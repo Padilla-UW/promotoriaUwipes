@@ -1,5 +1,6 @@
 <?php
     include 'includes/header.php';
+    include 'includes/conection.php';
 ?>
 <div class="container"></div>
     <div class="container">
