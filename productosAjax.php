@@ -31,7 +31,7 @@
                     echo 1;
                 }else{
                     mysqli_query($con,'ROLLBACK');
-                    echo 0;
+                    echo 0; 
                 }
               }else{
                 
