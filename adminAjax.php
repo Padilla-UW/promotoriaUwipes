@@ -20,6 +20,7 @@ session_start();
        $query= mysqli_query($con,"Select p.nombre, p.idPersona, u.correo, p.ciudad FROM 
        usuario u, persona p WHERE u.idPersona = p.idPersona LIMIT $offset,$per_page");
         while($res=mysqli_fetch_array($query)){
+            $idPersona=$res['idPersona'];
             $nombre=$res['nombre'];
             $correo = $res['correo'];
             $ciudad = $res['ciudad'];
@@ -27,9 +28,9 @@ session_start();
                     <td> $nombre </td>
                     <td> $correo </td>
                     <td> $ciudad </td>
-                    <td><button type='button' data-id='$idPersona' class='btn btnEditModal' data-toggle='modal' data-target='#modalEditar'>Datos <i class='far fa-edit'></i>
+                    <td><button type='button' data-id='$idPersona' class='btn' id='btnEditModal' data-toggle='modal' data-target='#modalEditar'>Datos <i class='far fa-edit'></i>
                   </svg></button>
-                  <button type='button' data-id='$idPersona' class='btn btnPassModal' data-toggle='modal' data-target='#modalPassword'>Contraseña <i class='fas fa-user-lock'></i></button></td>
+                  <button type='button' data-id='$idPersona' class='btn' id='btnPassModal' data-toggle='modal' data-target='#modalPassword'>Contraseña <i class='fas fa-user-lock'></i></button></td>
                 </tr>";
         } 
 
@@ -99,6 +100,14 @@ session_start();
         VALUES ('', '$idPersona', '$rolAdd', '$correoAdd', SHA1('$passwordAdd'))";
         mysqli_query($con, $insertUsuario);
         echo 1;
-    }
+    }elseif($action=="getTipoUsuario"){
+        $queryCadena=mysqli_query($con,"SELECT idTipoUsuario, tipoUsuario From tipousuario");
+        echo "<option value=''>Seleccione</option>";
+       while($cadena = mysqli_fetch_array($queryCadena)){
+           $idTipoUsuario = $cadena['idTipoUsuario'];
+           $tipoUsuario= $cadena['tipoUsuario'];
+          echo "<option value='".$idTipoUsuario."'>$tipoUsuario</option>";
+       } 
+   }
 
 ?>

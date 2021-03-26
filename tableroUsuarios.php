@@ -83,11 +83,7 @@ include('includes/header.php');
     <input class="form-control" id ="passwordAdd" type="password" placeholder="Ingrese su Contraseña" name="password" required>
 <br>
     <label for="rol"><b>Tipo de Usuario</b></label><br>
-    <select class="form-control" name="idRol" id="rolAdd" required>
-    <option selected value="0">Seleccione su tipo de cuenta</option>
-    <option value="1">Administrador</option>
-    <option value="2">Vendedor</option>
-    </select>
+    <select class="form-control" name="idRol" id="rolAdd" required></select>
     <br>
     <div id="avisoAgregar"> </div>
     <br>
@@ -130,10 +126,7 @@ include('includes/header.php');
     <input class="form-control" id ="correoEdit" type="text" placeholder="Ingrese su Correo" name="correoUsuario" required>
 <br>
     <label for="rol"><b>Tipo de Usuario</b></label><br>
-    <select class="form-control" name="idRol" id="rolEdit" required>
-    <option value="1">Administrador</option>
-    <option value="2">Vendedor</option>
-    </select>
+    <select class="form-control" name="idRol" id="rolEdit" required></select>
     <br><br>
     <div id="avisoEditar"> </div>
     <br>
@@ -175,6 +168,8 @@ include('includes/header.php');
 //función para
 $(document).ready(function(){
   load('');
+  getTipoUsuario();
+  getEditUsuario();
 });
 
 //función para mostrar datos en el tbody de la tabla
@@ -197,7 +192,7 @@ function load(page){
 }
 
 //AGREGAR función para JALA
-$(document).on("click", ".modalNvoUsuario", function() {
+$(document).on("click", "#modalNvoUsuario", function() {
       var idPersona=$(this).data('id');
       var idUsuario=$(this).data('id');
       var parametros = {
@@ -283,7 +278,7 @@ $("#btnNuevoUsuario").click(function(){
       });
 
 //EDITAR función para JALAR Datos
-    $(document).on("click", ".btnEditModal", function() {
+    $(document).on("click", "#btnEditModal", function() {
       var idPersona=$(this).data('id');
       var parametros = {
         "action": "getDatosUsuario",
@@ -295,6 +290,7 @@ $("#btnNuevoUsuario").click(function(){
         url:'adminAjax.php',
         success:function(data){
           data = JSON.parse(data);
+          // var data = jQuery.parseJSON(data);
           console.log(data);
           $("#nombreEdit").val(data.nombre);
           $("#apellidosEdit").val(data.apellidos);
@@ -354,7 +350,7 @@ $("#btnNuevoUsuario").click(function(){
       });
 
   //CONTRASEÑA función para JALA
-    $(document).on("click", ".btnPassModal", function() {
+    $(document).on("click", "#btnPassModal", function() {
       var idPersona=$(this).attr('data-id');
       var parametros = {
         "action": "getDatosUsuario",
@@ -401,19 +397,48 @@ $("#btnEditPassword").click(function btnEditPassword(idPersona, passwordEdit){
       }
       });
 
-//limpiar avisos
-// $(document).on("click", "#btnCerrarAdd", function(){
-//   $('#avisoAgregar').html("");
-//   $('#btnNuevoUsuario').show();
-// });
-// $(document).on("click", "#btnCerrarEdit", function(){
-//   $('#avisoEditar').html("");
-//   $('#btnEditarUsuario').show();
-// });
-// $(document).on("click", "#btnCerrarPass", function(){
-//   $('#avisoPass').html("");
-//   $('#btnEditPassword').show();
-// });
+//Función para SELECT automático
+function getTipoUsuario(){
+    var parametros={
+        "action": "getTipoUsuario"
+    }
+    $.ajax({
+        url:'adminAjax.php',
+        data:parametros,
+        success:function(data){
+            console.log(data);
+            $("#rolAdd").html(data);
+        }
+    });
+}
+
+function getEditUsuario(){
+    var parametros={
+        "action": "getTipoUsuario"
+    }
+    $.ajax({
+        url:'adminAjax.php',
+        data:parametros,
+        success:function(data){
+            console.log(data);
+            $("#rolEdit").html(data);
+        }
+    });
+}
+
+// limpiar avisos
+$(document).on("click", "#btnCerrarAdd", function(){
+  $('#avisoAgregar').html("");
+  $('#btnNuevoUsuario').show();
+});
+$(document).on("click", "#btnCerrarEdit", function(){
+  $('#avisoEditar').html("");
+  $('#btnEditarUsuario').show();
+});
+$(document).on("click", "#btnCerrarPass", function(){
+  $('#avisoPass').html("");
+  $('#btnEditPassword').show();
+});
 
 </script>
 
