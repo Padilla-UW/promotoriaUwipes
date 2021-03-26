@@ -170,15 +170,34 @@
                     console.log("Error de formato");
                 } else {
 
+                    var producto = new FormData();
+                    producto.append("action", "agregarProducto");
+                    producto.append("nombre", nombre);
+                    producto.append("categoria", categoria);
+                    producto.append("segmento", segmento);
+                    producto.append("conteo", conteo);
+                    producto.append("img", img);
+                    console.log(producto);
+                    agregarProducto(producto);
                 }
             }
-
-
-
-
-
         });
 
+
+        function agregarProducto(producto) {
+            $.ajax({
+                url: "productosAjax.php",
+                data: producto,
+                type: 'POST',
+                contentType: false,
+                enctype: 'multipart/form-data',
+                cache: false,
+                processData: false,
+                success: function(data) {
+                    console.log(data);
+                }
+            });
+        }
 
         function getCategoriasSelect(select) {
             var parametros = {
