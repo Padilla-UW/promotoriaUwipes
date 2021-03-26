@@ -48,6 +48,11 @@
         $nombre=(isset($_REQUEST['nombre'])&& $_REQUEST['nombre'] !=NULL)?$_REQUEST['nombre']:'';
         $segmento=(isset($_REQUEST['segmento'])&& $_REQUEST['segmento'] !=NULL)?$_REQUEST['segmento']:'';
         $categoria=(isset($_REQUEST['categoria'])&& $_REQUEST['categoria'] !=NULL)?$_REQUEST['categoria']:'';
+    }elseif($action == "getCategoriasFiltro"){
+        $categorias = mysqli_query($con,"SELECT * from categoria"); 
+        while($categoria = mysqli_fetch_array($categorias)){
+           echo "<a class='dropdown-item' href='#' data-id='".$categoria['idCategoria']."'>".$categoria['categoria']."</a>";         
+       } 
     }
 
 

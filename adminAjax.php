@@ -106,7 +106,7 @@ session_start();
        while($cadena = mysqli_fetch_array($queryCadena)){
            $idTipoUsuario = $cadena['idTipoUsuario'];
            $tipoUsuario= $cadena['tipoUsuario'];
-          echo "<option value='".$idTipoUsuario."'>$tipoUsuario</option>";
+          echo "<option value='".$idTipoUsuario."'>$tipoUsuario</option>"; 
        } 
    }
 
