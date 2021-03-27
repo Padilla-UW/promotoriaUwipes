@@ -116,7 +116,7 @@ if($action=="getUsuarios"){
     VALUES ('', '$idPersona', '$rolAdd', '$correoAdd', SHA1('$passwordAdd'))";
     mysqli_query($con, $insertUsuario);
     
-    if($insertPersona&& $insertUsuario ){
+    if($insertPersona && $insertUsuario ){
         mysqli_query($con,'COMMIT');
         echo 1;
     }else{
