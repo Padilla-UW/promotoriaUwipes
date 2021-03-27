@@ -127,10 +127,7 @@
                                 <div class="form-row">
                                     <div class="form-group col-12">
                                         <label for="precioProd">Imagen</label>
-
                                         <input type="file" class="form-control-file" id="imgProd" lang="es">
-
-
                                     </div>
                                 </div>
                             </form>
@@ -183,7 +180,6 @@
             }
         });
 
-
         function agregarProducto(producto) {
             $.ajax({
                 url: "productosAjax.php",
@@ -211,7 +207,6 @@
                 }
             });
         }
-
 
         function getCategoriasFiltro(filtro) {
             var parametros = {
