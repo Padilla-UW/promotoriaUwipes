@@ -1,9 +1,5 @@
 <?php
-// session_start();
-
 include('includes/header.php');
-// include('includes/menu.php');
-
 ?>
 
 <style>
@@ -441,4 +437,3 @@ $(document).on("click", "#btnCerrarPass", function(){
 });
 
 </script>
-
