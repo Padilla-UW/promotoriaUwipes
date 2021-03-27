@@ -106,6 +106,15 @@
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group col-md-12">
+                                        <label for="procedenciaProd">Procedencia</label>
+                                        <select id="procedenciaProd" class="form-control">
+                                            <option value="Propio">Propio</option>
+                                            <option value="Competencia">Competencia</option>
+                                          </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-12">
                                         <label for="segmentoProd">Segmento</label>
                                         <select id="segmentoProd" class="form-control">
                                             <option value="Alto">Alto</option>
@@ -159,6 +168,7 @@
             var segmento = $("#segmentoProd").val();
             var precio = $("#precioProd").val();
             var conteo = $("#conteoProd").val();
+            var procedencia = $("#procedenciaProd").val();
             var img = $("#imgProd")[0].files[0];
 
             if (!nombre || !categoria || !segmento || !precio || !conteo || !img) {
@@ -169,15 +179,15 @@
                 if (extension != ".png" && extension != ".jpg") {
                     console.log("Error de formato");
                 } else {
-
                     var producto = new FormData();
                     producto.append("action", "agregarProducto");
                     producto.append("nombre", nombre);
                     producto.append("categoria", categoria);
                     producto.append("segmento", segmento);
                     producto.append("conteo", conteo);
+                    producto.append("precio", precio);
+                    producto.append("procedencia", procedencia);
                     producto.append("img", img);
-                    console.log(producto);
                     agregarProducto(producto);
                 }
             }
