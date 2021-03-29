@@ -59,24 +59,23 @@
                         <tr>
                             <th scope="col">Producto</th>
                             <th scope="col">Categoria</th>
+                            <th scope="col">Procedencia</th>
+                            <th scope="col">Segmento</th>
                             <th scope="col">Precio</th>
+                            <th scope="col">Conteo</th>
+                            <th scope="col"></th>
                             <th scope="col"></th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@mdo</td>
-                        </tr>
+                    <tbody id="tablaProductos">
+
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 
-    <!-- Modal -->
+    <!-- Modal Agregar Producto-->
     <div class="modal fade" id="agreProducModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -136,10 +135,7 @@
                                 <div class="form-row">
                                     <div class="form-group col-12">
                                         <label for="precioProd">Imagen</label>
-
                                         <input type="file" class="form-control-file" id="imgProd" lang="es">
-
-
                                     </div>
                                 </div>
                             </form>
@@ -153,14 +149,84 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal Agregar Producto-->
+    <div class="modal fade" id="editProducModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Editar Producto</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row justify-content-center">
+                        <div class="col-10">
+                            <form>
+                                <div class="form-row">
+                                    <div class="form-group col-12">
+                                        <label for="nombreProdEdit">Nombre</label>
+                                        <input type="text" class="form-control" id="nombreProdEdit">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-12">
+                                        <label for="categoriaProdEdit">Categoria</label>
+                                        <select id="categoriaProdEdit" class="form-control">
+                                                
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-12">
+                                        <label for="procedenciaProdEdit">Procedencia</label>
+                                        <select id="procedenciaProdEdit" class="form-control">
+                                                <option value="Propio">Propio</option>
+                                                <option value="Competencia">Competencia</option>
+                                              </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-12">
+                                        <label for="segmentoProdEdit">Segmento</label>
+                                        <select id="segmentoProdEdit" class="form-control">
+                                                <option value="Alto">Alto</option>
+                                                <option value="Medio">Medio</option>
+                                                <option value="Bajo">Bajo</option>
+                                              </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-6">
+                                        <label for="conteoProdEdit">Conteo</label>
+                                        <input type="number" min="1" class="form-control" id="conteoProd">
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label for="precioProdEdit">Precio</label>
+                                        <input type="number" min="0" class="form-control" id="precioProd">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" id="btnEditarProd" class="btn btn-outline-success">Agregar <i class="far fa-save"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.bundle.min.js"></script>
     <script src="fontawesome/js/all.min.js"></script>
 
     <script>
         getCategoriasSelect("#categoriaProd");
+        getCategoriasSelect("#categoriaProdEdit");
         getCategoriasFiltro("#filtroCategorias");
-
+        getProductos();
 
         $("#btnAgregarProd").click(function() {
             var nombre = $("#nombreProd").val();
@@ -193,6 +259,13 @@
             }
         });
 
+        $(document).on("click", ".editProd", function() {
+            var idProducto = $(this).attr('data-id');
+            console.log("Entra a editar producto: " + idProducto);
+            $("#btnEditarProd").attr('data-id', idProducto);
+            var producto = getProducto(idProducto);
+            console.log(producto);
+        });
 
         function agregarProducto(producto) {
             $.ajax({
@@ -234,5 +307,40 @@
                     $(filtro).html(data);
                 }
             });
+        }
+
+        function getProductos(pagina, procedencia, categoria, segmento, nombre) {
+            var parametros = {
+                "action": "getProductos",
+                "pagina": pagina,
+                "procedencia": procedencia,
+                "categoria": categoria,
+                "segmento": segmento,
+                "nombre": nombre
+            }
+            $.ajax({
+                url: "productosAjax.php",
+                data: parametros,
+                success: function(data) {
+                    $("#tablaProductos").html(data);
+                }
+            });
+        }
+
+        function getProducto(idProducto) {
+            var producto;
+            var parametros = {
+                "action": "getProducto",
+                "idProducto": idProducto
+            }
+            $.ajax({
+                url: "productosAjax.php",
+                data: parametros,
+                async: false,
+                success: function(data) {
+                    producto = JSON.parse(data);
+                }
+            });
+            return producto;
         }
     </script>
