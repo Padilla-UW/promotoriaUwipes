@@ -260,8 +260,6 @@
             }
         });
 
-<<<<<<< HEAD
-=======
         $(".opcFilProceProd").click(function() {
             var procedenciaBusc = $(this).attr('data-proceProd');
             $("#filtroProcedProd").attr('data-proceBusc', procedenciaBusc);
@@ -341,7 +339,6 @@
             getProductos(pagina, procedencia, categoria, segmento);
         }
 
->>>>>>> origin/Guardar-Producto
         function agregarProducto(producto) {
             $.ajax({
                 url: "productosAjax.php",
