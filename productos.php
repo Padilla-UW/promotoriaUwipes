@@ -15,19 +15,19 @@
             </div>
         </div> <br>
         <div class="row justify-content-between">
-            <div class="col-6 col-lg-5">
+            <div class="col-6 col-lg-7" id="filtros">
                 <div class="btn-group" role="group">
-                    <button id="btnGroupDrop1" type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button id="filtroProcedProd" type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fas fa-globe-americas"></i> Procedencia
                     </button>
                     <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                        <a class="dropdown-item" href="#">Todos</a>
-                        <a class="dropdown-item" href="#">Propios</a>
-                        <a class="dropdown-item" href="#">Competencia</a>
+                        <a class="dropdown-item opcFilProceProd" data-proceProd="" href="#">Todos</a>
+                        <a class="dropdown-item opcFilProceProd" data-proceProd="Propio" href="#">Propios</a>
+                        <a class="dropdown-item opcFilProceProd" data-proceProd="Competencia" href="#">Competencia</a>
                     </div>
                 </div>
                 <div class="btn-group" role="group">
-                    <button id="btnGroupDrop1" type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button id="filtroCateProd" type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fas fa-filter"></i> Categoria
                     </button>
                     <div class="dropdown-menu" aria-labelledby="btnGroupDrop1" id="filtroCategorias">
@@ -35,15 +35,16 @@
                     </div>
                 </div>
                 <div class="btn-group" role="group">
-                    <button id="btnGroupDrop1" type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button id="filtroSegmProd" type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fas fa-funnel-dollar"></i> Segmento
                     </button>
                     <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                        <a class="dropdown-item" href="#">Alto</a>
-                        <a class="dropdown-item" href="#">Medio</a>
-                        <a class="dropdown-item" href="#">Bajo</a>
+                        <a class="dropdown-item opcFilSegmProd" data-segmProd="Alto" href="#">Alto</a>
+                        <a class="dropdown-item opcFilSegmProd" data-segmProd="Medio" href="#">Medio</a>
+                        <a class="dropdown-item opcFilSegmProd" data-segmProd="Bajo" href="#">Bajo</a>
                     </div>
                 </div>
+
             </div>
             <div class="col-6 col-lg-4">
                 <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
@@ -150,7 +151,7 @@
         </div>
     </div>
 
-    <!-- Modal Agregar Producto-->
+    <!-- Modal Editar Producto-->
     <div class="modal fade" id="editProducModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -200,11 +201,11 @@
                                 <div class="form-row">
                                     <div class="form-group col-6">
                                         <label for="conteoProdEdit">Conteo</label>
-                                        <input type="number" min="1" class="form-control" id="conteoProd">
+                                        <input type="number" min="1" class="form-control" id="conteoProdEdit">
                                     </div>
                                     <div class="form-group col-6">
                                         <label for="precioProdEdit">Precio</label>
-                                        <input type="number" min="0" class="form-control" id="precioProd">
+                                        <input type="number" min="0" class="form-control" id="precioProdEdit">
                                     </div>
                                 </div>
                             </form>
@@ -259,13 +260,84 @@
             }
         });
 
+        $(".opcFilProceProd").click(function() {
+            var procedenciaBusc = $(this).attr('data-proceProd');
+            $("#filtroProcedProd").attr('data-proceBusc', procedenciaBusc);
+            load();
+            if ($("#buscProcedencia").length) {
+                $("#buscProcedencia").remove();
+            }
+            if (procedenciaBusc)
+                $("#filtros").append('<a class="badge badge-pill badge-secondary" href="#" id="buscProcedencia">' + procedenciaBusc + ' <i class="far fa-times-circle"></i></a>');
+        });
+
+        $(".opcFilSegmProd").click(function() {
+            var segmentoBusc = $(this).attr('data-segmProd');
+            $("#filtroSegmProd").attr('data-segmBusc', segmentoBusc);
+            load();
+            if ($("#buscSegmento").length) {
+                $("#buscSegmento").remove();
+            }
+            if (segmentoBusc)
+                $("#filtros").append('<a class="badge badge-pill badge-secondary" href="#" id="buscSegmento">' + segmentoBusc + ' <i class="far fa-times-circle"></i></a>');
+        });
+
+        $(document).on("click", ".opcFilCateProd", function() {
+            var categoriaBusc = $(this).attr('data-id');
+            var categoria = $(this).attr('data-categoria');
+            $("#filtroCateProd").attr("data-cateBusc", categoriaBusc);
+            load();
+            if ($("#buscCategoria").length) {
+                $("#buscCategoria").remove();
+            }
+            if (categoriaBusc)
+                $("#filtros").append('<a class="badge badge-pill badge-secondary" href="#" id="buscCategoria">' + categoria + ' <i class="far fa-times-circle"></i></a>');
+        });
+
+
+        //Eliminar los filtros cuando lo borran en la x
+        $(document).on("click", "#buscProcedencia", function() {
+            $("#filtroProcedProd").attr('data-proceBusc', '');
+            $("#buscProcedencia").remove();
+            load();
+        });
+
+        $(document).on("click", "#buscCategoria", function() {
+            $("#filtroCateProd").attr('data-cateBusc', '');
+            $("#buscCategoria").remove();
+            load();
+        });
+
+        $(document).on("click", "#buscSegmento", function() {
+            $("#filtroSegmProd").attr('data-segmBusc', '');
+            $("#buscSegmento").remove();
+            load();
+        });
+
+
+        //Fin de eliminar los filtros cuando lo borran en la x
+
         $(document).on("click", ".editProd", function() {
             var idProducto = $(this).attr('data-id');
             console.log("Entra a editar producto: " + idProducto);
             $("#btnEditarProd").attr('data-id', idProducto);
             var producto = getProducto(idProducto);
             console.log(producto);
+            $("#nombreProdEdit").val(producto.nombre);
+            $("#categoriaProdEdit").val(producto.idCategoria);
+            $("#procedenciaProdEdit").val(producto.procedencia);
+            $("#segmentoProdEdit").val(producto.segmento);
+            $("#conteoProdEdit").val(producto.conteo);
+            $("#precioProdEdit").val(producto.precio);
         });
+
+
+        function load(pagina) {
+            var procedencia = $("#filtroProcedProd").attr('data-proceBusc');
+            var categoria = $("#filtroCateProd").attr("data-cateBusc");
+            var segmento = $("#filtroSegmProd").attr('data-segmBusc');
+            getProductos(pagina, procedencia, categoria, segmento);
+        }
 
         function agregarProducto(producto) {
             $.ajax({
@@ -318,6 +390,8 @@
                 "segmento": segmento,
                 "nombre": nombre
             }
+            console.log("Entra a buscar prod");
+            console.log(parametros);
             $.ajax({
                 url: "productosAjax.php",
                 data: parametros,
