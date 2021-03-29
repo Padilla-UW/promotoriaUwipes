@@ -15,19 +15,19 @@
             </div>
         </div> <br>
         <div class="row justify-content-between">
-            <div class="col-6 col-lg-5">
+            <div class="col-6 col-lg-7" id="filtros">
                 <div class="btn-group" role="group">
-                    <button id="btnGroupDrop1" type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button id="filtroProcedProd" type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fas fa-globe-americas"></i> Procedencia
                     </button>
                     <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                        <a class="dropdown-item" href="#">Todos</a>
-                        <a class="dropdown-item" href="#">Propios</a>
-                        <a class="dropdown-item" href="#">Competencia</a>
+                        <a class="dropdown-item opcFilProceProd" data-proceProd="" href="#">Todos</a>
+                        <a class="dropdown-item opcFilProceProd" data-proceProd="Propio" href="#">Propios</a>
+                        <a class="dropdown-item opcFilProceProd" data-proceProd="Competencia" href="#">Competencia</a>
                     </div>
                 </div>
                 <div class="btn-group" role="group">
-                    <button id="btnGroupDrop1" type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button id="filtroCateProd" type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fas fa-filter"></i> Categoria
                     </button>
                     <div class="dropdown-menu" aria-labelledby="btnGroupDrop1" id="filtroCategorias">
@@ -35,15 +35,16 @@
                     </div>
                 </div>
                 <div class="btn-group" role="group">
-                    <button id="btnGroupDrop1" type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button id="filtroSegmProd" type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fas fa-funnel-dollar"></i> Segmento
                     </button>
                     <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                        <a class="dropdown-item" href="#">Alto</a>
-                        <a class="dropdown-item" href="#">Medio</a>
-                        <a class="dropdown-item" href="#">Bajo</a>
+                        <a class="dropdown-item opcFilSegmProd" data-segmProd="Alto" href="#">Alto</a>
+                        <a class="dropdown-item opcFilSegmProd" data-segmProd="Medio" href="#">Medio</a>
+                        <a class="dropdown-item opcFilSegmProd" data-segmProd="Bajo" href="#">Bajo</a>
                     </div>
                 </div>
+
             </div>
             <div class="col-6 col-lg-4">
                 <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
@@ -59,24 +60,23 @@
                         <tr>
                             <th scope="col">Producto</th>
                             <th scope="col">Categoria</th>
+                            <th scope="col">Procedencia</th>
+                            <th scope="col">Segmento</th>
                             <th scope="col">Precio</th>
+                            <th scope="col">Conteo</th>
+                            <th scope="col"></th>
                             <th scope="col"></th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@mdo</td>
-                        </tr>
+                    <tbody id="tablaProductos">
+
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 
-    <!-- Modal -->
+    <!-- Modal Agregar Producto-->
     <div class="modal fade" id="agreProducModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -101,6 +101,15 @@
                                         <label for="categoriaProd">Categoria</label>
                                         <select id="categoriaProd" class="form-control">
                                             
+                                          </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-12">
+                                        <label for="procedenciaProd">Procedencia</label>
+                                        <select id="procedenciaProd" class="form-control">
+                                            <option value="Propio">Propio</option>
+                                            <option value="Competencia">Competencia</option>
                                           </select>
                                     </div>
                                 </div>
@@ -141,14 +150,84 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal Editar Producto-->
+    <div class="modal fade" id="editProducModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Editar Producto</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row justify-content-center">
+                        <div class="col-10">
+                            <form>
+                                <div class="form-row">
+                                    <div class="form-group col-12">
+                                        <label for="nombreProdEdit">Nombre</label>
+                                        <input type="text" class="form-control" id="nombreProdEdit">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-12">
+                                        <label for="categoriaProdEdit">Categoria</label>
+                                        <select id="categoriaProdEdit" class="form-control">
+                                                
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-12">
+                                        <label for="procedenciaProdEdit">Procedencia</label>
+                                        <select id="procedenciaProdEdit" class="form-control">
+                                                <option value="Propio">Propio</option>
+                                                <option value="Competencia">Competencia</option>
+                                              </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-12">
+                                        <label for="segmentoProdEdit">Segmento</label>
+                                        <select id="segmentoProdEdit" class="form-control">
+                                                <option value="Alto">Alto</option>
+                                                <option value="Medio">Medio</option>
+                                                <option value="Bajo">Bajo</option>
+                                              </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-6">
+                                        <label for="conteoProdEdit">Conteo</label>
+                                        <input type="number" min="1" class="form-control" id="conteoProdEdit">
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label for="precioProdEdit">Precio</label>
+                                        <input type="number" min="0" class="form-control" id="precioProdEdit">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" id="btnEditarProd" class="btn btn-outline-success">Agregar <i class="far fa-save"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.bundle.min.js"></script>
     <script src="fontawesome/js/all.min.js"></script>
 
     <script>
         getCategoriasSelect("#categoriaProd");
+        getCategoriasSelect("#categoriaProdEdit");
         getCategoriasFiltro("#filtroCategorias");
-
+        getProductos();
 
         $("#btnAgregarProd").click(function() {
             var nombre = $("#nombreProd").val();
@@ -156,6 +235,7 @@
             var segmento = $("#segmentoProd").val();
             var precio = $("#precioProd").val();
             var conteo = $("#conteoProd").val();
+            var procedencia = $("#procedenciaProd").val();
             var img = $("#imgProd")[0].files[0];
 
             if (!nombre || !categoria || !segmento || !precio || !conteo || !img) {
@@ -166,20 +246,102 @@
                 if (extension != ".png" && extension != ".jpg") {
                     console.log("Error de formato");
                 } else {
-
                     var producto = new FormData();
                     producto.append("action", "agregarProducto");
                     producto.append("nombre", nombre);
                     producto.append("categoria", categoria);
                     producto.append("segmento", segmento);
                     producto.append("conteo", conteo);
+                    producto.append("precio", precio);
+                    producto.append("procedencia", procedencia);
                     producto.append("img", img);
-                    console.log(producto);
                     agregarProducto(producto);
                 }
             }
         });
 
+<<<<<<< HEAD
+=======
+        $(".opcFilProceProd").click(function() {
+            var procedenciaBusc = $(this).attr('data-proceProd');
+            $("#filtroProcedProd").attr('data-proceBusc', procedenciaBusc);
+            load();
+            if ($("#buscProcedencia").length) {
+                $("#buscProcedencia").remove();
+            }
+            if (procedenciaBusc)
+                $("#filtros").append('<a class="badge badge-pill badge-secondary" href="#" id="buscProcedencia">' + procedenciaBusc + ' <i class="far fa-times-circle"></i></a>');
+        });
+
+        $(".opcFilSegmProd").click(function() {
+            var segmentoBusc = $(this).attr('data-segmProd');
+            $("#filtroSegmProd").attr('data-segmBusc', segmentoBusc);
+            load();
+            if ($("#buscSegmento").length) {
+                $("#buscSegmento").remove();
+            }
+            if (segmentoBusc)
+                $("#filtros").append('<a class="badge badge-pill badge-secondary" href="#" id="buscSegmento">' + segmentoBusc + ' <i class="far fa-times-circle"></i></a>');
+        });
+
+        $(document).on("click", ".opcFilCateProd", function() {
+            var categoriaBusc = $(this).attr('data-id');
+            var categoria = $(this).attr('data-categoria');
+            $("#filtroCateProd").attr("data-cateBusc", categoriaBusc);
+            load();
+            if ($("#buscCategoria").length) {
+                $("#buscCategoria").remove();
+            }
+            if (categoriaBusc)
+                $("#filtros").append('<a class="badge badge-pill badge-secondary" href="#" id="buscCategoria">' + categoria + ' <i class="far fa-times-circle"></i></a>');
+        });
+
+
+        //Eliminar los filtros cuando lo borran en la x
+        $(document).on("click", "#buscProcedencia", function() {
+            $("#filtroProcedProd").attr('data-proceBusc', '');
+            $("#buscProcedencia").remove();
+            load();
+        });
+
+        $(document).on("click", "#buscCategoria", function() {
+            $("#filtroCateProd").attr('data-cateBusc', '');
+            $("#buscCategoria").remove();
+            load();
+        });
+
+        $(document).on("click", "#buscSegmento", function() {
+            $("#filtroSegmProd").attr('data-segmBusc', '');
+            $("#buscSegmento").remove();
+            load();
+        });
+
+
+        //Fin de eliminar los filtros cuando lo borran en la x
+
+        $(document).on("click", ".editProd", function() {
+            var idProducto = $(this).attr('data-id');
+            console.log("Entra a editar producto: " + idProducto);
+            $("#btnEditarProd").attr('data-id', idProducto);
+            var producto = getProducto(idProducto);
+            console.log(producto);
+            $("#nombreProdEdit").val(producto.nombre);
+            $("#categoriaProdEdit").val(producto.idCategoria);
+            $("#procedenciaProdEdit").val(producto.procedencia);
+            $("#segmentoProdEdit").val(producto.segmento);
+            $("#conteoProdEdit").val(producto.conteo);
+            $("#precioProdEdit").val(producto.precio);
+        });
+
+
+        function load(pagina) {
+            var procedencia = $("#filtroProcedProd").attr('data-proceBusc');
+            var categoria = $("#filtroCateProd").attr("data-cateBusc");
+            var segmento = $("#filtroSegmProd").attr('data-segmBusc');
+            getProductos(pagina, procedencia, categoria, segmento);
+        }
+
+>>>>>>> origin/Guardar-Producto
         function agregarProducto(producto) {
             $.ajax({
                 url: "productosAjax.php",
@@ -219,5 +381,42 @@
                     $(filtro).html(data);
                 }
             });
+        }
+
+        function getProductos(pagina, procedencia, categoria, segmento, nombre) {
+            var parametros = {
+                "action": "getProductos",
+                "pagina": pagina,
+                "procedencia": procedencia,
+                "categoria": categoria,
+                "segmento": segmento,
+                "nombre": nombre
+            }
+            console.log("Entra a buscar prod");
+            console.log(parametros);
+            $.ajax({
+                url: "productosAjax.php",
+                data: parametros,
+                success: function(data) {
+                    $("#tablaProductos").html(data);
+                }
+            });
+        }
+
+        function getProducto(idProducto) {
+            var producto;
+            var parametros = {
+                "action": "getProducto",
+                "idProducto": idProducto
+            }
+            $.ajax({
+                url: "productosAjax.php",
+                data: parametros,
+                async: false,
+                success: function(data) {
+                    producto = JSON.parse(data);
+                }
+            });
+            return producto;
         }
     </script>
