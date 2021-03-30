@@ -21,14 +21,11 @@ if($action=="getUsuarios"){
     if($idTipoUsuario != '' || $nombre != ''){
         if($idTipoUsuario != '') $sqlTipoU = " AND t.idTipoUsuario = '$idTipoUsuario'";
         if($nombre != '') $sqlTipoN = " AND p.nombre LIKE '%$nombre%'";
-        // $sqlTipoU = " AND t.idTipoUsuario = '$idTipoUsuario'";
-        // $sqlTipoN = " AND p.nombre LIKE '%$nombre%'";
 
         $queryUsuarios = "Select p.nombre, p.idPersona, u.correo, p.ciudad, u.idTipoUsuario, t.idTipoUsuario, t.tipoUsuario FROM 
            usuario u, persona p, tipousuario t WHERE u.idPersona = p.idPersona AND t.idTipoUsuario=u.idTipoUsuario AND p.idPersona=u.idPersona";
 
         $queryUsuarios.=$sqlTipoU.$sqlTipoN." ORDER BY idPersona LIMIT $offset,$per_page";
-        //  echo $queryUsuarios;
         
     }else{
         $queryUsuarios = "Select p.nombre, p.idPersona, u.correo, p.ciudad, u.idTipoUsuario, t.idTipoUsuario, t.tipoUsuario FROM 
@@ -132,7 +129,6 @@ if($action=="getUsuarios"){
     $insertPersona = "INSERT INTO persona (idPersona, nombre, apellidos, telefono, ciudad)
     VALUES ('', '$nombreAdd', '$apellidosAdd', '$telAdd', '$ciudadAdd')"; 
     mysqli_query($con, $insertPersona);
-    $idPersona->insert_id;
     $idPersona = mysqli_insert_id($con);
     $insertUsuario = "INSERT INTO usuario (idUsuario, idPersona, idTipoUsuario, correo, contrasena)
     VALUES ('', '$idPersona', '$rolAdd', '$correoAdd', SHA1('$passwordAdd'))";
