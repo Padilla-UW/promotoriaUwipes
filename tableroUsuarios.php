@@ -1,13 +1,13 @@
 <?php
-// include('includes/menu.php');
+include('includes/menu.php');
 include('includes/header.php');
 ?>
 
 <style>
 .page-item.active .page-link {
     z-index: 3;
-    color: #fff;
-    background-color: #607d8b99;
+    color: #607d8b;
+    background-color: #607d8b57;
     border-color: #607d8b;
 }
 
@@ -18,22 +18,56 @@ include('includes/header.php');
 }
 </style>
 
+<!-- Encabezado -->
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h2>Usuarios</h2>
+    </div>
+  </div>
+</div>
+
 <!-- Botón Lanza Modal -->
-<button type="button" class="btn btn-light"
-  style="margin:1%; border-color:#607d8b; color: white; background-color:#607d8b99;" data-toggle="modal"
-  data-target="#modalNvoUsuario" id="btnAgregar">
-  Agregar
-</button>
-<!--Fin Botón Lanza Modal -->
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <button type="button" class="btn btn-light" style="margin-top:5px;" data-toggle="modal"
+        data-target="#modalNvoUsuario" id="btnAgregar">
+        Agregar <i class="fas fa-plus"></i></button><br>
+    </div>
+  </div>
+</div>
+<!--Fin Lanza Modal -->
+
+<!-- Filtrados Búsqueda -->
+<div class="container" style="margin-top:10px">
+  <div class="row justify-content-between">
+    <div class="col-6 col-lg-5" id="filtros">
+      <div class="btn-group" role="group">
+        <button id="filtroTUsuario" type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i class="fas fa-filter"></i> Tipo de Usuario
+        </button>
+        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1" id="filtroUsuario">
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-4">
+      <input type="text" onkeyup="load()" class="form-control" id="busquedaNombre" placeholder="Nombre">
+    </div>
+  </div>
+</div>
+<br>
+<!--Fin Filtrados Búsqueda -->
 
 <!-- Tabla usuario con campos principales-->
 <div class="container">
   <div class="row">
     <div class="col">
-      <table class="table">
+      <table id="myTable" class="table" style="margin-top:10px;">
         <thead>
           <tr>
             <th>Nombre</th>
+            <th>Usuario</th>
             <th>Correo</th>
             <th>Ciudad</th>
             <th>Editar</th>
@@ -99,7 +133,7 @@ include('includes/header.php');
           <div id="avisoAgregar"> </div>
           <br>
           <button class="btn btn-light"
-            style="margin:1%; border-color:#607d8b; color: white; background-color:#607d8b99;" type="button" data-id=""
+            style="margin:1%; border-color:#607d8b; color: black; background-color:#607d8b57;" type="button" data-id=""
             id="btnNuevoUsuario">Guardar</button>
         </form>
       </div>
@@ -150,7 +184,7 @@ include('includes/header.php');
           <div id="avisoEditar"> </div>
           <br>
           <button type="button" class="btn btn-light"
-            style="margin:1%; border-color:#607d8b; color: white; background-color:#607d8b99;" data-id=""
+            style="margin:1%; border-color:#607d8b; color: black; background-color:#607d8b57;" data-id=""
             id="btnEditarUsuario">Guardar Cambios </button>
         </form>
       </div>
@@ -178,7 +212,7 @@ include('includes/header.php');
           <div id="avisoPass"></div>
           <br>
           <button type="button" class="btn btn-light"
-            style="margin:1%; border-color:#607d8b; color: white; background-color:#607d8b99;" data-id=""
+            style="margin:1%; border-color:#607d8b; color: black; background-color:#607d8b57;" data-id=""
             id="btnEditPassword">Cambiar Contraseña </button>
         </form>
       </div>
@@ -190,23 +224,32 @@ include('includes/header.php');
 <?php include ('includes/footer.php')?>
 
 <script>
+getUsuarioFiltro("#filtroUsuario");
+
 //función para
 $(document).ready(function () {
   load('');
   getTipoUsuario();
   getEditUsuario();
+  getUsuarioFiltro();
 });
 
 //función para mostrar datos en el tbody de la tabla
 //ponemos buscar por si el un futuro se necesita
-function load(page) {
+function load(page, idTipoUsuario, busquedaNombre) {
+  var idTipoUsuario = $("#filtroTUsuario").attr("data-userBusc");
+  getUsuarioFiltro(idTipoUsuario);
+  var busquedaNombre = $("#busquedaNombre").val();
+
   var parametros = {
     "action": "getUsuarios",
-    "page": page
+    "page": page,
+    "idTipoUsuario": idTipoUsuario,
+    "busquedaNombre": busquedaNombre
   }
   $.ajax({
     data: parametros,
-    url: 'adminAjax.php',
+    url: 'usuarioAjax.php',
     success: function (data) {
       data = jQuery.parseJSON(data);
       console.log(data);
@@ -248,14 +291,14 @@ $("#btnNuevoUsuario").click(function () {
       "passwordAdd": passwordAdd
     }
     $.ajax({
-      url: "adminAjax.php",
+      url: "usuarioAjax.php",
       data: parametros,
       success: function (data) {
         console.log(data);
         load();
         if (data == 1) {
           $('#btnNuevoUsuario').hide();
-          $('#avisoAgregar').html("<i class='bi bi-check2-square'></i> Agregado con Éxito").css("color", "#0f5132");
+          $('#avisoAgregar').html("<i class='far fa-save'></i> Agregado con Éxito").css("color", "#0f5132");
         }
       }
     }).done(function () {
@@ -268,7 +311,7 @@ $("#btnNuevoUsuario").click(function () {
       document.getElementById("passwordAdd").value = "";
     });
   } else {
-    $('#avisoAgregar').html("<i class='bi bi-x-square'></i> Datos Incorrectos o Vacíos").css("color", "red");
+    $('#avisoAgregar').html("<i class='fas fa-exclamation-triangle'></i> Datos Incorrectos o Vacíos").css("color", "red");
     console.log("Existen campos vacios");
   }
 });
@@ -283,7 +326,7 @@ $(document).on("click", "#btnEditModal", function () {
 
   $.ajax({
     data: parametros,
-    url: 'adminAjax.php',
+    url: 'usuarioAjax.php',
     success: function (data) {
       data = jQuery.parseJSON(data);
       console.log(data);
@@ -328,18 +371,18 @@ $("#btnEditarUsuario").click(function btnEditarUsuario(idPersona, nombreEdit, ap
       "correoEdit": correoEdit
     }
     $.ajax({
-      url: "adminAjax.php",
+      url: "usuarioAjax.php",
       data: parametros,
       success: function (data) {
         load();
         if (data == 1) {
           $('#btnEditarUsuario').hide();
-          $('#avisoEditar').html("<i class='bi bi-check2-square'></i> Agregado con Éxito").css("color", "#0f5132");
+          $('#avisoEditar').html("<i class='far fa-save'></i> Agregado con Éxito").css("color", "#0f5132");
         }
       }
     });
   } else {
-    $('#avisoEditar').html("<i class='bi bi-x-square'></i> Datos Incorrectos o Vacíos").css("color", "red");
+    $('#avisoEditar').html("<i class='fas fa-exclamation-triangle'></i> Datos Incorrectos o Vacíos").css("color", "red");
     console.log("Existen campos vacios");
   }
 });
@@ -354,7 +397,7 @@ $(document).on("click", "#btnPassModal", function () {
 
   $.ajax({
     data: parametros,
-    url: 'adminAjax.php',
+    url: 'usuarioAjax.php',
     success: function (data) {
       data = jQuery.parseJSON(data);
       $("#btnEditPassword").attr("data-id", data.idPersona);
@@ -374,20 +417,20 @@ $("#btnEditPassword").click(function btnEditPassword(idPersona, passwordEdit) {
       "passwordEdit": passwordEdit
     }
     $.ajax({
-      url: "adminAjax.php",
+      url: "usuarioAjax.php",
       data: parametros,
       success: function (data) {
         load();
         if (data == 1) {
           $('#btnEditPassword').hide();
-          $('#avisoPass').html("<i class='bi bi-check2-square'></i> Datos Guardados").css("color", "#0f5132");
+          $('#avisoPass').html("<i class='far fa-save'></i> Datos Guardados").css("color", "#0f5132");
         }
       }
     }).done(function () {
       document.getElementById("passwordEdit").value = "";
     });
   } else {
-    $('#avisoPass').html("<i class='bi bi-x-square'></i> Datos Incorrectos o Vacíos").css("color", "red");
+    $('#avisoPass').html("<i class='fas fa-exclamation-triangle'></i> Datos Incorrectos o Vacíos").css("color", "red");
     console.log("Existen campos vacios");
   }
 });
@@ -398,7 +441,7 @@ function getTipoUsuario() {
     "action": "getTipoUsuario"
   }
   $.ajax({
-    url: 'adminAjax.php',
+    url: 'usuarioAjax.php',
     data: parametros,
     success: function (data) {
       console.log(data);
@@ -412,7 +455,7 @@ function getEditUsuario() {
     "action": "getTipoUsuario"
   }
   $.ajax({
-    url: 'adminAjax.php',
+    url: 'usuarioAjax.php',
     data: parametros,
     success: function (data) {
       console.log(data);
@@ -421,7 +464,7 @@ function getEditUsuario() {
   });
 }
 
-// limpiar avisos
+// limpiar avisos y filtros
 $(document).on("click", "#btnCerrarAdd", function () {
   $('#avisoAgregar').html("");
   $('#btnNuevoUsuario').show();
@@ -433,6 +476,38 @@ $(document).on("click", "#btnCerrarEdit", function () {
 $(document).on("click", "#btnCerrarPass", function () {
   $('#avisoPass').html("");
   $('#btnEditPassword').show();
+});
+$(document).on("click", "#buscUsuario", function() {
+  $("#filtroCateProd").attr('data-userBusc', '');
+  $("#buscUsuario").remove();
+  location.reload();
+});
+
+//filtros de búsqueda
+function getUsuarioFiltro(filtro) {
+  var parametros = {
+    "action": "getUsuarioFiltro"
+  }
+  $.ajax({
+    url: "usuarioAjax.php",
+    data: parametros,
+    success: function (data) {
+      $(filtro).html(data);
+    }
+  });
+}
+
+//Aparece bolita de búsqueda en filtros
+$(document).on("click", ".opcFilTipoUsu", function () {
+  var tipoUsuarioBusc = $(this).attr('data-id');
+  var idTipoUsuario = $(this).attr('data-tipUsuario');
+  $("#filtroTUsuario").attr("data-userBusc", tipoUsuarioBusc);
+  load();
+  if ($("#buscUsuario").length) {
+    $("#buscUsuario").remove();
+  }
+  if (tipoUsuarioBusc)
+    $("#filtros").append('<a class="badge badge-pill badge-secondary" href="#" id="buscUsuario">' + idTipoUsuario + ' <i class="far fa-times-circle"></i></a>');
 });
 
 </script>
