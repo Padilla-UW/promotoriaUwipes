@@ -24,6 +24,11 @@ include('includes/header.php');
 #btnNuevaMatriz:hover{
   opacity: 0.8;
 }
+
+.matrix {
+  border: .1px solid #dedede;
+  border-spacing: 5px;
+}
 </style>
 
 <!-- selects principal -->
@@ -124,81 +129,81 @@ include('includes/header.php');
       </div>
       <div class="modal-body">
         <form id="formMatriz">
-          <label for="">Ingrese o seleccione el producto según su posición</label>
+          <label for="">Seleccione o ingrese el producto según sea su posición</label>
           <br><br>
           <!-- Sección Superior -->
           <div class="row">
-    <div class="col">
-    <label for=""><b>Sup. Izquierda</b></label><br>
-          <select class="form-control" name="supIzq" id="supIzq" required></select>
-          <br>
-          <input class="form-control" type="text" id="txtSupIzq" placeholder="Ingrese" name="txtSupIzq" required>
-          <br>
-    </div>
-    <div class="col">
-    <label for=""><b>Superior Centro</b></label><br>
-          <select class="form-control" name="supCen" id="supCen" required></select>
-          <br>
-          <input class="form-control" type="text" id="txtSupCen" placeholder="Ingrese" name="txtSupCen" required>
-          <br>
-    </div>
-    <div class="col">
-    <label for=""><b>Superior Derecha</b></label><br>
-          <select class="form-control" name="supDer" id="supDer" required></select>
-          <br>
-          <input class="form-control" type="text" id="txtSupDer" placeholder="Ingrese" name="txtSupDer" required>
-          <br>
-    </div>
-  </div>
-<!-- Sección Central -->
-  <div class="row">
-    <div class="col">
-    <label for=""><b>Centro Izquierda</b></label><br>
-          <select class="form-control" name="cenIzq" id="cenIzq" required></select>
-          <br>
-          <input class="form-control" type="text" id="txtCenIzq" placeholder="Ingrese" name="txtCenIzq" required>
-          <br>
-    </div>
-    <div class="col">
-    <label for=""><b>Centro</b></label><br>
-          <select class="form-control" name="cen" id="centro" required></select>
-          <br>
-          <input class="form-control" type="text" id="txtCentro" placeholder="Ingrese" name="txtCentro" required>
-          <br>
-    </div>
-    <div class="col">
-    <label for=""><b>Centro Derecha</b></label><br>
-          <select class="form-control" name="cenDer" id="cenDer" required></select>
-          <br>
-          <input class="form-control" type="text" id="txtCenDer" placeholder="Ingrese" name="txtCenDer" required>
-          <br>
-    </div>
-  </div>
-<!-- Sección Inferior -->
-  <div class="row">
-    <div class="col">
-    <label for=""><b>Inferior Izquierda</b></label><br>
-          <select class="form-control" name="infIzq" id="infIzq" required></select>
-          <br>
-          <input class="form-control" type="text" id="txtInfIzq" placeholder="Ingrese" name="txtInfIzq" required>
-          <br>
-    </div>
-    <div class="col">
-    <label for=""><b>Inferior Centro</b></label><br>
-          <select class="form-control" name="infCen" id="infCen" required></select>
-          <br>
-          <input class="form-control" type="text" id="txtInfCen" placeholder="Ingrese" name="txtInfCen" required>
-          <br>
-    </div>
-    <div class="col">
-    <label for=""><b>Inferior Derecha</b></label><br>
-    <select class="form-control" name="infDer" id="infDer" required></select>
-          <br>
-          <input class="form-control" type="text" id="txtInfDer" placeholder="Ingrese" name="txtInfDer" required>
-          <br>
-    </div>
-  </div>  
-          <div id="avisoAgregar"> </div>
+            <div class="col matrix">
+              <label for="">Sup Izq</label><br>
+              <select class="form-control" name="supIzq" id="supIzq" required></select>
+              <br>
+              <input class="form-control" type="text" id="txtSupIzq" placeholder="Ingrese" name="txtSupIzq" required>
+              <br>
+            </div>
+            <div class="col matrix">
+              <label for="">Sup Centro</label><br>
+              <select class="form-control" name="supCen" id="supCen" required></select>
+              <br>
+              <input class="form-control" type="text" id="txtSupCen" placeholder="Ingrese" name="txtSupCen" required>
+              <br>
+            </div>
+            <div class="col matrix">
+              <label for="">Sup Der</label><br>
+              <select class="form-control" name="supDer" id="supDer" required></select>
+              <br>
+              <input class="form-control" type="text" id="txtSupDer" placeholder="Ingrese" name="txtSupDer" required>
+              <br>
+            </div>
+          </div>
+          <!-- Sección Central -->
+          <div class="row">
+            <div class="col matrix">
+              <label for="">Izquierda</label><br>
+              <select class="form-control" name="cenIzq" id="cenIzq" required></select>
+              <br>
+              <input class="form-control" type="text" id="txtCenIzq" placeholder="Ingrese" name="txtCenIzq" required>
+              <br>
+            </div>
+            <div class="col matrix">
+              <label for="">Centro</label><br>
+              <select class="form-control" name="cen" id="centro" required></select>
+              <br>
+              <input class="form-control" type="text" id="txtCentro" placeholder="Ingrese" name="txtCentro" required>
+              <br>
+            </div>
+            <div class="col matrix">
+              <label for="">Derecha</label><br>
+              <select class="form-control" name="cenDer" id="cenDer" required></select>
+              <br>
+              <input class="form-control" type="text" id="txtCenDer" placeholder="Ingrese" name="txtCenDer" required>
+              <br>
+            </div>
+          </div>
+          <!-- Sección Inferior -->
+          <div class="row matrix">
+            <div class="col matrix">
+              <label for="">Inf Izq</label><br>
+              <select class="form-control" name="infIzq" id="infIzq" required></select>
+              <br>
+              <input class="form-control" type="text" id="txtInfIzq" placeholder="Ingrese" name="txtInfIzq" required>
+              <br>
+            </div>
+            <div class="col matrix">
+              <label for="">Inf Centro</label><br>
+              <select class="form-control" name="infCen" id="infCen" required></select>
+              <br>
+              <input class="form-control" type="text" id="txtInfCen" placeholder="Ingrese" name="txtInfCen" required>
+              <br>
+            </div>
+            <div class="col matrix">
+              <label for="">Inf Der</label><br>
+              <select class="form-control" name="infDer" id="infDer" required></select>
+              <br>
+              <input class="form-control" type="text" id="txtInfDer" placeholder="Ingrese" name="txtInfDer" required>
+              <br>
+            </div>
+          </div>
+          <div id="avisoMatriz"> </div>
           <br>
           <button class="btn btn-light"
             style="margin:1%; border-color:#607d8b; color: black; background-color:#607d8b57;" type="button" data-id=""
@@ -214,7 +219,8 @@ include('includes/header.php');
 
 <script>
 $(document).ready(function(){
-    getFProducto();  
+    getFProducto(); 
+    getNProducto(); 
     getFTipoExi();
 });
 
@@ -229,6 +235,28 @@ function getFProducto() {
     success: function (data) {
       console.log(data);
       $("#selProducto").html(data);
+    }
+  });
+}
+
+function getNProducto() {
+  var parametros = {
+    "action": "getNProducto"
+  }
+  $.ajax({
+    url: 'visitasAjax.php',
+    data: parametros,
+    success: function (data) {
+      console.log(data);
+      $("#supIzq").html(data);
+      $("#supCen").html(data);
+      $("#supDer").html(data);
+      $("#cenIzq").html(data);
+      $("#centro").html(data);
+      $("#cenDer").html(data);
+      $("#infIzq").html(data);
+      $("#infCen").html(data);
+      $("#infDer").html(data);
     }
   });
 }
@@ -278,6 +306,24 @@ $("#btnGuardar").click(function(){
         document.getElementById("selExistencia").value = "0";
         document.getElementById("selPrecio").value = "";
         document.getElementById("selFrentes").value = "";
+        document.getElementById("supIzq").value = "";
+        document.getElementById("supCen").value = "";
+        document.getElementById("supDer").value = "";
+        document.getElementById("cenIzq").value = "";
+        document.getElementById("centro").value = "";
+        document.getElementById("cenDer").value = "";
+        document.getElementById("infIzq").value = "";
+        document.getElementById("infCen").value = "";
+        document.getElementById("infDer").value = "";
+        document.getElementById("txtSupIzq").value = "";
+        document.getElementById("txtSupCen").value = "";
+        document.getElementById("txtSupDer").value = "";
+        document.getElementById("txtCenIzq").value = "";
+        document.getElementById("txtCentro").value = "";
+        document.getElementById("txtCenDer").value = "";
+        document.getElementById("txtInfIzq").value = "";
+        document.getElementById("txtInfCen").value = "";
+        document.getElementById("txtInfDer").value = "";
         $("#btnFinalizar").removeAttr('disabled');
       });
   }else{
@@ -350,6 +396,24 @@ $("#btnConfirmar").click(function(){
   var selExistencia = $('#selExistencia').val();
   var selPrecio = $('#selPrecio').val();
   var selFrentes = $('#selFrentes').val();
+  var supIzq = $('#supIzq').val();
+  var supCen = $('#supCen').val();
+  var supDer = $('#supDer').val();
+  var cenIzq = $('#cenIzq').val();
+  var centro = $('#centro').val();
+  var cenDer = $('#cenDer').val();
+  var infIzq = $('#infIzq').val();
+  var infCen = $('#infCen').val();
+  var infDer = $('#infDer').val();
+  var txtSupIzq = $('#txtSupIzq').val();
+  var txtSupCen = $('#txtSupCen').val();
+  var txtSupDer = $('#txtSupDer').val();
+  var txtCenIzq = $('#txtCenIzq').val();
+  var txtCentro = $('#txtCentro').val();
+  var txtCenDer = $('#txtCenDer').val();
+  var txtInfIzq = $('#txtInfIzq').val();
+  var txtInfCen = $('#txtInfCen').val();
+  var txtInfDer = $('#txtInfDer').val();
 
   $("#mns2").css("color", "#0f5132").html("<i class='far fa-save'></i> Agregado con Éxito");
   var parametros = {
@@ -358,7 +422,16 @@ $("#btnConfirmar").click(function(){
         "selTipoExi": selTipoExi,
         "selExistencia":selExistencia,  
         "selPrecio":selPrecio,
-        "selFrentes":selFrentes
+        "selFrentes":selFrentes,
+        "supIzq": (supIzq || txtSupIzq),
+        "supCen": (supCen || txtSupCen),
+        "supDer": (supDer || txtSupDer),
+        "cenIzq": (cenIzq || txtCenIzq),
+        "centro": (centro || txtCentro),
+        "cenDer": (cenDer || txtCenDer),
+        "infIzq": (infIzq || txtInfIzq),
+        "infCen": (infCen || txtInfCen),
+        "infDer": (infDer || txtInfDer)
       }
       $.ajax({
         data:parametros,
@@ -369,8 +442,59 @@ $("#btnConfirmar").click(function(){
       }).done(function(){
         document.getElementById("mns").innerHTML = "";
         $('#btnConfirmar').hide();
-        setTimeout("redireccionarPagina()", 1000);
+        setTimeout("redireccionarPagina()", 2000);
       });
+    });
+
+//MATRIZ guardar datos
+$("#btnNuevaMatriz").click(function(){
+  var supIzq = $('#supIzq').val();
+  var supCen = $('#supCen').val();
+  var supDer = $('#supDer').val();
+  var cenIzq = $('#cenIzq').val();
+  var centro = $('#centro').val();
+  var cenDer = $('#cenDer').val();
+  var infIzq = $('#infIzq').val();
+  var infCen = $('#infCen').val();
+  var infDer = $('#infDer').val();
+  var txtSupIzq = $('#txtSupIzq').val();
+  var txtSupCen = $('#txtSupCen').val();
+  var txtSupDer = $('#txtSupDer').val();
+  var txtCenIzq = $('#txtCenIzq').val();
+  var txtCentro = $('#txtCentro').val();
+  var txtCenDer = $('#txtCenDer').val();
+  var txtInfIzq = $('#txtInfIzq').val();
+  var txtInfCen = $('#txtInfCen').val();
+  var txtInfDer = $('#txtInfDer').val();
+  
+  if(((supIzq == "" && txtSupIzq != "") || (supIzq != "" && txtSupIzq == "" )) && ((supCen == "" && txtSupCen != "") || (supCen != "" && txtSupCen == "" )) && ((supDer == "" && txtSupDer != "") || (supDer != "" && txtSupDer == "" )) &&
+     ((cenIzq == "" && txtCenIzq != "") || (cenIzq != "" && txtCenIzq == "" )) && ((centro == "" && txtCentro != "") || (centro != "" && txtCentro == "" )) && ((cenDer == "" && txtCenDer != "") || (cenDer != "" && txtCenDer == "" )) &&
+     ((infIzq == "" && txtInfIzq != "") || (infIzq != "" && txtInfIzq == "" )) && ((infCen == "" && txtInfCen != "") || (infCen != "" && txtInfCen == "" )) && ((infDer == "" && txtInfDer != "") || (infDer != "" && txtInfDer == "" ))){
+
+    $("#avisoMatriz").css("color", "#0f5132").html("<i class='far fa-save'></i> Agregado con Éxito");
+
+    var parametros = {
+        "action": "guardarMatriz",
+        "supIzq": (supIzq || txtSupIzq),
+        "supCen": (supCen || txtSupCen),
+        "supDer": (supDer || txtSupDer),
+        "cenIzq": (cenIzq || txtCenIzq),
+        "centro": (centro || txtCentro),
+        "cenDer": (cenDer || txtCenDer),
+        "infIzq": (infIzq || txtInfIzq),
+        "infCen": (infCen || txtInfCen),
+        "infDer": (infDer || txtInfDer)
+      }
+      $.ajax({
+        data:parametros,
+        url:'visitasAjax.php',
+        success:function(data){
+          console.log(data);
+        }
+      });
+  }else{
+    $("#avisoMatriz").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> Datos Incorrectos o Vacíos");
+      }
     });
 
 //limpiar avisos
@@ -379,5 +503,8 @@ $(document).on("click", "#btnCerrarF", function(){
   $('#btnConfirmar').show();
 });
 
+$(document).on("click", "#btnCerrarMat", function(){
+  $('#avisoMatriz').html("");
+});
 
 </script>
