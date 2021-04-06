@@ -46,6 +46,14 @@ if($action=="getPVenta"){
       echo "<option value='".$idProducto."'>$nombre</option>";
    } 
 
+}elseif($action=="getNProducto"){
+    $queryRes=mysqli_query($con,"SELECT * From producto");
+    echo "<option value=''>Seleccione</option>";
+   while($res = mysqli_fetch_array($queryRes)){
+       $nombre = $res['nombre'];
+      echo "<option value='".$nombre."'>$nombre</option>";
+   } 
+
 }elseif($action=="getFTipoExi"){
     $queryRes=mysqli_query($con,"SELECT * From tipoexibicion");
     echo "<option value=''>Seleccione</option>";
@@ -152,8 +160,6 @@ if($action=="getPVenta"){
         $queryVisita="INSERT INTO visita(idVisita, idVendedor, idPuntoVenta, fecha) 
                 VALUES ('', $idVendedor, $idPuntoVenta, '$fecha')";
                 mysqli_query($con,$queryVisita);
-    
-                $idVisita->insert_id;
                 $idVisita = mysqli_insert_id($con);
     
     //parte funcional de detallesVisita
@@ -165,11 +171,95 @@ if($action=="getPVenta"){
             $precio=$_SESSION['fichero'][$i]['precio'];
             $frentes=$_SESSION['fichero'][$i]['frentes'];
     
-                $queryDetalles="INSERT INTO detallesvisita(idVisita, idProducto, idTipoExibicion, existencia, precio, frentes) 
-                VALUES ($idVisita, $producto, $tipoExi, '$existencia', $precio, $frentes)";
+                $queryDetalles="INSERT INTO detallesvisita(idDetallesVisita, idVisita, idProducto, idTipoExibicion, existencia, precio, frentes) 
+                VALUES ('', $idVisita, $producto, $tipoExi, '$existencia', $precio, $frentes)";
                 mysqli_query($con,$queryDetalles);
         } 
-             unset($_SESSION["fichero"]);
+
+    //parte funcional de matrixUbicacion
+    $counti = count($_SESSION['matrix']);
+    for($i=0;$i<$counti; $i++){
+        $supIzq=$_SESSION['matrix'][$i]['supIzq'];
+        $supCen=$_SESSION['matrix'][$i]['supCen'];
+        $supDer=$_SESSION['matrix'][$i]['supDer'];
+        $cenIzq=$_SESSION['matrix'][$i]['cenIzq'];
+        $centro=$_SESSION['matrix'][$i]['centro'];
+        $cenDer=$_SESSION['matrix'][$i]['cenDer'];
+        $infIzq=$_SESSION['matrix'][$i]['infIzq'];
+        $infCen=$_SESSION['matrix'][$i]['infCen'];
+        $infDer=$_SESSION['matrix'][$i]['infDer'];
+
+        $idDetallesVisita = mysqli_insert_id($con);
+        $insertMatriz = "INSERT INTO matrizubicacion(idDetallesVisita, supIzq, supCentro, supDer, centroIzq, centroCentro, centroDer, infIzq, infCentro, infDer)
+        VALUES ('$idDetallesVisita', '$supIzq', '$supCen', '$supDer', '$cenIzq', '$centro', '$cenDer', '$infIzq', '$infCen', '$infDer')"; 
+        mysqli_query($con, $insertMatriz);
+        echo $insertMatriz;
     }
+    unset($_SESSION["fichero"]);
+    unset($_SESSION["matrix"]);
+
+//matriz guardar datos
+}elseif($action=="guardarMatriz"){
+    $supIzq=(isset($_REQUEST['supIzq'])&& $_REQUEST['supIzq'] !=NULL)?$_REQUEST['supIzq']:''; 
+    $supCen=(isset($_REQUEST['supCen'])&& $_REQUEST['supCen'] !=NULL)?$_REQUEST['supCen']:'';
+    $supDer=(isset($_REQUEST['supDer'])&& $_REQUEST['supDer'] !=NULL)?$_REQUEST['supDer']:'';
+    $cenIzq=(isset($_REQUEST['cenIzq'])&& $_REQUEST['cenIzq'] !=NULL)?$_REQUEST['cenIzq']:'';
+    $centro=(isset($_REQUEST['centro'])&& $_REQUEST['centro'] !=NULL)?$_REQUEST['centro']:'';
+    $cenDer=(isset($_REQUEST['cenDer'])&& $_REQUEST['cenDer'] !=NULL)?$_REQUEST['cenDer']:'';
+    $infIzq=(isset($_REQUEST['infIzq'])&& $_REQUEST['infIzq'] !=NULL)?$_REQUEST['infIzq']:'';
+    $infCen=(isset($_REQUEST['infCen'])&& $_REQUEST['infCen'] !=NULL)?$_REQUEST['infCen']:'';
+    $infDer=(isset($_REQUEST['infDer'])&& $_REQUEST['infDer'] !=NULL)?$_REQUEST['infDer']:'';
+
+    if(isset($_SESSION['matrix'])){
+        $count = count($_SESSION['matrix']);
+        $datos=array_column($_SESSION['matrix'], 'supIzq', 'supCen', 'supDer', 'cenIzq', 'centro', 'cenDer', 'infIzq', 'infCen', 'infDer');
+   if(!in_array($res, $datos)){
+       $_SESSION['matrix'][$count] = array(
+                'supIzq' => $supIzq,
+                'supCen' => $supCen,
+                'supDer' => $supDer,
+                'cenIzq' => $cenIzq,
+                'centro' => $centro,
+                'cenDer' => $cenDer,
+                'infIzq' => $infIzq,
+                'infCen' => $infCen,
+                'infDer' => $infDer
+            );
+   }else{
+       for($i=0; $i < count($datos); $i++){
+           
+           if($datos[$i]==$res){
+              $_SESSION['matrix'][$i]['supIzq']= $supIzq;
+              $_SESSION['matrix'][$i]['supCen']= $supCen;
+              $_SESSION['matrix'][$i]['supDer']= $supDer;
+              $_SESSION['matrix'][$i]['cenIzq']= $cenIzq;
+              $_SESSION['matrix'][$i]['centro']= $centro;
+              $_SESSION['matrix'][$i]['cenDer']= $cenDer;
+              $_SESSION['matrix'][$i]['infIzq']= $infIzq;
+              $_SESSION['matrix'][$i]['infCen']= $infCen;
+              $_SESSION['matrix'][$i]['infDer']= $infDer;
+
+              echo ($supIzq);
+              echo ($supDer);
+              echo ($supCen);
+              echo ($centro);
+              echo ($cenIzq);
+           }
+       }
+   }
+}else{
+   $_SESSION['matrix'][0] = array(
+    'supIzq' => $supIzq,
+    'supCen' => $supCen,
+    'supDer' => $supDer,
+    'cenIzq' => $cenIzq,
+    'centro' => $centro,
+    'cenDer' => $cenDer,
+    'infIzq' => $infIzq,
+    'infCen' => $infCen,
+    'infDer' => $infDer
+        );
+    }
+}
 
 ?>
