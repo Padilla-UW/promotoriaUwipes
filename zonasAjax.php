@@ -57,7 +57,6 @@ if($action=="getZona"){
               echo json_encode($array);
 
 }elseif($action=="agregarZona"){
-    $idZona=(isset($_REQUEST['idZona'])&& $_REQUEST['idZona'] !=NULL)?$_REQUEST['idZona']:''; 
     $nombreAdd=(isset($_REQUEST['nombreAdd'])&& $_REQUEST['nombreAdd'] !=NULL)?$_REQUEST['nombreAdd']:'';
     mysqli_query($con,'BEGIN');
 
@@ -164,7 +163,6 @@ if($action=="getPuntosV"){
 
 //Agregar
 }elseif($action=="agregarPuntoV"){
-    $idPuntoVenta=(isset($_REQUEST['idPuntoVenta'])&& $_REQUEST['idPuntoVenta'] !=NULL)?$_REQUEST['idPuntoVenta']:''; 
     $nombreAdd=(isset($_REQUEST['nombreAdd'])&& $_REQUEST['nombreAdd'] !=NULL)?$_REQUEST['nombreAdd']:'';
     $tipoAdd=(isset($_REQUEST['tipoAdd'])&& $_REQUEST['tipoAdd'] !=NULL)?$_REQUEST['tipoAdd']:'';
     $zonaAdd=(isset($_REQUEST['zonaAdd'])&& $_REQUEST['zonaAdd'] !=NULL)?$_REQUEST['zonaAdd']:'';
