@@ -226,7 +226,6 @@ include('includes/header.php');
 <script>
 getUsuarioFiltro("#filtroUsuario");
 
-//función para
 $(document).ready(function () {
   load('');
   getTipoUsuario();
@@ -235,7 +234,7 @@ $(document).ready(function () {
 });
 
 //función para mostrar datos en el tbody de la tabla
-//ponemos buscar por si el un futuro se necesita
+//llamamos paginación y filtros
 function load(page, idTipoUsuario, busquedaNombre) {
   var idTipoUsuario = $("#filtroTUsuario").attr("data-userBusc");
   getUsuarioFiltro(idTipoUsuario);
@@ -300,15 +299,14 @@ $("#btnNuevoUsuario").click(function () {
           $('#btnNuevoUsuario').hide();
           $('#avisoAgregar').html("<i class='far fa-save'></i> Agregado con Éxito").css("color", "#0f5132");
         }
+      $('#nombreAdd').val("");
+      $('#apellidosAdd').val("");
+      $('#telAdd').val("");
+      $('#ciudadAdd').val("");
+      $('#rolAdd').val("");
+      $('#correoAdd').val("");
+      $('#passwordAdd').val("");
       }
-    }).done(function () {
-      document.getElementById("nombreAdd").value = "";
-      document.getElementById("apellidosAdd").value = "";
-      document.getElementById("telAdd").value = "";
-      document.getElementById("ciudadAdd").value = "";
-      document.getElementById("rolAdd").value = "";
-      document.getElementById("correoAdd").value = "";
-      document.getElementById("passwordAdd").value = "";
     });
   } else {
     $('#avisoAgregar').html("<i class='fas fa-exclamation-triangle'></i> Datos Incorrectos o Vacíos").css("color", "red");
@@ -316,9 +314,9 @@ $("#btnNuevoUsuario").click(function () {
   }
 });
 
-//EDITAR función para JALAR Datos
+//EDITAR función para obtener datos
 $(document).on("click", "#btnEditModal", function () {
-  var idPersona = $(this).data('id');
+  var idPersona = $(this).attr('data-id');
   var parametros = {
     "action": "getDatosUsuario",
     "idPersona": idPersona
@@ -341,7 +339,7 @@ $(document).on("click", "#btnEditModal", function () {
   })
 });
 
-//EDITAR función para jalar datos de campos editar y realizar validaciones
+//EDITAR función para obtener datos de campos editar y realizar validaciones
 $("#btnEditarUsuario").click(function btnEditarUsuario(idPersona, nombreEdit, apellidosEdit, telEdit, ciudadEdit, rolEdit, correoEdit) {
   var idPersona = $("#btnEditarUsuario").attr('data-id');
   var nombreEdit = $("#nombreEdit").val();
@@ -377,7 +375,7 @@ $("#btnEditarUsuario").click(function btnEditarUsuario(idPersona, nombreEdit, ap
         load();
         if (data == 1) {
           $('#btnEditarUsuario').hide();
-          $('#avisoEditar').html("<i class='far fa-save'></i> Agregado con Éxito").css("color", "#0f5132");
+          $('#avisoEditar').html("<i class='far fa-save'></i> Guardado con Éxito").css("color", "#0f5132");
         }
       }
     });
@@ -387,7 +385,7 @@ $("#btnEditarUsuario").click(function btnEditarUsuario(idPersona, nombreEdit, ap
   }
 });
 
-//CONTRASEÑA función para JALA
+//CONTRASEÑA función para obtener datos
 $(document).on("click", "#btnPassModal", function () {
   var idPersona = $(this).attr('data-id');
   var parametros = {
@@ -405,7 +403,7 @@ $(document).on("click", "#btnPassModal", function () {
   })
 });
 
-//CONTRASEÑA función para jalar datos de campos editar y realizar validaciones
+//CONTRASEÑA función para obtener datos de campos editar y realizar validaciones
 $("#btnEditPassword").click(function btnEditPassword(idPersona, passwordEdit) {
   var idPersona = $("#btnEditPassword").attr('data-id');
   var passwordEdit = $("#passwordEdit").val();
@@ -425,9 +423,8 @@ $("#btnEditPassword").click(function btnEditPassword(idPersona, passwordEdit) {
           $('#btnEditPassword').hide();
           $('#avisoPass').html("<i class='far fa-save'></i> Datos Guardados").css("color", "#0f5132");
         }
+        $('#passwordEdit').val("");
       }
-    }).done(function () {
-      document.getElementById("passwordEdit").value = "";
     });
   } else {
     $('#avisoPass').html("<i class='fas fa-exclamation-triangle'></i> Datos Incorrectos o Vacíos").css("color", "red");
