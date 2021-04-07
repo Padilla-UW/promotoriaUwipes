@@ -243,7 +243,6 @@ function load(page, tipo, busquedaNombre, idZonaV, idVendedorV) {
 
 //AGREGAR
 $("#btnNuevoPuntoV").click(function () {
-  var idPuntoVenta = $("#btnNuevoPuntoV").data('id');
   var nombreAdd = $("#nombreAdd").val();
   var tipoAdd = $("#tipoAdd").val();
   var zonaAdd = $("#zonaAdd").val();
@@ -252,7 +251,6 @@ $("#btnNuevoPuntoV").click(function () {
   if (nombreAdd != "" && tipoAdd != "" && zonaAdd != "" && vendedorAdd != "") {
     var parametros = {
       "action": "agregarPuntoV",
-      "idPuntoVenta": idPuntoVenta,
       "nombreAdd": nombreAdd,
       "tipoAdd": tipoAdd,
       "zonaAdd": zonaAdd,
@@ -268,12 +266,11 @@ $("#btnNuevoPuntoV").click(function () {
           $('#btnNuevoPuntoV').hide();
           $('#avisoAgregar').html("<i class='far fa-save'></i> Agregado con Éxito").css("color", "#0f5132");
         }
+      $('#nombreAdd').val("");
+      $('#tipoAdd').val("0");
+      $('#zonaAdd').val("");
+      $('#vendedorAdd').val("");
       }
-    }).done(function () {
-      document.getElementById("nombreAdd").value = "";
-      document.getElementById("tipoAdd").value = "0";
-      document.getElementById("zonaAdd").value = "";
-      document.getElementById("vendedorAdd").value = "";
     });
   } else {
     $('#avisoAgregar').html("<i class='fas fa-exclamation-triangle'></i> Datos Incorrectos o Vacíos").css("color", "red");
@@ -283,7 +280,7 @@ $("#btnNuevoPuntoV").click(function () {
 
 //EDITAR función para obtener datos
 $(document).on("click", "#btnEditModalP", function () {
-  var idPuntoVenta = $(this).data('id');
+  var idPuntoVenta = $(this).attr('data-id');
   var parametros = {
     "action": "getDatosPuntoV",
     "idPuntoVenta": idPuntoVenta
