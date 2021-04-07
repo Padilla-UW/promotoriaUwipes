@@ -167,13 +167,11 @@ function load(page, busquedaNombre) {
 
 //AGREGAR
 $("#btnNuevaZona").click(function () {
-  var idZona = $("#btnNuevaZona").data('id');
   var nombreAdd = $("#nombreAdd").val();
 
   if (nombreAdd != "") {
     var parametros = {
       "action": "agregarZona",
-      "idZona": idZona,
       "nombreAdd": nombreAdd
     }
     $.ajax({
@@ -187,10 +185,9 @@ $("#btnNuevaZona").click(function () {
           $('#avisoAgregar').html("<i class='far fa-save'></i> Agregado con Éxito").css("color", "#0f5132");
         }else if(data==0){
                 $('#avisoAgregar').html("<i class='bi bi-x-square'></i> Dato Duplicado").css("color", "red");
-              }
+              } 
+              $('#nombreAdd').val("");
       }
-    }).done(function() {
-      document.getElementById("nombreAdd").value = "";
     });
   }else{
     $('#avisoAgregar').html("<i class='fas fa-exclamation-triangle'></i> Datos Incorrectos o Vacíos").css("color", "red");
@@ -200,7 +197,7 @@ $("#btnNuevaZona").click(function () {
 
 //EDITAR función para obtener datos
 $(document).on("click", "#btnEditModal", function () {
-  var idZona = $(this).data('id');
+  var idZona = $(this).attr('data-id');
   var parametros = {
     "action": "getDatosZona",
     "idZona": idZona
