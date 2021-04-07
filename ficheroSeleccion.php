@@ -299,32 +299,31 @@ $("#btnGuardar").click(function(){
         data:parametros,
         url:'visitasAjax.php',
         success:function(data){
-        }
-      }).done(function(){
-        document.getElementById("selProducto").value = "";
-        document.getElementById("selTipoExi").value = "";
-        document.getElementById("selExistencia").value = "0";
-        document.getElementById("selPrecio").value = "";
-        document.getElementById("selFrentes").value = "";
-        document.getElementById("supIzq").value = "";
-        document.getElementById("supCen").value = "";
-        document.getElementById("supDer").value = "";
-        document.getElementById("cenIzq").value = "";
-        document.getElementById("centro").value = "";
-        document.getElementById("cenDer").value = "";
-        document.getElementById("infIzq").value = "";
-        document.getElementById("infCen").value = "";
-        document.getElementById("infDer").value = "";
-        document.getElementById("txtSupIzq").value = "";
-        document.getElementById("txtSupCen").value = "";
-        document.getElementById("txtSupDer").value = "";
-        document.getElementById("txtCenIzq").value = "";
-        document.getElementById("txtCentro").value = "";
-        document.getElementById("txtCenDer").value = "";
-        document.getElementById("txtInfIzq").value = "";
-        document.getElementById("txtInfCen").value = "";
-        document.getElementById("txtInfDer").value = "";
+        $('#selProducto').val("");
+        $('#selTipoExi').val("");
+        $('#selExistencia').val("0");
+        $('#selPrecio').val("");
+        $('#selFrentes').val("");
+        $('#supIzq').val("");
+        $('#supCen').val("");
+        $('#supDer').val("");
+        $('#cenIzq').val("");
+        $('#centro').val("");
+        $('#cenDer').val("");
+        $('#infIzq').val("");
+        $('#infCen').val("");
+        $('#infDer').val("");
+        $('#txtSupIzq').val("");
+        $('#txtSupCen').val("");
+        $('#txtSupDer').val("");
+        $('#txtCenIzq').val("");
+        $('#txtCentro').val("");
+        $('#txtCenDer').val("");
+        $('#txtInfIzq').val("");
+        $('#txtInfCen').val("");
+        $('#txtInfDer').val("");
         $("#btnFinalizar").removeAttr('disabled');
+        }
       });
   }else{
     $("#mns").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> Datos Incorrectos o Vacíos");
@@ -438,11 +437,10 @@ $("#btnConfirmar").click(function(){
         url:'visitasAjax.php',
         success:function(data){
           console.log(data);
-        }
-      }).done(function(){
-        document.getElementById("mns").innerHTML = "";
+        $('#mns').html("");
         $('#btnConfirmar').hide();
         setTimeout("redireccionarPagina()", 2000);
+        }
       });
     });
 
