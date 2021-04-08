@@ -1,4 +1,5 @@
 <?php
+session_start();
 include('includes/menu.php');
 include('includes/header.php');
 ?>
@@ -124,7 +125,7 @@ include('includes/header.php');
           <label for="nombre"><b>DATOS</b></label>
           <br>
           <label for="nombre"><b>Nombre</b></label><br>
-          <input class="form-control" id="nombreAdd" type="text" placeholder="Ingrese su Nombre" name="nombre" required>
+          <input class="form-control" id="nombreAdd" type="text" placeholder="Nombre" name="nombre" required>
           <br>
             <label for="tipo"><b>Tipo</b></label>
             <select class="form-control" id="tipoAdd">
@@ -205,8 +206,6 @@ $(document).ready(function () {
   load('');
   getZonas();
   getVendedor();
-  getEditZonas();
-  getEditVendedor();
   getZonaFiltro();
   getVendedorFiltro();
 });
@@ -274,7 +273,7 @@ $("#btnNuevoPuntoV").click(function () {
       $('#vendedorAdd').val("");
       }
     });
-  }else {
+  }else{
     $('#avisoAgregar').html("<i class='fas fa-exclamation-triangle'></i> Datos Incorrectos o Vacíos").css("color", "red");
     console.log("Existen campos vacios");
   }
@@ -348,6 +347,7 @@ function getZonas() {
     success: function (data) {
       console.log(data);
       $("#zonaAdd").html(data);
+      $("#zonaEdit").html(data);
     }
   });
 }
@@ -362,33 +362,6 @@ function getVendedor() {
     success: function (data) {
       console.log(data);
       $("#vendedorAdd").html(data);
-    }
-  });
-}
-
-function getEditZonas() {
-  var parametros = {
-    "action": "getZonas"
-  }
-  $.ajax({
-    url: 'zonasAjax.php',
-    data: parametros,
-    success: function (data) {
-      console.log(data);
-      $("#zonaEdit").html(data);
-    }
-  });
-}
-
-function getEditVendedor() {
-  var parametros = {
-    "action": "getVendedor"
-  }
-  $.ajax({
-    url: 'zonasAjax.php',
-    data: parametros,
-    success: function (data) {
-      console.log(data);
       $("#vendedorEdit").html(data);
     }
   });
