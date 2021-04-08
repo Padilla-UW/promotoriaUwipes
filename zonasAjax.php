@@ -1,4 +1,5 @@
 <?php
+session_start();
 // añadimos conexion y cachamos datos
 include('includes/conection.php');
     
@@ -171,9 +172,9 @@ if($action=="getPuntosV"){
     mysqli_query($con,'BEGIN');
     $insertPuntoV = "INSERT INTO puntoventa (idPuntoVenta, idVendedor, idZona, nombre, tipo)
     VALUES ('', '$vendedorAdd', '$zonaAdd', '$nombreAdd', '$tipoAdd')"; 
-    mysqli_query($con, $insertPuntoV);
+    $conPuntoV=mysqli_query($con, $insertPuntoV);
     
-    if($insertPuntoV){
+    if($conPuntoV){
         mysqli_query($con,'COMMIT');
         echo 1;
     }else{
@@ -196,9 +197,9 @@ if($action=="getPuntosV"){
 
     mysqli_query($con,'BEGIN');
     $updatePuntoV = "UPDATE puntoventa SET idVendedor='$vendedorEdit', idZona='$zonaEdit', nombre='$nombreEdit', tipo='$tipoEdit' WHERE idPuntoVenta= $idPuntoVenta"; 
-    mysqli_query($con, $updatePuntoV);
+    $conUpdatePuntoV=mysqli_query($con, $updatePuntoV);
 
-    if($updatePuntoV){
+    if($conUpdatePuntoV){
         mysqli_query($con,'COMMIT');
         echo 1;
     }else{
@@ -237,3 +238,5 @@ if($action=="getPuntosV"){
         echo "<a class='dropdown-item opcFilVendedorV' href='#' data-id='".$res['idPersona']."' data-vendedorV='".$res['nombre']."'>".$res['nombre']."</a>";         
     }   
 }
+
+?>
