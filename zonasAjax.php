@@ -218,7 +218,8 @@ if($action=="getPuntosV"){
    } 
 
 }elseif($action=="getVendedor"){
-    $queryVendedor=mysqli_query($con,"SELECT idPersona, nombre From persona");
+    $queryVendedor=mysqli_query($con,"SELECT p.idPersona, p.nombre, u.idPersona, u.idTipoUsuario From 
+    persona p, usuario u WHERE p.idPersona=u.idPersona AND u.idTipoUsuario=2");
     echo "<option value=''>Seleccione</option>";
    while($res = mysqli_fetch_array($queryVendedor)){
        $idPersona = $res['idPersona'];
@@ -233,7 +234,8 @@ if($action=="getPuntosV"){
         echo "<a class='dropdown-item opcFilZonaV' href='#' data-id='".$res['idZona']."' data-zonaV='".$res['nombre']."'>".$res['nombre']."</a>";         
     }   
 }elseif($action == "getVendedorFiltro"){
-    $vende = mysqli_query($con,"SELECT * from persona"); 
+    $vende = mysqli_query($con,"SELECT p.idPersona, p.nombre, u.idPersona, u.idTipoUsuario From 
+    persona p, usuario u WHERE p.idPersona=u.idPersona AND u.idTipoUsuario=2"); 
     while($res = mysqli_fetch_array($vende)){
         echo "<a class='dropdown-item opcFilVendedorV' href='#' data-id='".$res['idPersona']."' data-vendedorV='".$res['nombre']."'>".$res['nombre']."</a>";         
     }   

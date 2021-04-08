@@ -89,7 +89,6 @@ include('includes/header.php');
           <span aria-hidden="true">&times;</span></button>
       </div>
       <div class="modal-body">
-        <form id="formNuevaZona">
           <label for="nombre"><b>DATOS</b></label>
           <br>
           <label for="nombre"><b>Nombre</b></label><br>
@@ -100,7 +99,6 @@ include('includes/header.php');
           <button class="btn btn-light"
             style="margin:1%; border-color:#607d8b; color: black; background-color:#607d8b57;" type="button" data-id=""
             id="btnNuevaZona">Guardar</button>
-        </form>
       </div>
     </div>
   </div>
@@ -118,7 +116,6 @@ include('includes/header.php');
           <span aria-hidden="true">&times;</span></button></button>
       </div>
       <div class="modal-body">
-        <form id="formEditar">
           <label for="nombre"><b>DATOS</b></label>
           <br>
           <label for="nombre"><b>Nombre</b></label><br>
@@ -129,7 +126,6 @@ include('includes/header.php');
           <button type="button" class="btn btn-light"
             style="margin:1%; border-color:#607d8b; color: black; background-color:#607d8b57;" data-id=""
             id="btnEditarZona">Guardar Cambios </button>
-        </form>
       </div>
     </div>
   </div>

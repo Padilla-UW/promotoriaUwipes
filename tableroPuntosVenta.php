@@ -1,4 +1,5 @@
 <?php
+session_start();
 include('includes/menu.php');
 include('includes/header.php');
 ?>
@@ -120,11 +121,10 @@ include('includes/header.php');
           <span aria-hidden="true">&times;</span></button>
       </div>
       <div class="modal-body">
-        <form id="formNuevoPuntoV">
           <label for="nombre"><b>DATOS</b></label>
           <br>
           <label for="nombre"><b>Nombre</b></label><br>
-          <input class="form-control" id="nombreAdd" type="text" placeholder="Ingrese su Nombre" name="nombre" required>
+          <input class="form-control" id="nombreAdd" type="text" placeholder="Nombre" name="nombre" required>
           <br>
             <label for="tipo"><b>Tipo</b></label>
             <select class="form-control" id="tipoAdd">
@@ -145,7 +145,6 @@ include('includes/header.php');
           <button class="btn btn-light"
             style="margin:1%; border-color:#607d8b; color: black; background-color:#607d8b57;" type="button" data-id=""
             id="btnNuevoPuntoV">Guardar</button>
-        </form>
       </div>
     </div>
   </div>
@@ -163,7 +162,6 @@ include('includes/header.php');
           <span aria-hidden="true">&times;</span></button></button>
       </div>
       <div class="modal-body">
-        <form id="formNuevoPuntoV">
           <label for="nombre"><b>DATOS</b></label>
           <br>
           <label for="nombre"><b>Nombre</b></label><br>
@@ -188,7 +186,6 @@ include('includes/header.php');
           <button type="button" class="btn btn-light"
             style="margin:1%; border-color:#607d8b; color: black; background-color:#607d8b57;" data-id=""
             id="btnEditarPuntoV">Guardar Cambios </button>
-        </form>
       </div>
     </div>
   </div>
@@ -205,8 +202,6 @@ $(document).ready(function () {
   load('');
   getZonas();
   getVendedor();
-  getEditZonas();
-  getEditVendedor();
   getZonaFiltro();
   getVendedorFiltro();
 });
@@ -274,7 +269,7 @@ $("#btnNuevoPuntoV").click(function () {
       $('#vendedorAdd').val("");
       }
     });
-  }else {
+  }else{
     $('#avisoAgregar').html("<i class='fas fa-exclamation-triangle'></i> Datos Incorrectos o Vacíos").css("color", "red");
     console.log("Existen campos vacios");
   }
@@ -348,6 +343,7 @@ function getZonas() {
     success: function (data) {
       console.log(data);
       $("#zonaAdd").html(data);
+      $("#zonaEdit").html(data);
     }
   });
 }
@@ -362,33 +358,6 @@ function getVendedor() {
     success: function (data) {
       console.log(data);
       $("#vendedorAdd").html(data);
-    }
-  });
-}
-
-function getEditZonas() {
-  var parametros = {
-    "action": "getZonas"
-  }
-  $.ajax({
-    url: 'zonasAjax.php',
-    data: parametros,
-    success: function (data) {
-      console.log(data);
-      $("#zonaEdit").html(data);
-    }
-  });
-}
-
-function getEditVendedor() {
-  var parametros = {
-    "action": "getVendedor"
-  }
-  $.ajax({
-    url: 'zonasAjax.php',
-    data: parametros,
-    success: function (data) {
-      console.log(data);
       $("#vendedorEdit").html(data);
     }
   });
