@@ -65,7 +65,6 @@ if($action=="getPVenta"){
 
 //guarda datos en fichero boton guardar
 }elseif($action=="guardarFichero"){
-    
     $producto=(isset($_REQUEST['selProducto'])&& $_REQUEST['selProducto'] !=NULL)?$_REQUEST['selProducto']:'';
     $tipoExi=(isset($_REQUEST['selTipoExi'])&& $_REQUEST['selTipoExi'] !=NULL)?$_REQUEST['selTipoExi']:'';
     $existencia=(isset($_REQUEST['selExistencia'])&& $_REQUEST['selExistencia'] !=NULL)?$_REQUEST['selExistencia']:'';
@@ -162,7 +161,7 @@ if($action=="getPVenta"){
                 mysqli_query($con,$queryVisita);
                 $idVisita = mysqli_insert_id($con);
     
-    //parte funcional de detallesVisita
+    //parte funcional de detallesVisita y matrizUbicacion
         $count = count($_SESSION['fichero']);
         for($i=0;$i<$count; $i++){
             $producto=$_SESSION['fichero'][$i]['producto'];
@@ -170,33 +169,29 @@ if($action=="getPVenta"){
             $existencia=$_SESSION['fichero'][$i]['existencia'];
             $precio=$_SESSION['fichero'][$i]['precio'];
             $frentes=$_SESSION['fichero'][$i]['frentes'];
+            $supIzq=$_SESSION['matrix'][$i]['supIzq'];
+            $supCen=$_SESSION['matrix'][$i]['supCen'];
+            $supDer=$_SESSION['matrix'][$i]['supDer'];
+            $cenIzq=$_SESSION['matrix'][$i]['cenIzq'];
+            $centro=$_SESSION['matrix'][$i]['centro'];
+            $cenDer=$_SESSION['matrix'][$i]['cenDer'];
+            $infIzq=$_SESSION['matrix'][$i]['infIzq'];
+            $infCen=$_SESSION['matrix'][$i]['infCen'];
+            $infDer=$_SESSION['matrix'][$i]['infDer'];
     
                 $queryDetalles="INSERT INTO detallesvisita(idDetallesVisita, idVisita, idProducto, idTipoExibicion, existencia, precio, frentes) 
                 VALUES ('', $idVisita, $producto, $tipoExi, '$existencia', $precio, $frentes)";
                 mysqli_query($con,$queryDetalles);
+                $idDetallesVisita = mysqli_insert_id($con);
+                $insertMatriz = "INSERT INTO matrizubicacion(idDetallesVisita, supIzq, supCentro, supDer, centroIzq, centroCentro, centroDer, infIzq, infCentro, infDer)
+                VALUES ('$idDetallesVisita', '$supIzq', '$supCen', '$supDer', '$cenIzq', '$centro', '$cenDer', '$infIzq', '$infCen', '$infDer')"; 
+                mysqli_query($con, $insertMatriz);
+                echo $insertMatriz;
+                var_dump($_SESSION);
         } 
 
-    //parte funcional de matrixUbicacion
-    $counti = count($_SESSION['matrix']);
-    for($i=0;$i<$counti; $i++){
-        $supIzq=$_SESSION['matrix'][$i]['supIzq'];
-        $supCen=$_SESSION['matrix'][$i]['supCen'];
-        $supDer=$_SESSION['matrix'][$i]['supDer'];
-        $cenIzq=$_SESSION['matrix'][$i]['cenIzq'];
-        $centro=$_SESSION['matrix'][$i]['centro'];
-        $cenDer=$_SESSION['matrix'][$i]['cenDer'];
-        $infIzq=$_SESSION['matrix'][$i]['infIzq'];
-        $infCen=$_SESSION['matrix'][$i]['infCen'];
-        $infDer=$_SESSION['matrix'][$i]['infDer'];
-
-        $idDetallesVisita = mysqli_insert_id($con);
-        $insertMatriz = "INSERT INTO matrizubicacion(idDetallesVisita, supIzq, supCentro, supDer, centroIzq, centroCentro, centroDer, infIzq, infCentro, infDer)
-        VALUES ('$idDetallesVisita', '$supIzq', '$supCen', '$supDer', '$cenIzq', '$centro', '$cenDer', '$infIzq', '$infCen', '$infDer')"; 
-        mysqli_query($con, $insertMatriz);
-        echo $insertMatriz;
-    }
-    unset($_SESSION["fichero"]);
-    unset($_SESSION["matrix"]);
+        unset($_SESSION["fichero"]);
+        unset($_SESSION["matrix"]);
 
 //matriz guardar datos
 }elseif($action=="guardarMatriz"){
@@ -213,7 +208,7 @@ if($action=="getPVenta"){
     if(isset($_SESSION['matrix'])){
         $count = count($_SESSION['matrix']);
         $datos=array_column($_SESSION['matrix'], 'supIzq', 'supCen', 'supDer', 'cenIzq', 'centro', 'cenDer', 'infIzq', 'infCen', 'infDer');
-   if(!in_array($res, $datos)){
+   if(!in_array($supIzq, $datos)){
        $_SESSION['matrix'][$count] = array(
                 'supIzq' => $supIzq,
                 'supCen' => $supCen,
@@ -228,7 +223,7 @@ if($action=="getPVenta"){
    }else{
        for($i=0; $i < count($datos); $i++){
            
-           if($datos[$i]==$res){
+           if($datos[$i]==$supIzq){
               $_SESSION['matrix'][$i]['supIzq']= $supIzq;
               $_SESSION['matrix'][$i]['supCen']= $supCen;
               $_SESSION['matrix'][$i]['supDer']= $supDer;
@@ -242,8 +237,12 @@ if($action=="getPVenta"){
               echo ($supIzq);
               echo ($supDer);
               echo ($supCen);
-              echo ($centro);
               echo ($cenIzq);
+              echo ($centro);
+              echo ($cenDer);
+              echo ($infIzq);
+              echo ($infCen);
+              echo ($infDer);
            }
        }
    }
