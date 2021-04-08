@@ -262,9 +262,11 @@ $("#btnNuevoPuntoV").click(function () {
       success: function (data) {
         console.log(data);
         load();
-        if (data == 1) {
+        if(data == 1) {
           $('#btnNuevoPuntoV').hide();
           $('#avisoAgregar').html("<i class='far fa-save'></i> Agregado con Éxito").css("color", "#0f5132");
+        }else{
+        $('#avisoAgregar').html("<i class='fas fa-exclamation-triangle'></i> Datos Incorrectos o Vacíos").css("color", "red");
         }
       $('#nombreAdd').val("");
       $('#tipoAdd').val("0");
@@ -272,7 +274,7 @@ $("#btnNuevoPuntoV").click(function () {
       $('#vendedorAdd').val("");
       }
     });
-  } else {
+  }else {
     $('#avisoAgregar').html("<i class='fas fa-exclamation-triangle'></i> Datos Incorrectos o Vacíos").css("color", "red");
     console.log("Existen campos vacios");
   }
