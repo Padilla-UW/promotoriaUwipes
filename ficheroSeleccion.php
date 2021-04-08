@@ -439,7 +439,7 @@ $("#btnConfirmar").click(function(){
           console.log(data);
         $('#mns').html("");
         $('#btnConfirmar').hide();
-        setTimeout("redireccionarPagina()", 2000);
+        setTimeout("redireccionarPagina()", 1500);
         }
       });
     });
