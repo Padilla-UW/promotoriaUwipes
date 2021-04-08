@@ -128,7 +128,6 @@ include('includes/header.php');
           <span aria-hidden="true">&times;</span></button>
       </div>
       <div class="modal-body">
-        <form id="formMatriz">
           <label for="">Seleccione o ingrese el producto según sea su posición</label>
           <br><br>
           <!-- Sección Superior -->
@@ -208,7 +207,6 @@ include('includes/header.php');
           <button class="btn btn-light"
             style="margin:1%; border-color:#607d8b; color: black; background-color:#607d8b57;" type="button" data-id=""
             id="btnNuevaMatriz">Guardar</button>
-        </form>
       </div>
     </div>
   </div>
