@@ -159,6 +159,30 @@ if($action=="getUsuarios"){
         echo "<a class='dropdown-item opcFilTipoUsu' href='#' data-id='".$res['idTipoUsuario']."' data-tipUsuario='".$res['tipoUsuario']."'>".$res['tipoUsuario']."</a>";         
     } 
     
+//Entrar Login con Sesiones  
+}elseif($action=="entrarLogin"){
+    $correoLogin=(isset($_REQUEST['correoLogin'])&& $_REQUEST['correoLogin'] !=NULL)?$_REQUEST['correoLogin']:'';
+    $passwordLogin=sha1((isset($_REQUEST['passwordLogin'])&& $_REQUEST['passwordLogin'] !=NULL)?$_REQUEST['passwordLogin']:'');
+
+    $result = mysqli_query($con,"SELECT * FROM usuario u, tipousuario t WHERE u.correo = '$correoLogin' and u.contrasena = '$passwordLogin' AND u.idTipoUsuario=t.idTipoUsuario");
+    $row  = mysqli_fetch_array($result);
+    
+    if(count($row)>0){
+        $_SESSION["idUsuario"] = $row['idUsuario'];
+        $_SESSION["tipoUsuario"] = $row['tipoUsuario'];
+    }else{
+        echo 0;
+    }
+
+ if(isset($_SESSION["idUsuario"])){   
+     if($_SESSION["tipoUsuario"]=="Administrador"){
+        echo $_SESSION["tipoUsuario"];
+     }elseif($_SESSION["tipoUsuario"]=="Vendedor"){
+        echo $_SESSION["tipoUsuario"];
+     }  
+ }else{
+     echo 0;
+ }
 }
 
 ?>
