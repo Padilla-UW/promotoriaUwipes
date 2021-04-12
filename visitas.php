@@ -1,4 +1,5 @@
 <?php
+session_start();
 include('includes/menu.php');
 include('includes/header.php');
 ?>
@@ -24,8 +25,6 @@ include('includes/header.php');
 <div class="col-12 col-lg-6">
 <div style="display: flex; align-items: center; justify-content: center;">
     </div>
-    <label for="correo">Correo</label>
-    <input type="email" name="correo" id="selCorreo">
     <br>
     <label for=""><b>Punto de Venta</b></label><br>
     <select name="" id="selPuntoV" class="form-control"></select> 
@@ -62,14 +61,12 @@ function getPVenta() {
 //Botón visita valida o redirecciona
 $("#btnVisita").click(function(){
   var selPuntoV = $('#selPuntoV').val();
-  var selCorreo = $('#selCorreo').val();
-
-  if(selPuntoV != "" && selCorreo != "") {
+ 
+  if(selPuntoV != "") {
     window.location="ficheroSeleccion.php";
     var parametros = {
         "action": "entrarVisita",
-        "selPuntoV": selPuntoV,
-        "selCorreo": selCorreo
+        "selPuntoV": selPuntoV
       };
 }else{
   $("#mns").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> Completar Campos Vacíos");
