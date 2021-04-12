@@ -17,24 +17,13 @@ if($action=="getPVenta"){
 
 //SESSIONES de visita
 }elseif($action=="entrarVisita"){
-    $correoLogin=(isset($_REQUEST['selCorreo'])&& $_REQUEST['selCorreo'] !=NULL)?$_REQUEST['selCorreo']:'';
     $punVenta=(isset($_REQUEST['selPuntoV'])&& $_REQUEST['selPuntoV'] !=NULL)?$_REQUEST['selPuntoV']:'';
-
-    $result = mysqli_query($con, "SELECT * FROM usuario WHERE correo = '$correoLogin'");
-    $row  = mysqli_fetch_array($result);
     
     $_SESSION['checkUsuario'] = $row['correo'];
 
-    if(count($row)>0){
-        $_SESSION["idUsuario"] = $row['idUsuario'];
-        $_SESSION["idPersona"] = $row['idPersona'];
-    }else{
-        echo 0;
-    }
-  
     $_SESSION['checkVisita']=array(
         'punVenta' => $punVenta
-    );   
+    );    
 
 //Selects automáticos
 }elseif($action=="getFProducto"){
