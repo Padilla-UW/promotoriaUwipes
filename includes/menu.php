@@ -1,3 +1,9 @@
+<?php
+session_start();
+
+if($_SESSION["tipoUsuario"]=="Administrador"){
+?>
+
 <!-- MENÚ ADMINISTRADOR -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <a class="navbar-brand" href="#">NavbarAdmin</a>
@@ -10,6 +16,9 @@
     <li class="nav-item">
         <a class="nav-link" href="dashboard.php">Dashboard</a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" href="tableroVisitas.php">Visitas</a>
+      </li>
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Administrar
@@ -19,11 +28,34 @@
           <a class="dropdown-item" href="tableroZonas.php">Zonas</a>
           <a class="dropdown-item" href="tableroPuntosVenta.php">Puntos de Venta</a>
           <a class="dropdown-item" href="productos.php">Productos</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="visitas.php">Visitas(vendedor)</a>
         </div>
       </li>
     </ul>
         <a href="cerrarSesion.php" class="btn btn-light">Cerrar Sesión</a>
   </div>
 </nav>
+
+<?php
+}else{
+?>
+
+<!-- Menú Vendedores -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#">NavbarVendedor</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+    <li class="nav-item">
+        <a class="nav-link" href="visitas.php">Visitas</a>
+      </li>
+    </ul>
+        <a href="cerrarSesion.php" class="btn btn-light">Cerrar Sesión</a>
+  </div>
+</nav>
+
+<?php
+} //cierre else SESSION para menú
+?>
