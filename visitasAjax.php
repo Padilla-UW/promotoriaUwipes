@@ -250,4 +250,132 @@ if($action=="getPVenta"){
     }
 }
 
+//Inicia parte de VISITAS ADMIN ***************************************************************************************
+if($action=="getPVisitas"){
+    //paginación
+    include 'includes/pagination.php';
+    $page = (isset($_REQUEST['page']) && !empty($_REQUEST['page']))?$_REQUEST['page']:1;
+    $per_page = 8; //la cantidad de registros que desea mostrar
+    $adjacents  = 3; //brecha entre páginas después de varios adyacentes
+    $offset = ($page - 1) * $per_page;
+
+    //filtrado x punto de venta/nombre/fecha
+    $idPuntoVenta=(isset($_REQUEST['idPuntoVenta'])&& $_REQUEST['idPuntoVenta'] !=NULL)?$_REQUEST['idPuntoVenta']:'';
+    $idVendedor=(isset($_REQUEST['idVendedor'])&& $_REQUEST['idVendedor'] !=NULL)?$_REQUEST['idVendedor']:'';
+    $fechaInicio=(isset($_REQUEST['fechaInicio'])&& $_REQUEST['fechaInicio'] !=NULL)?$_REQUEST['fechaInicio']:'';
+    $fechaFin=(isset($_REQUEST['fechaFin'])&& $_REQUEST['fechaFin'] !=NULL)?$_REQUEST['fechaFin']:'';
+
+    if($idPuntoVenta != '' || $fecha != '' || $idVendedor != '' || $fechaInicio != '' || $fechaFin != ''){
+        if($idPuntoVenta != '') $sqlVenta = " AND v.idPuntoVenta = '$idPuntoVenta'";
+        if($idVendedor != '') $sqlVendedor = " AND v.idVendedor = '$idVendedor'";
+        if($fechaInicio !='' && $fechaFin !=''){ $sqlFecha = " AND v.fecha BETWEEN '$fechaInicio' AND '$fechaFin'";
+        }elseif($fechaInicio !='' && $fechaFin ==''){ $sqlFecha = " AND v.fecha >= '$fechaInicio'";
+        }elseif($fechaInicio =='' && $fechaFin !=''){ $sqlFecha = " AND v.fecha <= '$fechaFin'";}
+
+        $queryVisitas = "SELECT v.idVisita, v.idVendedor, v.idPuntoVenta, v.fecha, pv.idPuntoVenta, pv.nombre AS nombrePunto,
+        pv.idVendedor, p.nombre AS nombrePersona, p.idPersona FROM visita v, persona p, puntoventa pv WHERE v.idPuntoVenta=pv.idPuntoVenta AND v.idVendedor=p.idPersona";
+        $queryVisitas.=$sqlVenta.$sqlFecha.$sqlVendedor." ORDER BY idVisita LIMIT $offset,$per_page";
+        
+    }else{
+        $queryVisitas = "SELECT v.idVisita, v.idVendedor, v.idPuntoVenta, v.fecha, pv.idPuntoVenta, pv.nombre AS nombrePunto,
+        pv.idVendedor, p.nombre AS nombrePersona, p.idPersona FROM visita v, persona p, puntoventa pv WHERE v.idPuntoVenta=pv.idPuntoVenta AND v.idVendedor=p.idPersona
+        ORDER BY idVisita LIMIT $offset,$per_page";
+    }
+
+    //tabla
+    $query= mysqli_query($con, $queryVisitas);
+    while($res=mysqli_fetch_array($query)){
+        $idVisita=$res['idVisita'];
+        $vendedor=$res['nombrePersona'];
+        $idPuntoVenta=$res['nombrePunto'];
+        $fecha = $res['fecha'];
+        $visitas .= "<tr> 
+                <th> $vendedor </th>
+                <td> $idPuntoVenta </td>
+                <td> $fecha </td>
+                <td><button type='button' data-id='$idVisita' class='btn' id='btnDetalleModal' data-toggle='modal' data-target='#modalDetalles'>Detalles <i class='far fa-edit'></i>
+              </svg></button>
+              <button type='button' data-id='$idVisita' class='btn' id='btnMatrizModal' data-toggle='modal' data-target='#modalMatriz'>Matriz <i class='fab fa-slack-hash'></i></button></td>
+            </tr>";
+    } 
+
+    //paginación
+    $queryVisitas = "SELECT count(*) AS numrows FROM visita v, persona p, puntoventa pv WHERE v.idPuntoVenta=pv.idPuntoVenta AND v.idVendedor=p.idPersona";
+            $count_query = mysqli_query($con, $queryVisitas);
+
+            if($row= mysqli_fetch_array($count_query)):$numrows = $row['numrows'];endif;
+                $total_pages = ceil($numrows/$per_page);
+                $reload = 'tableroVisitas.php';
+        
+                $pagination=paginate($reload, $page, $total_pages, $adjacents);
+                $array = array(
+                    "visitas" => $visitas,
+                    "pagination" => $pagination,
+                );
+              echo json_encode($array);
+
+//FILTRADO BÚSQUEDA
+}elseif($action == "getPVentaFiltro"){
+    $visitas = mysqli_query($con,"SELECT * FROM puntoventa"); 
+    while($res = mysqli_fetch_array($visitas)){
+        echo "<a class='dropdown-item opcFilPunVenta' href='#' data-id='".$res['idPuntoVenta']."' data-tipVisita='".$res['nombre']."'>".$res['nombre']."</a>";         
+    } 
+
+}elseif($action == "getVendedorFiltro"){
+    $vende = mysqli_query($con,"SELECT p.idPersona, p.nombre, u.idPersona, u.idTipoUsuario From 
+    persona p, usuario u WHERE p.idPersona=u.idPersona AND u.idTipoUsuario=2"); 
+    while($res = mysqli_fetch_array($vende)){
+        echo "<a class='dropdown-item opcFilVendedor' href='#' data-id='".$res['idPersona']."' data-tipVende='".$res['nombre']."'>".$res['nombre']."</a>";         
+    }
+
+//detalles
+}elseif($action=="getDetalles"){
+        $idVisita=(isset($_REQUEST['idVisita'])&& $_REQUEST['idVisita'] !=NULL)?$_REQUEST['idVisita']:'';
+        $query= mysqli_query($con,"SELECT v.idVisita, d.idDetallesVisita, d.idVisita, d.idProducto, p.idProducto, p.nombre, d.idTipoExibicion, d.existencia, d.precio, d.frentes, t.idTipoExibicion, t.tipoExibicion
+        FROM detallesvisita d, visita v, producto p, tipoexibicion t WHERE v.idVisita = d.idVisita AND v.idVisita = $idVisita AND p.idProducto=d.idProducto");
+        while($res=mysqli_fetch_array($query)){
+            $producto=$res['nombre'];
+            $idTipoExibicion = $res['tipoExibicion'];
+            $existencia = $res['existencia'];
+            $precio = $res['precio'];
+            $frentes = $res['frentes'];
+             
+            echo "<tr> 
+                    <td> $producto </td>
+                    <td> $idTipoExibicion </td>
+                    <td> $existencia </td>
+                    <td> $precio </td>
+                    <td> $frentes </td>
+                </tr>";
+        } 
+
+//detalles Matriz
+}elseif($action=="getDetalleMatriz"){
+        $idVisita=(isset($_REQUEST['idVisita'])&& $_REQUEST['idVisita'] !=NULL)?$_REQUEST['idVisita']:'';
+        $query= mysqli_query($con,"SELECT * FROM detallesvisita d, matrizubicacion u, visita v 
+        WHERE d.idDetallesVisita = u.idDetallesVisita AND d.idVisita = $idVisita AND d.idVisita = v.idVisita");
+        while($res=mysqli_fetch_array($query)){
+            $supIzq = $res['supIzq'];
+            $supCen = $res['supCentro'];
+            $supDer = $res['supDer'];
+            $centroIzq = $res['centroIzq'];
+            $centroCentro = $res['centroCentro'];
+            $centroDer = $res['centroDer'];
+            $infIzq = $res['infIzq'];
+            $infCen = $res['infCentro'];
+            $infDer = $res['infDer'];
+           
+            echo "<tr> 
+                    <td> $supIzq </td>
+                    <td> $supCen </td>
+                    <td> $supDer </td>
+                    <td> $centroIzq </td>
+                    <td> $centroCentro </td>
+                    <td> $centroDer </td>
+                    <td> $infIzq </td>
+                    <td> $infCen </td>
+                    <td> $infDer </td>    
+                </tr>";
+        } 
+    }
 ?>
