@@ -1,6 +1,11 @@
 <?php
 include('includes/menu.php');
 include('includes/header.php');
+
+if($_SESSION["tipoUsuario"]!="Administrador"){
+  echo '<script type="text/javascript">alert("Inicie sesión nuevamente.");</script>';
+  echo '<script type="text/javascript">onload=window.location="index.php";</script>';
+}else{
 ?>
 
 <style>
@@ -250,3 +255,7 @@ $(document).on("click", "#btnCerrarEdit", function () {
   $('#btnEditarZona').show();
 });
 </script>
+
+<?php
+} //cierre llave else SESSION
+?>
