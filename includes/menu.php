@@ -36,7 +36,7 @@ if($_SESSION["tipoUsuario"]=="Administrador"){
 </nav>
 
 <?php
-}else{
+}elseif($_SESSION["tipoUsuario"]=="Vendedor"){
 ?>
 
 <!-- Menú Vendedores -->
