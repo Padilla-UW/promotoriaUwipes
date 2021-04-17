@@ -3,6 +3,11 @@ session_start();
 
 include('includes/menu.php');
 include('includes/header.php');
+
+if($_SESSION["tipoUsuario"]!="Administrador"){
+  echo '<script type="text/javascript">alert("Inicie sesión nuevamente.");</script>';
+  echo '<script type="text/javascript">onload=window.location="index.php";</script>';
+}else{
 ?>
 
 <style>
@@ -32,7 +37,7 @@ include('includes/header.php');
 <!-- Filtrados Búsqueda -->
 <div class="container" style="margin-top:10px">
   <div class="row justify-content-between">
-    <div class="col-6 col-lg-5" id="filtros">
+    <div class="col-6 col-lg-7" id="filtros">
       <div class="btn-group" role="group">
         <button id="filtroPVenta" type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown"
           aria-haspopup="true" aria-expanded="false">
@@ -48,21 +53,27 @@ include('includes/header.php');
         </button>
         <div class="dropdown-menu" aria-labelledby="btnGroupDrop1" id="filtroVendedor">
         </div>
-      </div>  
+      </div> 
+      <div class="btn-group" role="group">
+        <button id="filtroZonas" type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
+          <i class="fas fa-filter"></i> Zona
+        </button>
+        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1" id="filtroZona">
+        </div>
+      </div> 
     </div>
-    <div class="row">
-    <div class="col">
+    <div class="col-2">
     <label for="">Desde:</label>
       <input type="date" class="form-control" id="fechaInicio" onchange="load()">
     </div>
-    <div class="col">
+    <div class="col-2">
     <label for="">Hasta:</label>
       <input type="date" class="form-control" id="fechaFin" onchange="load()">
     </div>
     <div class="col">
     <i class="far fa-calendar-times" id="calendario"></i>
     </div></div>
-  </div>
 </div>
 <br>
 <!--Fin Filtrados Búsqueda -->
@@ -96,10 +107,9 @@ include('includes/header.php');
 <!-- FIN Tabla Visita -->
 
 <!-- Modal Detalles-->
-<div class="modal fade" id="modalDetalles" tabindex="-1" aria-labelledby="modalDetallesLabel" aria-hidden="true"
-  data-backdrop="static" data-keyboard="false">
+<div class="modal fade" id="modalDetalles" tabindex="-1" aria-labelledby="modalDetallesLabel" aria-hidden="true">
   <div class="modal-dialog">
-    <div class="modal-content">
+    <div class="modal-content" style="width:120%;">
       <div class="modal-header">
         <h5 class="modal-title" id="modalDetallesLabel" style="color:#607d8b">Detalles</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="btnCerrarDetalles">
@@ -114,6 +124,7 @@ include('includes/header.php');
                    <th>Existencia</th>
                    <th>Precio</th>
                    <th>Frentes</th>
+                   <th>Ver</th>
                </tr>
            </thead>
            <tbody id="tablaDetalles">
@@ -126,10 +137,9 @@ include('includes/header.php');
 <!-- FIN Modal Detalles-->
 
 <!-- Modal Matriz-->
-<div class="modal fade" id="modalMatriz" tabindex="-1" aria-labelledby="modalMatrizLabel" aria-hidden="true"
-  data-backdrop="static" data-keyboard="false">
+<div class="modal fade" id="modalMatriz" tabindex="-1" aria-labelledby="modalMatrizLabel" aria-hidden="true">
   <div class="modal-dialog">
-    <div class="modal-content" style="width:190%;">
+    <div class="modal-content" style="width:120%;">
       <div class="modal-header">
         <h5 class="modal-title" id="modalMatrizLabel" style="color:#607d8b">Matriz</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="btnCerrarMatriz">
@@ -142,17 +152,33 @@ include('includes/header.php');
                    <th>Sup Izq</th>
                    <th>Sup Centro</th>
                    <th>Sup Der</th>
+               </tr>
+           </thead>
+           <tbody id="tablaMatrizSup">
+           </tbody>
+       </table> 
+       <table class="table">
+           <thead>
+               <tr>
                    <th>Cen Izq</th>
                    <th>Cen Centro</th>
                    <th>Cen Der</th>
+               </tr>
+           </thead>
+           <tbody id="tablaMatrizCen">
+           </tbody>
+       </table>
+       <table class="table">
+           <thead>
+               <tr>
                    <th>Inf Izq</th>
                    <th>Inf Centro</th>
                    <th>Inf Der</th>
                </tr>
            </thead>
-           <tbody id="tablaMatriz">
+           <tbody id="tablaMatrizInf">
            </tbody>
-       </table> 
+       </table>
       </div>
     </div>
   </div>
@@ -164,20 +190,24 @@ include('includes/header.php');
 <script>
 getPVentaFiltro("#filtroPuntoVenta");
 getVendedorFiltro("#filtroVendedor");
+getZonaFiltro("#filtroZona");
 
 $(document).ready(function () {
   load('');
   getPVentaFiltro();
   getVendedorFiltro();
+  getZonaFiltro();
 });
 
 //función para mostrar datos en el tbody de la tabla
 //llamamos paginación y filtros
-function load(page, idPuntoVenta, fechaInicio, fechaFin, idVendedor) {
+function load(page, idPuntoVenta, fechaInicio, fechaFin, idVendedor, idZona) {
   var idPuntoVenta = $("#filtroPVenta").attr("data-visitBusc");
   getPVentaFiltro(idPuntoVenta);
   var idVendedor = $("#filtroVendedores").attr("data-vendeBusc");
   getVendedorFiltro(idVendedor);
+  var idZona = $("#filtroZonas").attr("data-zonaBusc");
+  getZonaFiltro(idZona);
   var fechaInicio = $("#fechaInicio").val();
   var fechaFin = $("#fechaFin").val();
   
@@ -187,7 +217,8 @@ function load(page, idPuntoVenta, fechaInicio, fechaFin, idVendedor) {
     "idPuntoVenta": idPuntoVenta,
     "fechaInicio": fechaInicio,
     "fechaFin": fechaFin,
-    "idVendedor": idVendedor
+    "idVendedor": idVendedor,
+    "idZona": idZona
   }
   $.ajax({
     data: parametros,
@@ -228,6 +259,19 @@ function getVendedorFiltro(filtro) {
   });
 }
 
+function getZonaFiltro(filtro) {
+  var parametros = {
+    "action": "getZonaFiltro"
+  }
+  $.ajax({
+    url: "visitasAjax.php",
+    data: parametros,
+    success: function (data) {
+      $(filtro).html(data);
+    }
+  });
+}
+
 //Aparece bolita de búsqueda en filtros
 $(document).on("click", ".opcFilPunVenta", function () {
   var pVentaBusc = $(this).attr('data-id');
@@ -253,6 +297,18 @@ $(document).on("click", ".opcFilVendedor", function () {
     $("#filtros").append('<a class="badge badge-pill badge-secondary" href="#" id="buscVende">' + idVendedor + ' <i class="far fa-times-circle"></i></a>');
 });
 
+$(document).on("click", ".opcFilZona", function () {
+  var zonaBusc = $(this).attr('data-id');
+  var idZona = $(this).attr('data-tipZona');
+  $("#filtroZonas").attr("data-zonaBusc", zonaBusc);
+  load();
+  if ($("#buscZona").length) {
+    $("#buscZona").remove();
+  }
+  if (zonaBusc)
+    $("#filtros").append('<a class="badge badge-pill badge-secondary" href="#" id="buscZona">' + idZona + ' <i class="far fa-times-circle"></i></a>');
+});
+
 //limpiar avisos
 $(document).on("click", "#buscPVenta", function() {
   $("#filtroPVenta").attr('data-visitBusc', '');
@@ -263,6 +319,12 @@ $(document).on("click", "#buscPVenta", function() {
 $(document).on("click", "#buscVende", function() {
   $("#filtroVendedores").attr('data-vendeBusc', '');
   $("#buscVende").remove();
+  load();
+});
+
+$(document).on("click", "#buscZona", function() {
+  $("#filtroZonas").attr('data-zonaBusc', '');
+  $("#buscZona").remove();
   load();
 });
 
@@ -295,24 +357,56 @@ function getDetalles(idVisita){
 
 //modal matriz
 $(document).on("click", "#btnMatrizModal", function() {
-    var idVisita =  $(this).attr("data-id");
-    getDetalleMatriz(idVisita);
+    var idDetallesVisita =  $(this).attr("data-id");
+    getDetalleMatrizSup(idDetallesVisita);
+    getDetalleMatrizCen(idDetallesVisita);
+    getDetalleMatrizInf(idDetallesVisita);
 });
 
-function getDetalleMatriz(idVisita){
+function getDetalleMatrizSup(idDetallesVisita){
   var parametros={
-    "action":"getDetalleMatriz",
-    "idVisita": idVisita
+    "action":"getDetalleMatrizSup",
+    "idDetallesVisita": idDetallesVisita
   }
   $.ajax({
     data:parametros,
     url:'visitasAjax.php',
     success: function(data){
-      $("#tablaMatriz").html(data);
+      $("#tablaMatrizSup").html(data);
     }
   });
 }
 
+function getDetalleMatrizCen(idDetallesVisita){
+  var parametros={
+    "action":"getDetalleMatrizCen",
+    "idDetallesVisita": idDetallesVisita
+  }
+  $.ajax({
+    data:parametros,
+    url:'visitasAjax.php',
+    success: function(data){
+      $("#tablaMatrizCen").html(data);
+    }
+  });
+}
 
+function getDetalleMatrizInf(idDetallesVisita){
+  var parametros={
+    "action":"getDetalleMatrizInf",
+    "idDetallesVisita": idDetallesVisita
+  }
+  $.ajax({
+    data:parametros,
+    url:'visitasAjax.php',
+    success: function(data){
+      $("#tablaMatrizInf").html(data);
+    }
+  });
+}
 
 </script>
+
+<?php
+} //cierre llave else SESSION
+?>
