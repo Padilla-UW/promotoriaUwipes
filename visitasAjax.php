@@ -262,19 +262,21 @@ if($action=="getPVisitas"){
     //filtrado x punto de venta/nombre/fecha
     $idPuntoVenta=(isset($_REQUEST['idPuntoVenta'])&& $_REQUEST['idPuntoVenta'] !=NULL)?$_REQUEST['idPuntoVenta']:'';
     $idVendedor=(isset($_REQUEST['idVendedor'])&& $_REQUEST['idVendedor'] !=NULL)?$_REQUEST['idVendedor']:'';
+    $idZona=(isset($_REQUEST['idZona'])&& $_REQUEST['idZona'] !=NULL)?$_REQUEST['idZona']:'';
     $fechaInicio=(isset($_REQUEST['fechaInicio'])&& $_REQUEST['fechaInicio'] !=NULL)?$_REQUEST['fechaInicio']:'';
     $fechaFin=(isset($_REQUEST['fechaFin'])&& $_REQUEST['fechaFin'] !=NULL)?$_REQUEST['fechaFin']:'';
 
-    if($idPuntoVenta != '' || $fecha != '' || $idVendedor != '' || $fechaInicio != '' || $fechaFin != ''){
+    if($idPuntoVenta != '' || $fecha != '' || $idVendedor != '' || $fechaInicio != '' || $fechaFin != '' || $idZona != ''){
         if($idPuntoVenta != '') $sqlVenta = " AND v.idPuntoVenta = '$idPuntoVenta'";
         if($idVendedor != '') $sqlVendedor = " AND v.idVendedor = '$idVendedor'";
-        if($fechaInicio !='' && $fechaFin !=''){ $sqlFecha = " AND v.fecha BETWEEN '$fechaInicio' AND '$fechaFin'";
-        }elseif($fechaInicio !='' && $fechaFin ==''){ $sqlFecha = " AND v.fecha >= '$fechaInicio'";
-        }elseif($fechaInicio =='' && $fechaFin !=''){ $sqlFecha = " AND v.fecha <= '$fechaFin'";}
+        if($idZona != '') $sqlZona = " AND pv.idZona = '$idZona'";
+        if($fechaInicio !='' && $fechaFin !='') $sqlFecha1 = " AND v.fecha BETWEEN '$fechaInicio' AND '$fechaFin'";
+        if($fechaInicio !='' && $fechaFin =='') $sqlFecha2 = " AND v.fecha >= '$fechaInicio'";
+        if($fechaInicio =='' && $fechaFin !='') $sqlFecha3 = " AND v.fecha <= '$fechaFin'";
 
         $queryVisitas = "SELECT v.idVisita, v.idVendedor, v.idPuntoVenta, v.fecha, pv.idPuntoVenta, pv.nombre AS nombrePunto,
-        pv.idVendedor, p.nombre AS nombrePersona, p.idPersona FROM visita v, persona p, puntoventa pv WHERE v.idPuntoVenta=pv.idPuntoVenta AND v.idVendedor=p.idPersona";
-        $queryVisitas.=$sqlVenta.$sqlFecha.$sqlVendedor." ORDER BY idVisita LIMIT $offset,$per_page";
+        pv.idVendedor, p.nombre AS nombrePersona, p.idPersona, pv.idZona FROM visita v, persona p, puntoventa pv WHERE v.idPuntoVenta=pv.idPuntoVenta AND v.idVendedor=p.idPersona";
+        $queryVisitas.=$sqlVenta.$sqlFecha1.$sqlFecha2.$sqlFecha3.$sqlVendedor.$sqlZona." ORDER BY idVisita LIMIT $offset,$per_page";
         
     }else{
         $queryVisitas = "SELECT v.idVisita, v.idVendedor, v.idPuntoVenta, v.fecha, pv.idPuntoVenta, pv.nombre AS nombrePunto,
@@ -294,8 +296,7 @@ if($action=="getPVisitas"){
                 <td> $idPuntoVenta </td>
                 <td> $fecha </td>
                 <td><button type='button' data-id='$idVisita' class='btn' id='btnDetalleModal' data-toggle='modal' data-target='#modalDetalles'>Detalles <i class='far fa-edit'></i>
-              </svg></button>
-              <button type='button' data-id='$idVisita' class='btn' id='btnMatrizModal' data-toggle='modal' data-target='#modalMatriz'>Matriz <i class='fab fa-slack-hash'></i></button></td>
+              </svg></button></td>
             </tr>";
     } 
 
@@ -328,12 +329,19 @@ if($action=="getPVisitas"){
         echo "<a class='dropdown-item opcFilVendedor' href='#' data-id='".$res['idPersona']."' data-tipVende='".$res['nombre']."'>".$res['nombre']."</a>";         
     }
 
+}elseif($action == "getZonaFiltro"){
+    $zona = mysqli_query($con,"SELECT * from zona"); 
+    while($res = mysqli_fetch_array($zona)){
+        echo "<a class='dropdown-item opcFilZona' href='#' data-id='".$res['idZona']."' data-tipZona='".$res['nombre']."'>".$res['nombre']."</a>";         
+    } 
+
 //detalles
 }elseif($action=="getDetalles"){
         $idVisita=(isset($_REQUEST['idVisita'])&& $_REQUEST['idVisita'] !=NULL)?$_REQUEST['idVisita']:'';
         $query= mysqli_query($con,"SELECT v.idVisita, d.idDetallesVisita, d.idVisita, d.idProducto, p.idProducto, p.nombre, d.idTipoExibicion, d.existencia, d.precio, d.frentes, t.idTipoExibicion, t.tipoExibicion
-        FROM detallesvisita d, visita v, producto p, tipoexibicion t WHERE v.idVisita = d.idVisita AND v.idVisita = $idVisita AND p.idProducto=d.idProducto");
+        FROM detallesvisita d, visita v, producto p, tipoexibicion t WHERE v.idVisita = d.idVisita AND v.idVisita = $idVisita AND p.idProducto=d.idProducto AND d.idTipoExibicion=t.idTipoExibicion");
         while($res=mysqli_fetch_array($query)){
+            $idDetallesVisita=$res['idDetallesVisita'];
             $producto=$res['nombre'];
             $idTipoExibicion = $res['tipoExibicion'];
             $existencia = $res['existencia'];
@@ -346,32 +354,52 @@ if($action=="getPVisitas"){
                     <td> $existencia </td>
                     <td> $precio </td>
                     <td> $frentes </td>
+                    <td><button type='button' data-id='$idDetallesVisita' class='btn' style='padding:0%;margin:0%' id='btnMatrizModal' data-toggle='modal' data-target='#modalMatriz'>
+                   Matriz </button></td>
                 </tr>";
         } 
 
 //detalles Matriz
-}elseif($action=="getDetalleMatriz"){
-        $idVisita=(isset($_REQUEST['idVisita'])&& $_REQUEST['idVisita'] !=NULL)?$_REQUEST['idVisita']:'';
+}elseif($action=="getDetalleMatrizSup"){
+        $idDetallesVisita=(isset($_REQUEST['idDetallesVisita'])&& $_REQUEST['idDetallesVisita'] !=NULL)?$_REQUEST['idDetallesVisita']:'';
         $query= mysqli_query($con,"SELECT * FROM detallesvisita d, matrizubicacion u, visita v 
-        WHERE d.idDetallesVisita = u.idDetallesVisita AND d.idVisita = $idVisita AND d.idVisita = v.idVisita");
+        WHERE d.idDetallesVisita = u.idDetallesVisita AND d.idDetallesVisita = $idDetallesVisita AND d.idVisita = v.idVisita");
         while($res=mysqli_fetch_array($query)){
             $supIzq = $res['supIzq'];
             $supCen = $res['supCentro'];
             $supDer = $res['supDer'];
+           
+            echo "<tr> 
+                    <td> $supIzq </td>
+                    <td> $supCen </td>
+                    <td> $supDer </td>    
+                </tr>";
+        } 
+    }elseif($action=="getDetalleMatrizCen"){
+        $idDetallesVisita=(isset($_REQUEST['idDetallesVisita'])&& $_REQUEST['idDetallesVisita'] !=NULL)?$_REQUEST['idDetallesVisita']:'';
+        $query= mysqli_query($con,"SELECT * FROM detallesvisita d, matrizubicacion u, visita v 
+        WHERE d.idDetallesVisita = u.idDetallesVisita AND d.idDetallesVisita = $idDetallesVisita AND d.idVisita = v.idVisita");
+        while($res=mysqli_fetch_array($query)){
             $centroIzq = $res['centroIzq'];
             $centroCentro = $res['centroCentro'];
             $centroDer = $res['centroDer'];
+            
+            echo "<tr> 
+                    <td> $centroIzq </td>
+                    <td> $centroCentro </td>
+                    <td> $centroDer </td> 
+                </tr>";
+        } 
+    }elseif($action=="getDetalleMatrizInf"){
+        $idDetallesVisita=(isset($_REQUEST['idDetallesVisita'])&& $_REQUEST['idDetallesVisita'] !=NULL)?$_REQUEST['idDetallesVisita']:'';
+        $query= mysqli_query($con,"SELECT * FROM detallesvisita d, matrizubicacion u, visita v 
+        WHERE d.idDetallesVisita = u.idDetallesVisita AND d.idDetallesVisita = $idDetallesVisita AND d.idVisita = v.idVisita");
+        while($res=mysqli_fetch_array($query)){
             $infIzq = $res['infIzq'];
             $infCen = $res['infCentro'];
             $infDer = $res['infDer'];
            
             echo "<tr> 
-                    <td> $supIzq </td>
-                    <td> $supCen </td>
-                    <td> $supDer </td>
-                    <td> $centroIzq </td>
-                    <td> $centroCentro </td>
-                    <td> $centroDer </td>
                     <td> $infIzq </td>
                     <td> $infCen </td>
                     <td> $infDer </td>    
