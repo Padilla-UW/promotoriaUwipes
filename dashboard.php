@@ -61,9 +61,22 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
 
 <!-- Gráfica -->
 <div class="container">
+<div class="row">
 <div class="col-4">
-<select class="form-control" name="grafica" id="selGrafica">
-</select></div>
+<label for="">Paso 1 - Punto de Venta</label>
+<select class="form-control" name="grafica" id="selGrafica"></select>
+</div>
+<div class="col-4">
+<label for="">Paso 2 - Fecha de inicio de Semana</label><br>
+<input class="form-control" type="date" id="fechaSemana" onchange="getGrafica()">
+</div>
+<div id="btnLimpiarG" class="col-4">
+<label for="">Paso 3 - Borrar para volver a insertar</label>
+<button style="margin1; border-radius:5px;" class="form-control btn-light" onclick="limpiarGrafica()">Borrar Contenido en Gráfica</button>
+</div>
+</div>
+<br>
+<br>
 <div>
   <canvas id="myChart"></canvas>
 </div>
@@ -77,16 +90,20 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
     getTopProdPropio();
     getTopProdCompetencia();
     getTopProdAccesible();
-    getGrafica();
+    $('#btnLimpiarG').hide();
 });
 
 //GRÁFICA
 function getGrafica(){
   var selGrafica = $("#selGrafica").val();
+  var fechaSemana = $("#fechaSemana").val();
+  
   var parametros = {
     "action": "getGrafica",
-    "selGrafica": selGrafica
+    "selGrafica": selGrafica,
+    "fechaSemana": fechaSemana
   }
+  $('#btnLimpiarG').show();
     $.ajax({
         data:parametros,
         url: "dashboardAjax.php",
@@ -94,21 +111,19 @@ function getGrafica(){
         contentType: "application/json; charset=utf-8",
         method: "GET",
         success: function(data) {
-            var fecha = [];
             var precio = [];
             var nombre = [];
             console.log(data);
  
             for (var i in data) {
-                fecha.push(data[i].fecha);
                 precio.push(data[i].precio);
                 nombre.push(data[i].nombre);  
             }
 
             const chartdata = {
-                labels: fecha,
+                labels: nombre,
                 datasets: [{
-                    label: 'Precio ' + (nombre),
+                    label: 'Precio ',
                     backgroundColor: '#ff6384a8', //color puntos
                     borderColor: 'rgb(255, 99, 132)', //color línea
                     data: precio, //datos Y
@@ -118,7 +133,7 @@ function getGrafica(){
 
             // configuración
             const config = {
-                type: 'line', //tipo de gráfica
+                type: 'bar', //tipo de gráfica
                 data: chartdata,
                 options: {
                     responsive: true,
@@ -128,7 +143,7 @@ function getGrafica(){
                         },
                         title: {
                             display: true,
-                            text: 'Gráfica Precios'
+                            text: 'Gráfica Precios Productos'
                         }
                     }
                 },
@@ -206,6 +221,11 @@ function getTopProdAccesible(){
     }
   });
 }
+
+function limpiarGrafica(){
+  location.reload();
+}
+
 </script>
 
 <?php
