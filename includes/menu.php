@@ -56,6 +56,7 @@ if($_SESSION["tipoUsuario"]=="Administrador"){
   </div>
 </nav>
 
+
 <?php
 } //cierre else SESSION para menú
 ?>
