@@ -64,9 +64,11 @@ while($res=mysqli_fetch_array($query)){
 //GRÁFICA PUNTOS DE VENTA/PRECIO/PRODUCTO
 }elseif($action=="getGrafica"){
     $selGrafica=(isset($_REQUEST['selGrafica'])&& $_REQUEST['selGrafica'] !=NULL)?$_REQUEST['selGrafica']:'';
+    $fechaSemana=(isset($_REQUEST['fechaSemana'])&& $_REQUEST['fechaSemana'] !=NULL)?$_REQUEST['fechaSemana']:'';
 
     $sqlProductos="SELECT v.idVisita, v.idPuntoVenta, v.fecha, p.idProducto, p.nombre, d.idDetallesVisita, d.idProducto, d.idVisita, d.precio 
-    FROM visita v, detallesVisita d, producto p WHERE idPuntoVenta = 17 AND v.idVisita = d.idVisita AND p.idProducto=d.idProducto;";
+    FROM visita v, detallesVisita d, producto p WHERE idPuntoVenta = '$selGrafica' AND v.idVisita = d.idVisita AND p.idProducto=d.idProducto
+    AND (v.fecha>='$fechaSemana' AND v.fecha<date_add('$fechaSemana', INTERVAL 8 DAY))";
 
     $result = mysqli_query($con,$sqlProductos);
 
