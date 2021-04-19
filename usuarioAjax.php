@@ -1,4 +1,5 @@
 <?php
+session_start();
 // añadimos conexion y cachamos datos
 include('includes/conection.php');
     
@@ -45,8 +46,7 @@ if($action=="getUsuarios"){
                 <td> $idTipoUsuario </td>
                 <td> $correo </td>
                 <td> $ciudad </td>
-                <td><button type='button' data-id='$idPersona' class='btn' id='btnEditModal' data-toggle='modal' data-target='#modalEditar'>Datos <i class='far fa-edit'></i>
-              </svg></button>
+                <td><button type='button' data-id='$idPersona' class='btn' id='btnEditModal' data-toggle='modal' data-target='#modalEditar'>Datos <i class='far fa-edit'></i></button>
               <button type='button' data-id='$idPersona' class='btn' id='btnPassModal' data-toggle='modal' data-target='#modalPassword'>Contraseña <i class='fas fa-user-lock'></i></button></td>
             </tr>";
     } 
@@ -83,12 +83,12 @@ if($action=="getUsuarios"){
 
     mysqli_query($con,'BEGIN');
     $updatePersona = "UPDATE usuario u, persona p SET nombre='$nombreEdit', apellidos='$apellidosEdit', telefono='$telEdit', ciudad='$ciudadEdit' WHERE p.idPersona=u.idPersona AND p.idPersona= $idPersona"; 
-    mysqli_query($con, $updatePersona);
+    $conUpdatePersona=mysqli_query($con, $updatePersona);
     
     $updateUsuario = "UPDATE usuario u, persona p SET u.idTipoUsuario='$rolEdit', u.correo='$correoEdit' WHERE p.idPersona=u.idPersona AND p.idPersona= $idPersona";
-    mysqli_query($con, $updateUsuario);
+    $conUpdateUsuario=mysqli_query($con, $updateUsuario);
 
-    if($updatePersona && $updateUsuario ){
+    if($conUpdatePersona && $conUpdateUsuario){
         mysqli_query($con,'COMMIT');
         echo 1;
     }else{
@@ -103,9 +103,9 @@ if($action=="getUsuarios"){
         
     mysqli_query($con,'BEGIN');
     $updateContrasena = "UPDATE persona p, usuario u SET u.contrasena = SHA1('$passwordEdit') WHERE p.idPersona=u.idPersona AND p.idPersona= $idPersona";
-    mysqli_query($con, $updateContrasena);
+    $conUpdateContrasena=mysqli_query($con, $updateContrasena);
 
-    if($updateContrasena){
+    if($conUpdateContrasena){
         mysqli_query($con,'COMMIT');
         echo 1;
     }else{
@@ -128,13 +128,13 @@ if($action=="getUsuarios"){
     mysqli_query($con,'BEGIN');
     $insertPersona = "INSERT INTO persona (idPersona, nombre, apellidos, telefono, ciudad)
     VALUES ('', '$nombreAdd', '$apellidosAdd', '$telAdd', '$ciudadAdd')"; 
-    mysqli_query($con, $insertPersona);
+    $conInsertPersona=mysqli_query($con, $insertPersona);
     $idPersona = mysqli_insert_id($con);
     $insertUsuario = "INSERT INTO usuario (idUsuario, idPersona, idTipoUsuario, correo, contrasena)
     VALUES ('', '$idPersona', '$rolAdd', '$correoAdd', SHA1('$passwordAdd'))";
-    mysqli_query($con, $insertUsuario);
+    $conInsertUsuario=mysqli_query($con, $insertUsuario);
     
-    if($insertPersona && $insertUsuario ){
+    if($conInsertPersona && $conInsertUsuario){
         mysqli_query($con,'COMMIT');
         echo 1;
     }else{
@@ -158,8 +158,8 @@ if($action=="getUsuarios"){
     while($res = mysqli_fetch_array($usuarios)){
         echo "<a class='dropdown-item opcFilTipoUsu' href='#' data-id='".$res['idTipoUsuario']."' data-tipUsuario='".$res['tipoUsuario']."'>".$res['tipoUsuario']."</a>";         
     } 
-    
-//Entrar Login con Sesiones  
+   
+//Entrar Login con Sesiones
 }elseif($action=="entrarLogin"){
     $correoLogin=(isset($_REQUEST['correoLogin'])&& $_REQUEST['correoLogin'] !=NULL)?$_REQUEST['correoLogin']:'';
     $passwordLogin=sha1((isset($_REQUEST['passwordLogin'])&& $_REQUEST['passwordLogin'] !=NULL)?$_REQUEST['passwordLogin']:'');
