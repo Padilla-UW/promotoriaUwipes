@@ -81,7 +81,7 @@ $("#btnLogin").click(function(){
         success:function(data){
           console.log(data);
           if(data=="Administrador"){
-            window.location="tableroUsuarios.php";
+            window.location="dashboard.php";
           }
           if(data=="Vendedor"){
             window.location="visitas.php";
