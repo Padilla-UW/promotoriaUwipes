@@ -1,4 +1,5 @@
 <?php
+session_start();
 include('includes/menu.php');
 include('includes/header.php');
 
@@ -11,14 +12,14 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
 <style>
 .page-item.active .page-link {
     z-index: 3;
-    color: #607d8b;
-    background-color: #607d8b57;
-    border-color: #607d8b;
+    color: white;
+    background-color: rgba(34,34,34,0.75);
+    border-color: black;
 }
 
 .page-item .page-link {
     z-index: 2;
-    color: #607d8b;
+    color: black;
     background-color: white;
 }
 </style>
@@ -49,7 +50,8 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
   <div class="row justify-content-between">
     <div class="col-6 col-lg-5" id="filtros">
       <div class="btn-group" role="group">
-        <button id="filtroTUsuario" type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <button id="filtroTUsuario" type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
           <i class="fas fa-filter"></i> Tipo de Usuario
         </button>
         <div class="dropdown-menu" aria-labelledby="btnGroupDrop1" id="filtroUsuario">
@@ -136,9 +138,9 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
           <br>
           <div id="avisoAgregar"> </div>
           <br>
-          <button class="btn btn-light"
-            style="margin:1%; border-color:#607d8b; color: black; background-color:#607d8b57;" type="button" data-id=""
-            id="btnNuevoUsuario">Guardar</button>
+          <button class="btn btn-outline-success"
+            style="margin:1%;" type="button" data-id=""
+            id="btnNuevoUsuario">Agregar <i class="far fa-save"></i></button>
       </div>
     </div>
   </div>
@@ -185,9 +187,9 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
           <br><br>
           <div id="avisoEditar"> </div>
           <br>
-          <button type="button" class="btn btn-light"
-            style="margin:1%; border-color:#607d8b; color: black; background-color:#607d8b57;" data-id=""
-            id="btnEditarUsuario">Guardar Cambios </button>
+          <button type="button" class="btn btn-outline-success"
+            style="margin:1%;" data-id=""
+            id="btnEditarUsuario">Guardar <i class="far fa-save"></i></button>
       </div>
     </div>
   </div>
@@ -202,7 +204,7 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
       <div class="modal-header">
         <h5 class="modal-title" id="modalPasswordLabel" style="color:#607d8b">Actualizar Contraseña</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="btnCerrarPass">
-          <span aria-hidden="true">&times;</span></button></button></button>
+          <span aria-hidden="true">&times;</span></button>
       </div>
       <div class="modal-body">
           <label for="password"><b>Nueva Contraseña</b></label><br>
@@ -211,9 +213,9 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
           <br>
           <div id="avisoPass"></div>
           <br>
-          <button type="button" class="btn btn-light"
-            style="margin:1%; border-color:#607d8b; color: black; background-color:#607d8b57;" data-id=""
-            id="btnEditPassword">Cambiar Contraseña </button>
+          <button type="button" class="btn btn-outline-success"
+            style="margin:1%;" data-id=""
+            id="btnEditPassword">Cambiar Contraseña <i class="far fa-save"></i></button>
       </div>
     </div>
   </div>
@@ -228,7 +230,6 @@ getUsuarioFiltro("#filtroUsuario");
 $(document).ready(function () {
   load('');
   getTipoUsuario();
-  getEditUsuario();
   getUsuarioFiltro();
 });
 
@@ -297,14 +298,16 @@ $("#btnNuevoUsuario").click(function () {
         if (data == 1) {
           $('#btnNuevoUsuario').hide();
           $('#avisoAgregar').html("<i class='far fa-save'></i> Agregado con Éxito").css("color", "#0f5132");
+          $('#nombreAdd').val("");
+          $('#apellidosAdd').val("");
+          $('#telAdd').val("");
+          $('#ciudadAdd').val("");
+          $('#rolAdd').val("");
+          $('#correoAdd').val("");
+          $('#passwordAdd').val("");
+        }else{
+        $('#avisoAgregar').html("<i class='fas fa-exclamation-triangle'></i> Datos Incorrectos o Vacíos").css("color", "red");
         }
-      $('#nombreAdd').val("");
-      $('#apellidosAdd').val("");
-      $('#telAdd').val("");
-      $('#ciudadAdd').val("");
-      $('#rolAdd').val("");
-      $('#correoAdd').val("");
-      $('#passwordAdd').val("");
       }
     });
   } else {
@@ -375,6 +378,8 @@ $("#btnEditarUsuario").click(function btnEditarUsuario(idPersona, nombreEdit, ap
         if (data == 1) {
           $('#btnEditarUsuario').hide();
           $('#avisoEditar').html("<i class='far fa-save'></i> Guardado con Éxito").css("color", "#0f5132");
+        }else{
+          $('#avisoEditar').html("<i class='fas fa-exclamation-triangle'></i> Datos Incorrectos o Vacíos").css("color", "red");
         }
       }
     });
@@ -442,19 +447,6 @@ function getTipoUsuario() {
     success: function (data) {
       console.log(data);
       $("#rolAdd").html(data);
-    }
-  });
-}
-
-function getEditUsuario() {
-  var parametros = {
-    "action": "getTipoUsuario"
-  }
-  $.ajax({
-    url: 'usuarioAjax.php',
-    data: parametros,
-    success: function (data) {
-      console.log(data);
       $("#rolEdit").html(data);
     }
   });

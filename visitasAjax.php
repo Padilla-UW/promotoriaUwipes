@@ -296,7 +296,7 @@ if($action=="getPVisitas"){
                 <th> $vendedor </th>
                 <td> $idPuntoVenta </td>
                 <td> $fecha </td>
-                <td><button type='button' data-id='$idVisita' class='btn' id='btnDetalleModal' data-toggle='modal' data-target='#modalDetalles'>Detalles <i class='far fa-edit'></i>
+                <td><button type='button' data-id='$idVisita' class='btn' id='btnDetalleModal' data-toggle='modal' data-target='#modalDetalles'>Detalles <i class='far fa-eye'></i>
               </svg></button></td>
             </tr>";
     } 

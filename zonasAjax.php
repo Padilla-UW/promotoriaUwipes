@@ -170,18 +170,18 @@ if($action=="getPuntosV"){
     $vendedorAdd=(isset($_REQUEST['vendedorAdd'])&& $_REQUEST['vendedorAdd'] !=NULL)?$_REQUEST['vendedorAdd']:'';
 
     mysqli_query($con,'BEGIN');
-    $insertPuntoV = "INSERT INTO puntoventa (idPuntoVenta, idVendedor, idZona, nombre, tipo)
-    VALUES ('', '$vendedorAdd', '$zonaAdd', '$nombreAdd', '$tipoAdd')"; 
-    $conPuntoV=mysqli_query($con, $insertPuntoV);
-    
-    if($conPuntoV){
+    $duplicado=mysqli_query($con, "SELECT nombre FROM puntoventa WHERE nombre='$nombreAdd' AND idZona='$zonaAdd'");
+    if(mysqli_num_rows($duplicado)>0){
+        mysqli_query($con,'ROLLBACK');
+        echo 0;
+        }else{      
+        $insertPuntoV = "INSERT INTO puntoventa (idPuntoVenta, idVendedor, idZona, nombre, tipo)
+        VALUES ('', '$vendedorAdd', '$zonaAdd', '$nombreAdd', '$tipoAdd')";
+        mysqli_query($con, $insertPuntoV);
         mysqli_query($con,'COMMIT');
         echo 1;
-    }else{
-        mysqli_query($con,'ROLLBACK');
-        echo 0; 
-    }
-
+        }
+        
 //editar
 }elseif($action=="getDatosPuntoV"){
     $idPuntoVenta=(isset($_REQUEST['idPuntoVenta'])&& $_REQUEST['idPuntoVenta'] !=NULL)?$_REQUEST['idPuntoVenta']:'';
@@ -196,16 +196,16 @@ if($action=="getPuntosV"){
     $vendedorEdit=(isset($_REQUEST['vendedorEdit'])&& $_REQUEST['vendedorEdit'] !=NULL)?$_REQUEST['vendedorEdit']:'';
 
     mysqli_query($con,'BEGIN');
-    $updatePuntoV = "UPDATE puntoventa SET idVendedor='$vendedorEdit', idZona='$zonaEdit', nombre='$nombreEdit', tipo='$tipoEdit' WHERE idPuntoVenta= $idPuntoVenta"; 
-    $conUpdatePuntoV=mysqli_query($con, $updatePuntoV);
-
-    if($conUpdatePuntoV){
+    $duplicado=mysqli_query($con, "SELECT nombre FROM puntoventa WHERE nombre='$nombreEdit' AND idZona='$zonaEdit'");
+    if(mysqli_num_rows($duplicado)>0){
+        mysqli_query($con,'ROLLBACK');
+        echo 0;
+        }else{      
+        $updatePuntoV = "UPDATE puntoventa SET idVendedor='$vendedorEdit', idZona='$zonaEdit', nombre='$nombreEdit', tipo='$tipoEdit' WHERE idPuntoVenta= $idPuntoVenta"; 
+        mysqli_query($con, $updatePuntoV);
         mysqli_query($con,'COMMIT');
         echo 1;
-    }else{
-        mysqli_query($con,'ROLLBACK');
-        echo 0; 
-    }
+        }
 
 //SELECT AUTOMATICO
 }elseif($action=="getZonas"){

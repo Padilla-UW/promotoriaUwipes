@@ -147,9 +147,8 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
           <br>
           <div id="avisoAgregar"> </div>
           <br>
-          <button class="btn btn-light"
-            style="margin:1%; border-color:#607d8b; color: black; background-color:#607d8b57;" type="button" data-id=""
-            id="btnNuevoPuntoV">Guardar</button>
+          <button class="btn btn-outline-success" type="button" data-id="" id="btnNuevoPuntoV">Agregar 
+          <i class="far fa-save"></i></button>
       </div>
     </div>
   </div>
@@ -188,15 +187,13 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
           <br>
           <div id="avisoEditar"> </div>
           <br>
-          <button type="button" class="btn btn-light"
-            style="margin:1%; border-color:#607d8b; color: black; background-color:#607d8b57;" data-id=""
-            id="btnEditarPuntoV">Guardar Cambios </button>
+          <button type="button" class="btn btn-outline-success" style="margin:1%;" data-id="" id="btnEditarPuntoV">
+          Guardar <i class="far fa-save"></i></button>
       </div>
     </div>
   </div>
 </div>
-<!-- FIN Editar nuevo punto venta-->
-
+<!-- FIN Editar punto venta-->
 
 <?php include ('includes/footer.php')?>
 
@@ -265,13 +262,13 @@ $("#btnNuevoPuntoV").click(function () {
         if(data == 1) {
           $('#btnNuevoPuntoV').hide();
           $('#avisoAgregar').html("<i class='far fa-save'></i> Agregado con Éxito").css("color", "#0f5132");
+          $('#nombreAdd').val("");
+          $('#tipoAdd').val("0");
+          $('#zonaAdd').val("");
+          $('#vendedorAdd').val("");
         }else{
         $('#avisoAgregar').html("<i class='fas fa-exclamation-triangle'></i> Datos Incorrectos o Vacíos").css("color", "red");
         }
-      $('#nombreAdd').val("");
-      $('#tipoAdd').val("0");
-      $('#zonaAdd').val("");
-      $('#vendedorAdd').val("");
       }
     });
   }else{
@@ -328,6 +325,8 @@ $("#btnEditarPuntoV").click(function btnEditarPuntoV(idPuntoVenta, nombreEdit, t
         if (data == 1) {
           $('#btnEditarPuntoV').hide();
           $('#avisoEditar').html("<i class='far fa-save'></i> Guardado con Éxito").css("color", "#0f5132");
+        }else{
+          $('#avisoEditar').html("<i class='fas fa-exclamation-triangle'></i> Datos Incorrectos o Vacíos").css("color", "red");
         }
       }
     });

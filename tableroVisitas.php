@@ -65,14 +65,14 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
     </div>
     <div class="col-2">
     <label for="">Desde:</label>
-      <input type="date" class="form-control" id="fechaInicio" onchange="load()">
+      <input type="date" class="form-control" id="fechaInicio" onchange="load()" onclick="aparecerCalendario()">
     </div>
     <div class="col-2">
     <label for="">Hasta:</label>
-      <input type="date" class="form-control" id="fechaFin" onchange="load()">
+      <input type="date" class="form-control" id="fechaFin" onchange="load()" onclick="aparecerCalendario()">
     </div>
     <div class="col">
-    <i class="far fa-calendar-times" id="calendario"></i>
+    <i class="far fa-calendar-times" id="calendario" onclick="desaparecerCalendario()"></i>
     </div></div>
 </div>
 <br>
@@ -197,6 +197,7 @@ $(document).ready(function () {
   getPVentaFiltro();
   getVendedorFiltro();
   getZonaFiltro();
+  $('#calendario').hide();
 });
 
 //función para mostrar datos en el tbody de la tabla
@@ -405,8 +406,17 @@ function getDetalleMatrizInf(idDetallesVisita){
   });
 }
 
+function aparecerCalendario(){
+  $('#calendario').show();
+}
+
+function desaparecerCalendario(){
+  $('#calendario').hide();
+}
+
 </script>
 
 <?php
 } //cierre llave else SESSION
 ?>
+
