@@ -11,7 +11,7 @@
         </div>
         <div class="row">
             <div class="col">
-                <button type="button" class="btn btn-light" data-toggle="modal" data-target="#agreProducModal">Agregar <i class="fas fa-plus"></i> </button>
+                <button type="button" class="btn btn-light" data-toggle="modal" data-target="#agreProducModal" id="btnModalAgreProd">Agregar <i class="fas fa-plus"></i> </button>
             </div>
         </div> <br>
         <div class="row justify-content-between">
@@ -142,6 +142,11 @@
                                     <div class="form-group col-12">
                                         <label for="precioProd">Imagen</label>
                                         <input type="file" class="form-control-file" id="imgProd" lang="es">
+                                    </div>
+                                </div>
+                                <div class="row justify-content-center">
+                                    <div class="col-10 text-center" id="msjAgregarProd">
+
                                     </div>
                                 </div>
                             </form>
@@ -309,6 +314,12 @@
                 $("#filtros").append('<a class="badge badge-pill badge-secondary" href="#" id="buscCategoria">' + categoria + ' <i class="far fa-times-circle"></i></a>');
         });
 
+        $("#agreProducModal").on('show.bs.modal', function() {
+            var nombre = $("#nombreProd").val('');
+            var precio = $("#precioProd").val('');
+            var conteo = $("#conteoProd").val('');
+            var img = $("#imgProd").val('');
+        });
 
         //Eliminar los filtros cuando lo borran en la x
         $(document).on("click", "#buscProcedencia", function() {
@@ -390,7 +401,20 @@
                 cache: false,
                 processData: false,
                 success: function(data) {
-                    console.log(data);
+                    if (data == 1) {
+                        $("#msjAgregarProd").html("Producto Guardado");
+                        $("#msjAgregarProd").removeClass("border-warning border-danger");
+                        $("#msjAgregarProd").addClass("border border-success rounded");
+                        load();
+                    } else if (data == 2) {
+                        $("#msjAgregarProd").html("Producto repetido");
+                        $("#msjAgregarProd").removeClass("border-success border-danger");
+                        $("#msjAgregarProd").addClass("border border-warning rounded");
+                    } else {
+                        $("#msjAgregarProd").html("Error");
+                        $("#msjAgregarProd").removeClass("border-success border-warning");
+                        $("#msjAgregarProd").addClass("border border-danger rounded");
+                    }
                 }
             });
         }
@@ -473,7 +497,7 @@
                         $("#msjEditar").removeClass("border-warning border-danger");
                         $("#msjEditar").addClass("border border-success rounded");
                         load();
-                    } else if (data == 3) {
+                    } else if (data == 2) {
                         $("#msjEditar").html("Producto repetido");
                         $("#msjEditar").removeClass("border-success border-danger");
                         $("#msjEditar").addClass("border border-warning rounded");
