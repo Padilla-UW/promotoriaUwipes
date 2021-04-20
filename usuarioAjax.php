@@ -126,21 +126,22 @@ if($action=="getUsuarios"){
     $passwordAdd=(isset($_REQUEST['passwordAdd'])&& $_REQUEST['passwordAdd'] !=NULL)?$_REQUEST['passwordAdd']:'';
 
     mysqli_query($con,'BEGIN');
-    $insertPersona = "INSERT INTO persona (idPersona, nombre, apellidos, telefono, ciudad)
-    VALUES ('', '$nombreAdd', '$apellidosAdd', '$telAdd', '$ciudadAdd')"; 
-    $conInsertPersona=mysqli_query($con, $insertPersona);
-    $idPersona = mysqli_insert_id($con);
-    $insertUsuario = "INSERT INTO usuario (idUsuario, idPersona, idTipoUsuario, correo, contrasena)
-    VALUES ('', '$idPersona', '$rolAdd', '$correoAdd', SHA1('$passwordAdd'))";
-    $conInsertUsuario=mysqli_query($con, $insertUsuario);
-    
-    if($conInsertPersona && $conInsertUsuario){
+    $duplicado=mysqli_query($con, "SELECT correo FROM usuario WHERE correo='$correoAdd'");
+
+    if(mysqli_num_rows($duplicado)>0){
+        mysqli_query($con,'ROLLBACK');
+        echo 0;
+        }else{      
+            $insertPersona = "INSERT INTO persona (idPersona, nombre, apellidos, telefono, ciudad)
+            VALUES ('', '$nombreAdd', '$apellidosAdd', '$telAdd', '$ciudadAdd')"; 
+            mysqli_query($con, $insertPersona);
+            $idPersona = mysqli_insert_id($con);
+            $insertUsuario = "INSERT INTO usuario (idUsuario, idPersona, idTipoUsuario, correo, contrasena)
+            VALUES ('', '$idPersona', '$rolAdd', '$correoAdd', SHA1('$passwordAdd'))";
+            mysqli_query($con, $insertUsuario);
         mysqli_query($con,'COMMIT');
         echo 1;
-    }else{
-        mysqli_query($con,'ROLLBACK');
-        echo 0; 
-    }
+        }
 
 //SELECT AUTOMÁTICO
 }elseif($action=="getTipoUsuario"){
