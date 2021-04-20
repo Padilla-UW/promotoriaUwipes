@@ -62,7 +62,7 @@ if($_SESSION["tipoUsuario"]!="Vendedor"){
     <input type="number" class="form-control" name="" id="selFrentes" min="0">
     <br>
     <button type="button" class="btn btn-light" style="margin-top:5px;" data-toggle="modal"
-    data-target="#modalMatriz" id="btnMatriz">Matriz <i class="fab fa-slack-hash"></i></button>
+    data-target="#modalMatriz" id="btnMatriz">Matriz <i class="fab fa-buromobelexperte"></i></button>
     <br>
     <div id="mns"></div>
     <br>
