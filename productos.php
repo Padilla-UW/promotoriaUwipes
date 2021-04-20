@@ -47,7 +47,7 @@
 
             </div>
             <div class="col-6 col-lg-4">
-                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                <input type="text" class="form-control" id="buscNombreProd" aria-describedby="emailHelp">
             </div>
         </div>
     </div> <br>
@@ -223,6 +223,8 @@
                 </div>
             </div>
         </div>
+
+
     </div>
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.bundle.min.js"></script>
@@ -287,6 +289,9 @@
                 $("#filtros").append('<a class="badge badge-pill badge-secondary" href="#" id="buscSegmento">' + segmentoBusc + ' <i class="far fa-times-circle"></i></a>');
         });
 
+        $("#buscNombreProd").keyup(function() {
+            load();
+        });
         $(document).on("click", ".opcFilCateProd", function() {
             var categoriaBusc = $(this).attr('data-id');
             var categoria = $(this).attr('data-categoria');
@@ -366,7 +371,8 @@
             var procedencia = $("#filtroProcedProd").attr('data-proceBusc');
             var categoria = $("#filtroCateProd").attr("data-cateBusc");
             var segmento = $("#filtroSegmProd").attr('data-segmBusc');
-            getProductos(pagina, procedencia, categoria, segmento);
+            var nombre = $("#buscNombreProd").val();
+            getProductos(pagina, procedencia, categoria, segmento, nombre);
         }
 
         function agregarProducto(producto) {
@@ -425,6 +431,7 @@
                 url: "productosAjax.php",
                 data: parametros,
                 success: function(data) {
+                    console.log(data);
                     $("#tablaProductos").html(data);
                 }
             });

@@ -55,9 +55,10 @@
             if($categoria != '') $sqlCategoria = " AND c.idCategoria = '$categoria'";
             if($procedencia != '')$sqlProcedencia = " AND p.procedencia = '$procedencia'";
             if($segmento != '')$sqlSegmento = " AND p.segmento = '$segmento'";
+            if($nombre != '')$sqlNombre = " AND p.nombre LIKE '%$nombre%' ";
             $queryProductos = "SELECT * FROM producto p, categoria c WHERE p.idCategoria = c.idCategoria ";
 
-            $queryProductos.=$sqlCategoria.$sqlProcedencia.$sqlSegmento;
+            $queryProductos.=$sqlCategoria.$sqlProcedencia.$sqlSegmento.$sqlNombre;
 
             echo $queryProductos;
             $productos = mysqli_query($con,$queryProductos);
