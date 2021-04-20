@@ -378,6 +378,8 @@ $("#btnEditarUsuario").click(function btnEditarUsuario(idPersona, nombreEdit, ap
         if (data == 1) {
           $('#btnEditarUsuario').hide();
           $('#avisoEditar').html("<i class='far fa-save'></i> Guardado con Éxito").css("color", "#0f5132");
+        }else{
+          $('#avisoEditar').html("<i class='fas fa-exclamation-triangle'></i> Datos Incorrectos o Vacíos").css("color", "red");
         }
       }
     });
