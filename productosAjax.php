@@ -95,6 +95,30 @@
         $producto = mysqli_fetch_array(mysqli_query($con,"SELECT * FROM producto WHERE idProducto = $idProducto"));
        echo json_encode($producto);
 
+    }elseif($action == "actualizarProd"){
+        $idProducto=(isset($_REQUEST['idProducto'])&& $_REQUEST['idProducto'] !=NULL)?$_REQUEST['idProducto']:'';
+        $nombre=(isset($_REQUEST['nombre'])&& $_REQUEST['nombre'] !=NULL)?$_REQUEST['nombre']:'';
+        $categoria=(isset($_REQUEST['categoria'])&& $_REQUEST['categoria'] !=NULL)?$_REQUEST['categoria']:'';
+        $conteo=(isset($_REQUEST['conteo'])&& $_REQUEST['conteo'] !=NULL)?$_REQUEST['conteo']:'';
+        $precio=(isset($_REQUEST['precio'])&& $_REQUEST['precio'] !=NULL)?$_REQUEST['precio']:'';
+        $procedencia=(isset($_REQUEST['procedencia'])&& $_REQUEST['procedencia'] !=NULL)?$_REQUEST['procedencia']:'';
+        $repetido=existeProducto($nombre,$idProducto,$con);
+        if($repetido > 0){
+            echo 3;
+        }else{
+            $queryUpdateProd = mysqli_query($con,"Update producto SET nombre ='$nombre', idCategoria = '$categoria', conteo = '$conteo', precio = '$precio', procedencia = '$procedencia' WHERE idProducto = $idProducto");
+            if($queryUpdateProd){
+                echo 1;
+            }else{
+                echo 0;
+            }
+        }
+        
+    }
+
+    function existeProducto($producto,$idProducto,$con){
+        $productos = mysqli_num_rows(mysqli_query($con,"SELECT * FROM producto WHERE nombre = '$producto' AND idProducto != $idProducto"));
+        return $productos;
     }
 
 

@@ -208,13 +208,18 @@
                                         <input type="number" min="0" class="form-control" id="precioProdEdit">
                                     </div>
                                 </div>
+                                <div class="row justify-content-center">
+                                    <div class="col-10 text-center p-2" id="msjEditar">
+
+                                    </div>
+                                </div>
                             </form>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                    <button type="button" id="btnEditarProd" class="btn btn-outline-success">Agregar <i class="far fa-save"></i></button>
+                    <button type="button" id="btnEditarProd" class="btn btn-outline-success">Guardar <i class="far fa-save"></i></button>
                 </div>
             </div>
         </div>
@@ -318,11 +323,11 @@
         //Fin de eliminar los filtros cuando lo borran en la x
 
         $(document).on("click", ".editProd", function() {
+            $("#msjEditar").removeClass("border-success border-warning border-danger");
+            $("#msjEditar").html("");
             var idProducto = $(this).attr('data-id');
-            console.log("Entra a editar producto: " + idProducto);
             $("#btnEditarProd").attr('data-id', idProducto);
             var producto = getProducto(idProducto);
-            console.log(producto);
             $("#nombreProdEdit").val(producto.nombre);
             $("#categoriaProdEdit").val(producto.idCategoria);
             $("#procedenciaProdEdit").val(producto.procedencia);
@@ -331,6 +336,31 @@
             $("#precioProdEdit").val(producto.precio);
         });
 
+        $("#btnEditarProd").click(function() {
+            var idProducto = $(this).attr('data-id');
+            var nombre = $("#nombreProdEdit").val();
+            var categoria = $("#categoriaProdEdit").val();
+            var procedencia = $("#procedenciaProdEdit").val();
+            var segmento = $("#segmentoProdEdit").val();
+            var conteo = $("#conteoProdEdit").val();
+            var precio = $("#precioProdEdit").val();
+
+            if (!nombre || !categoria || !procedencia || !segmento || !conteo || !precio) {
+                console.log("LLena todos los campos");
+            } else {
+                var parametros = {
+                    "action": "actualizarProd",
+                    "idProducto": idProducto,
+                    "nombre": nombre,
+                    "categoria": categoria,
+                    "procedencia": procedencia,
+                    "segmento": segmento,
+                    "conteo": conteo,
+                    "precio": precio
+                }
+                editarProd(parametros);
+            }
+        });
 
         function load(pagina) {
             var procedencia = $("#filtroProcedProd").attr('data-proceBusc');
@@ -415,5 +445,29 @@
                 }
             });
             return producto;
+        }
+
+        function editarProd(parametros) {
+            $.ajax({
+                data: parametros,
+                url: "productosAjax.php",
+                success: function(data) {
+                    console.log(data);
+                    if (data == 1) {
+                        $("#msjEditar").html("Cambios Guardados");
+                        $("#msjEditar").removeClass("border-warning border-danger");
+                        $("#msjEditar").addClass("border border-success rounded");
+                        load();
+                    } else if (data == 3) {
+                        $("#msjEditar").html("Producto repetido");
+                        $("#msjEditar").removeClass("border-success border-danger");
+                        $("#msjEditar").addClass("border border-warning rounded");
+                    } else {
+                        $("#msjEditar").html("Error");
+                        $("#msjEditar").removeClass("border-success border-warning");
+                        $("#msjEditar").addClass("border border-danger rounded");
+                    }
+                }
+            });
         }
     </script>
