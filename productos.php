@@ -74,6 +74,11 @@
                 </table>
             </div>
         </div>
+        <div class="row">
+            <div class="col ">
+                <div class="justify-content-center d-flex" id="paginationProd"></div>
+            </div>
+        </div>
     </div>
 
     <!-- Modal Agregar Producto-->
@@ -431,8 +436,11 @@
                 url: "productosAjax.php",
                 data: parametros,
                 success: function(data) {
+                    /* console.log(data); */
                     console.log(data);
-                    $("#tablaProductos").html(data);
+                    datos = JSON.parse(data);
+                    $("#tablaProductos").html(datos.productos);
+                    $("#paginationProd").html(datos.pagination);
                 }
             });
         }

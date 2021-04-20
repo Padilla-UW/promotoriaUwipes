@@ -51,21 +51,32 @@
         $procedencia=(isset($_REQUEST['procedencia'])&& $_REQUEST['procedencia'] !=NULL)?$_REQUEST['procedencia']:'';
         $page = (isset($_REQUEST['pagina']) && !empty($_REQUEST['pagina']))?$_REQUEST['pagina']:1;
         
+        include 'includes/pagination.php'; 
+        $per_page = 8; //la cantidad de registros que desea mostrar
+        $adjacents  = 4; //brecha entre páginas después de varios adyacentes
+        $offset = ($page - 1) * $per_page;
+
+
+
         if($nombre != '' || $segmento != '' || $categoria != '' || $procedencia != ''){
             if($categoria != '') $sqlCategoria = " AND c.idCategoria = '$categoria'";
             if($procedencia != '')$sqlProcedencia = " AND p.procedencia = '$procedencia'";
             if($segmento != '')$sqlSegmento = " AND p.segmento = '$segmento'";
             if($nombre != '')$sqlNombre = " AND p.nombre LIKE '%$nombre%' ";
-            $queryProductos = "SELECT * FROM producto p, categoria c WHERE p.idCategoria = c.idCategoria ";
-
-            $queryProductos.=$sqlCategoria.$sqlProcedencia.$sqlSegmento.$sqlNombre;
-
-            echo $queryProductos;
+            $queryProductos = "SELECT * FROM producto p, categoria c WHERE p.idCategoria = c.idCategoria";
+            $queryProductosCount=$queryProductos.$sqlCategoria.$sqlProcedencia.$sqlSegmento.$sqlNombre;
+            $queryProductos.=$sqlCategoria.$sqlProcedencia.$sqlSegmento.$sqlNombre." LIMIT $offset,$per_page";
+            
             $productos = mysqli_query($con,$queryProductos);
+            $productosCount = mysqli_query($con,$queryProductosCount);
             
         }else{
-            $productos = mysqli_query($con,"SELECT * FROM producto p, categoria c WHERE p.idCategoria = c.idCategoria");
+            $productos = mysqli_query($con,"SELECT * FROM producto p, categoria c WHERE p.idCategoria = c.idCategoria LIMIT $offset,$per_page");
+            $productosCount = mysqli_query($con,"SELECT * FROM producto p, categoria c WHERE p.idCategoria = c.idCategoria");
         }
+        $totalPaginas = mysqli_num_rows($productosCount);
+        $totalPaginas = ceil($totalPaginas/$per_page);
+        $reload = 'productos.php';
         
         while($producto = mysqli_fetch_array($productos)){
             $idProducto= $producto['idProducto'];
@@ -75,7 +86,7 @@
             $procedencia = $producto ['procedencia'];
             $precio = $producto['precio'];
             $conteo = $producto['conteo'];
-            echo "<tr>
+            $tablaProductos.= "<tr>
                     <th>$nombre</th>
                     <td>$categoria</td>
                     <td>$procedencia</td>
@@ -86,6 +97,15 @@
                     <td><button type='button' data-id='$idProducto' class='btn btn-light'><i class='far fa-image'></i>Imagen</button></td>
                 </tr>";
         }
+
+       
+        $pagination = paginate($reload, $page, $totalPaginas, $adjacents);
+        
+        $array=array('productos' => $tablaProductos, 'pagination' => $pagination, 'consulta' => $queryProductosCount);
+        echo json_encode($array);
+    
+
+
     }elseif($action == "getCategoriasFiltro"){
         $categorias = mysqli_query($con,"SELECT * from categoria"); 
         while($categoria = mysqli_fetch_array($categorias)){
