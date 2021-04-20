@@ -325,6 +325,8 @@ $("#btnEditarPuntoV").click(function btnEditarPuntoV(idPuntoVenta, nombreEdit, t
         if (data == 1) {
           $('#btnEditarPuntoV').hide();
           $('#avisoEditar').html("<i class='far fa-save'></i> Guardado con Éxito").css("color", "#0f5132");
+        }else{
+          $('#avisoEditar').html("<i class='fas fa-exclamation-triangle'></i> Datos Incorrectos o Vacíos").css("color", "red");
         }
       }
     });
