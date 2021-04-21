@@ -145,7 +145,7 @@
                                     </div>
                                 </div>
                                 <div class="row justify-content-center">
-                                    <div class="col-10 text-center" id="msjAgregarProd">
+                                    <div class="col-10 text-center p-2 rounded" id="msjAgregarProd">
 
                                     </div>
                                 </div>
@@ -233,8 +233,48 @@
                 </div>
             </div>
         </div>
+    </div>
+    <!-- Modal Imagen-->
+    <div class="modal fade" id="editImgProdModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Imagen <i class="far fa-image"></i></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row justify-content-center">
+                        <div class="col-4">
+                            <img src="" id="imgEdit" class="img img-fluid" alt="">
+                        </div>
+                        <div class="col-6 align-self-center">
+                            <div class="row">
+                                <div class="col">
+                                    <h2 id="nombreImgEdit">Nombre</h2>
+                                </div>
+                            </div>
+                            <form>
+                                <div class="form-group">
+                                    <label for="exampleFormControlFile1">Editar Imagen</label>
+                                    <input type="file" class="form-control-file" id="imgProdEdit">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-10 text-center p-2 rounded" id="msjEditImgProd">
 
-
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" id="btnEditImgProd" class="btn btn-outline-success">Editar imagen <i class="far fa-save"></i></button>
+                </div>
+            </div>
+        </div>
     </div>
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.bundle.min.js"></script>
@@ -261,7 +301,9 @@
                 var extension = img.name.substring(img.name.lastIndexOf("."));
                 console.log(extension);
                 if (extension != ".png" && extension != ".jpg") {
-                    console.log("Error de formato");
+                    $("#msjAgregarProd").removeClass("border-success border-danger");
+                    $("#msjAgregarProd").html("Formato no permitido <i class='fas fa-exclamation' style = 'color:#ffc107;'></i>");
+                    $("#msjAgregarProd").addClass("border border-warning");
                 } else {
                     var producto = new FormData();
                     producto.append("action", "agregarProducto");
@@ -339,9 +381,55 @@
             $("#buscSegmento").remove();
             load();
         });
-
-
         //Fin de eliminar los filtros cuando lo borran en la x
+        $(document).on("click", ".editImgProd", function() {
+            var idProducto = $(this).attr('data-id');
+            $("#btnEditImgProd").attr('data-id', idProducto);
+            $("#msjEditImgProd").html('');
+            $("#msjEditImgProd").removeClass('border border-success border-danger border-warning');
+            $("#imgProdEdit").val('');
+            var ruta = getImgProd(idProducto);
+            $("#imgEdit").attr("src", ruta);
+            var producto = getProducto(idProducto);
+            $("#nombreImgEdit").html(producto.nombre);
+        });
+
+        $("#btnEditImgProd").click(function() {
+            var img = $("#imgProdEdit")[0].files[0];
+            var idProducto = $(this).attr('data-id');
+            if (!img) {
+                $("#msjEditImgProd").removeClass("border-success border-danger");
+                $("#msjEditImgProd").html("Selecciona una imagen <i class='fas fa-exclamation' style = 'color:#ffc107;'></i>");
+                $("#msjEditImgProd").addClass("border border-warning");
+            } else {
+                var extension = img.name.substring(img.name.lastIndexOf("."));
+                console.log(extension);
+                if (extension != ".png" && extension != ".jpg") {
+                    $("#msjEditImgProd").removeClass("border-success border-danger");
+                    $("#msjEditImgProd").html("Formato no permitido <i class='fas fa-exclamation' style = 'color:#ffc107;'></i>");
+                    $("#msjEditImgProd").addClass("border border-warning");
+                } else {
+                    var imgEdit = new FormData();
+                    imgEdit.append("img", img);
+                    imgEdit.append("action", "editarImgProd");
+                    imgEdit.append("idProducto", idProducto);
+                    var imgEditada = editarImgProd(imgEdit);
+                    if (imgEditada == 1) {
+                        var ruta = getImgProd(idProducto);
+                        $("#imgEdit").attr("src", ruta);
+                        $("#msjEditImgProd").removeClass("border-warning border-danger");
+                        $("#msjEditImgProd").html("Se edito la imagen correctamente <i class='fas fa-check-double' style='color:#28a745;'></i>");
+                        $("#msjEditImgProd").addClass("border border-success");
+                        $("#imgProdEdit").val('');
+                    } else {
+                        $("#msjEditImgProd").removeClass("border-warning border-success");
+                        $("#msjEditImgProd").html("Ocurrio un error <i class='fas fa-times' style='color:#dc3545;'></i>");
+                        $("#msjEditImgProd").addClass("border border-danger");
+                    }
+                }
+            }
+        });
+
 
         $(document).on("click", ".editProd", function() {
             $("#msjEditar").removeClass("border-success border-warning border-danger");
@@ -402,21 +490,39 @@
                 processData: false,
                 success: function(data) {
                     if (data == 1) {
-                        $("#msjAgregarProd").html("Producto Guardado");
+                        $("#msjAgregarProd").html("Producto Guardado <i class='fas fa-check-double' style='color:#28a745;'></i>");
                         $("#msjAgregarProd").removeClass("border-warning border-danger");
-                        $("#msjAgregarProd").addClass("border border-success rounded");
+                        $("#msjAgregarProd").addClass("border border-success");
                         load();
                     } else if (data == 2) {
-                        $("#msjAgregarProd").html("Producto repetido");
+                        $("#msjAgregarProd").html("Producto repetido <i class='fas fa-exclamation' style = 'color:#ffc107;'></i>");
                         $("#msjAgregarProd").removeClass("border-success border-danger");
-                        $("#msjAgregarProd").addClass("border border-warning rounded");
+                        $("#msjAgregarProd").addClass("border border-warning ");
                     } else {
-                        $("#msjAgregarProd").html("Error");
+                        $("#msjAgregarProd").html("Error <i class='fas fa-times' style='color:#dc3545;'></i>");
                         $("#msjAgregarProd").removeClass("border-success border-warning");
-                        $("#msjAgregarProd").addClass("border border-danger rounded");
+                        $("#msjAgregarProd").addClass("border border-danger");
                     }
                 }
             });
+        }
+
+        function editarImgProd(imgEdit) {
+            var respuesta;
+            $.ajax({
+                url: "productosAjax.php",
+                data: imgEdit,
+                type: 'POST',
+                contentType: false,
+                enctype: 'multipart/form-data',
+                cache: false,
+                processData: false,
+                async: false,
+                success: function(data) {
+                    respuesta = data;
+                }
+            });
+            return respuesta;
         }
 
         function getCategoriasSelect(select) {
@@ -454,14 +560,11 @@
                 "segmento": segmento,
                 "nombre": nombre
             }
-            console.log("Entra a buscar prod");
-            console.log(parametros);
+
             $.ajax({
                 url: "productosAjax.php",
                 data: parametros,
                 success: function(data) {
-                    /* console.log(data); */
-                    console.log(data);
                     datos = JSON.parse(data);
                     $("#tablaProductos").html(datos.productos);
                     $("#paginationProd").html(datos.pagination);
@@ -491,7 +594,6 @@
                 data: parametros,
                 url: "productosAjax.php",
                 success: function(data) {
-                    console.log(data);
                     if (data == 1) {
                         $("#msjEditar").html("Cambios Guardados");
                         $("#msjEditar").removeClass("border-warning border-danger");
@@ -508,5 +610,22 @@
                     }
                 }
             });
+        }
+
+        function getImgProd(idProducto) {
+            var ruta;
+            var parametros = {
+                "action": "getImgProd",
+                "idProducto": idProducto
+            }
+            $.ajax({
+                url: "productosAjax.php",
+                data: parametros,
+                async: false,
+                success: function(data) {
+                    ruta = data;
+                }
+            });
+            return ruta;
         }
     </script>
