@@ -1,6 +1,7 @@
 <?php
-include('includes/menu.php');
+session_start();
 include('includes/header.php');
+include('includes/menu.php');
 
 if($_SESSION["tipoUsuario"]!="Administrador"){
   echo '<script type="text/javascript">alert("Inicie sesión nuevamente.");</script>';
@@ -101,9 +102,9 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
           <br>
           <div id="avisoAgregar"> </div>
           <br>
-          <button class="btn btn-light"
-            style="margin:1%; border-color:#607d8b; color: black; background-color:#607d8b57;" type="button" data-id=""
-            id="btnNuevaZona">Guardar</button>
+          <button class="btn btn-outline-success"
+            style="margin:1%;" type="button" data-id=""
+            id="btnNuevaZona">Agregar <i class="far fa-save"></i></button>
       </div>
     </div>
   </div>
@@ -128,9 +129,9 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
           <br>
           <div id="avisoEditar"> </div>
           <br>
-          <button type="button" class="btn btn-light"
-            style="margin:1%; border-color:#607d8b; color: black; background-color:#607d8b57;" data-id=""
-            id="btnEditarZona">Guardar Cambios </button>
+          <button type="button" class="btn btn-outline-success"
+            style="margin:1%;" data-id=""
+            id="btnEditarZona">Guardar <i class="far fa-save"></i></button>
       </div>
     </div>
   </div>
@@ -249,11 +250,13 @@ $("#btnEditarZona").click(function btnEditarZona(idZona, nombreEdit) {
 $(document).on("click", "#btnCerrarAdd", function () {
   $('#avisoAgregar').html("");
   $('#btnNuevaZona').show();
+  $('#nombreAdd').val("");
 });
 $(document).on("click", "#btnCerrarEdit", function () {
   $('#avisoEditar').html("");
   $('#btnEditarZona').show();
 });
+
 </script>
 
 <?php
