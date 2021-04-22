@@ -1,8 +1,8 @@
 <?php
 session_start();
 
-include('includes/menu.php');
 include('includes/header.php');
+include('includes/menu.php');
 
 if($_SESSION["tipoUsuario"]!="Vendedor"){
   echo '<script type="text/javascript">alert("Inicie sesión nuevamente.");</script>';
@@ -63,6 +63,8 @@ if($_SESSION["tipoUsuario"]!="Vendedor"){
     <br>
     <button type="button" class="btn btn-light" style="margin-top:5px;" data-toggle="modal"
     data-target="#modalMatriz" id="btnMatriz">Matriz <i class="fab fa-buromobelexperte"></i></button>
+    <button type="button" class="btn btn-light" style="margin-top:5px;" data-toggle="modal"
+    data-target="#modalImagen" id="btnImagen">Imagen <i class="far fa-image"></i></button>
     <br>
     <div id="mns"></div>
     <br>
@@ -209,14 +211,37 @@ if($_SESSION["tipoUsuario"]!="Vendedor"){
           </div>
           <div id="avisoMatriz"> </div>
           <br>
-          <button class="btn btn-light"
-            style="margin:1%; border-color:#607d8b; color: black; background-color:#607d8b57;" type="button" data-id=""
-            id="btnNuevaMatriz">Guardar</button>
+          <button class="btn btn-outline-success" style="margin:1%;" type="button" data-id=""
+            id="btnNuevaMatriz">Agregar <i class="far fa-save"></i></button>
       </div>
     </div>
   </div>
 </div>
 <!-- FIN Modal Matriz-->
+
+<!-- Modal Imagen-->
+<div class="modal fade" id="modalImagen" tabindex="-1" aria-labelledby="modalImagenLabel" aria-hidden="true"
+  data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalImagenLabel" style="color:#607d8b">Imagen Evidencia</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="btnCerrarMat">
+          <span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body">
+      <label for="">Seleccione su archivo tipo (.png / .jpg) a subir</label>
+      <br>
+        <input type="file" name="" id="imgEvidencia">
+          <div id="avisoImagen"> </div>
+          <br>
+          <button class="btn btn-outline-success" style="margin:1%;" type="button" data-id=""
+            id="btnNuevaImagen">Guardar <i class="far fa-save"></i></button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- FIN Modal Imagen-->
 
 <?php include ('includes/footer.php')?>
 
@@ -467,7 +492,11 @@ $("#btnNuevaMatriz").click(function(){
   var txtInfIzq = $('#txtInfIzq').val();
   var txtInfCen = $('#txtInfCen').val();
   var txtInfDer = $('#txtInfDer').val();
-  
+
+  if((supIzq != "" && txtSupIzq != "") || (supCen != "" && txtSupCen != "") || (supDer != "" && txtSupDer != "") || (cenIzq != "" && txtCenIzq != "") || (centro != "" && txtCentro != "") || (cenDer != "" && txtCenDer != "") ||
+     (infIzq != "" && txtInfIzq != "") || (infCen != "" && txtInfCen != "") || (infDer != "" && txtInfDer != "")){
+        $("#avisoMatriz").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> Sólo 1 producto por sección");
+      }else{
   if(((supIzq == "" && txtSupIzq != "") || (supIzq != "" && txtSupIzq == "" )) && ((supCen == "" && txtSupCen != "") || (supCen != "" && txtSupCen == "" )) && ((supDer == "" && txtSupDer != "") || (supDer != "" && txtSupDer == "" )) &&
      ((cenIzq == "" && txtCenIzq != "") || (cenIzq != "" && txtCenIzq == "" )) && ((centro == "" && txtCentro != "") || (centro != "" && txtCentro == "" )) && ((cenDer == "" && txtCenDer != "") || (cenDer != "" && txtCenDer == "" )) &&
      ((infIzq == "" && txtInfIzq != "") || (infIzq != "" && txtInfIzq == "" )) && ((infCen == "" && txtInfCen != "") || (infCen != "" && txtInfCen == "" )) && ((infDer == "" && txtInfDer != "") || (infDer != "" && txtInfDer == "" ))){
@@ -490,13 +519,15 @@ $("#btnNuevaMatriz").click(function(){
         data:parametros,
         url:'visitasAjax.php',
         success:function(data){
+          $('#btnNuevaMatriz').hide();
           console.log(data);
         }
       });
   }else{
     $("#avisoMatriz").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> Datos Incorrectos o Vacíos");
       }
-    });
+    }
+  });
 
 //limpiar avisos
 $(document).on("click", "#btnCerrarF", function(){
@@ -504,9 +535,63 @@ $(document).on("click", "#btnCerrarF", function(){
   $('#btnConfirmar').show();
 });
 
-$(document).on("click", "#btnCerrarMat", function(){
+$(document).on("click", "#btnCerrarMat", function () {
   $('#avisoMatriz').html("");
+  $('#btnNuevaMatriz').show();
+  $('#supIzq').val("");
+  $('#supCen').val("");
+  $('#supDer').val("");
+  $('#cenIzq').val("");
+  $('#centro').val("");
+  $('#cenDer').val("");
+  $('#infIzq').val("");
+  $('#infCen').val("");
+  $('#infDer').val("");
+  $('#txtSupIzq').val("");
+  $('#txtSupCen').val("");
+  $('#txtSupDer').val("");
+  $('#txtCenIzq').val("");
+  $('#txtCentro').val("");
+  $('#txtCenDer').val("");
+  $('#txtInfIzq').val("");
+  $('#txtInfCen').val("");
+  $('#txtInfDer').val("");
 });
+
+//AGREGAR IMG
+$("#btnNuevaImagen").click(function () {
+      var img = $("#imgEvidencia")[0].files[0];
+      if(img == ""){
+        console.log("Imagen no seleccionada");
+      }else{
+        var extension = img.name.substring(img.name.lastIndexOf("."));
+        console.log(extension);
+        if(extension != ".png" && extension != ".jpg"){
+          console.log("Error de formato");
+        }else {
+          var evidencia = new FormData();
+          evidencia.append("action", "guardarImagen");
+          evidencia.append("img", img);
+          guardarImagen(evidencia);
+        }
+      }
+});
+
+function guardarImagen(evidencia){
+      $.ajax({
+          url: "visitasAjax.php",
+          data: evidencia,
+          type: 'POST',
+          contentType: false,
+          enctype: 'multipart/form-data',
+          cache: false,
+          processData: false,
+          success: function(data) {
+            console.log(data);
+        }
+    });
+}
+
 
 </script>
 
