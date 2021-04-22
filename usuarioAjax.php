@@ -23,19 +23,26 @@ if($action=="getUsuarios"){
         if($idTipoUsuario != '') $sqlTipoU = " AND t.idTipoUsuario = '$idTipoUsuario'";
         if($nombre != '') $sqlTipoN = " AND p.nombre LIKE '%$nombre%'";
 
-        $queryUsuarios = "Select p.nombre, p.idPersona, u.correo, p.ciudad, u.idTipoUsuario, t.idTipoUsuario, t.tipoUsuario FROM 
-           usuario u, persona p, tipousuario t WHERE u.idPersona = p.idPersona AND t.idTipoUsuario=u.idTipoUsuario AND p.idPersona=u.idPersona";
-
-        $queryUsuarios.=$sqlTipoU.$sqlTipoN." ORDER BY idPersona LIMIT $offset,$per_page";
+        $qUsuarios = "SELECT p.nombre, p.idPersona, u.correo, p.ciudad, u.idTipoUsuario, t.idTipoUsuario, t.tipoUsuario FROM 
+        usuario u, persona p, tipousuario t WHERE u.idPersona = p.idPersona AND t.idTipoUsuario=u.idTipoUsuario AND p.idPersona=u.idPersona";
+        $qUsuariosCount.=$qUsuarios.$sqlTipoU.$sqlTipoN;
+        $qUsuarios.=$sqlTipoU.$sqlTipoN." ORDER BY idPersona LIMIT $offset,$per_page";
+            
+            $queryUsuarios = mysqli_query($con,$qUsuarios);
+            $queryUsuariosCount = mysqli_query($con,$qUsuariosCount);
         
     }else{
-        $queryUsuarios = "Select p.nombre, p.idPersona, u.correo, p.ciudad, u.idTipoUsuario, t.idTipoUsuario, t.tipoUsuario FROM 
-        usuario u, persona p, tipousuario t WHERE u.idPersona = p.idPersona AND t.idTipoUsuario=u.idTipoUsuario ORDER BY idPersona LIMIT $offset,$per_page";
+        $queryUsuarios=mysqli_query($con,"SELECT p.nombre, p.idPersona, u.correo, p.ciudad, u.idTipoUsuario, t.idTipoUsuario, t.tipoUsuario FROM 
+        usuario u, persona p, tipousuario t WHERE u.idPersona = p.idPersona AND t.idTipoUsuario=u.idTipoUsuario ORDER BY idPersona LIMIT $offset,$per_page");
+        $queryUsuariosCount =mysqli_query($con, "SELECT p.nombre, p.idPersona, u.correo, p.ciudad, u.idTipoUsuario, t.idTipoUsuario, t.tipoUsuario FROM 
+        usuario u, persona p, tipousuario t WHERE u.idPersona = p.idPersona AND t.idTipoUsuario=u.idTipoUsuario AND p.idPersona=u.idPersona");
     }
+        $total_pages = mysqli_num_rows($queryUsuariosCount);
+        $total_pages = ceil($total_pages/$per_page);
+        $reload = 'tableroUsuarios.php';
 
     //tabla
-    $query= mysqli_query($con, $queryUsuarios);
-    while($res=mysqli_fetch_array($query)){
+    while($res=mysqli_fetch_array($queryUsuarios)){
         $idPersona=$res['idPersona'];
         $nombre=$res['nombre'];
         $idTipoUsuario=$res['tipoUsuario'];
@@ -52,17 +59,10 @@ if($action=="getUsuarios"){
     } 
 
     //paginación
-    $queryUsuarios = "SELECT count(*) AS numrows FROM usuario u, persona p WHERE u.idPersona = p.idPersona";
-            $count_query = mysqli_query($con, $queryUsuarios);
-
-            if($row= mysqli_fetch_array($count_query)):$numrows = $row['numrows'];endif;
-                $total_pages = ceil($numrows/$per_page);
-                $reload = 'tableroUsuarios.php';
-        
                 $pagination=paginate($reload, $page, $total_pages, $adjacents);
                 $array = array(
                     "usuarios" => $usuarios,
-                    "pagination" => $pagination,
+                    "pagination" => $pagination
                 );
               echo json_encode($array);
 
