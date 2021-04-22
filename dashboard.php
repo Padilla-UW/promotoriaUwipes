@@ -1,8 +1,8 @@
 <?php
 session_start();
 
-include('includes/menu.php');
 include('includes/header.php');
+include('includes/menu.php');
 
 if($_SESSION["tipoUsuario"]!="Administrador"){
   echo '<script type="text/javascript">alert("Inicie sesión nuevamente.");</script>';
@@ -63,17 +63,22 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
 <div class="container">
 <div class="row">
 <div class="col-4">
-<label for="">Paso 1 - Punto de Venta</label>
+<label for="">Paso 1 - Zona</label>
+<select class="form-control" name="grafica" id="selZona"></select>
+</div>
+<div class="col-4">
+<label for="">Paso 2 - Punto de Venta</label>
 <select class="form-control" name="grafica" id="selGrafica"></select>
 </div>
 <div class="col-4">
-<label for="">Paso 2 - Fecha de inicio de Semana</label><br>
+<label for="">Paso 3 - Fecha de inicio de Semana</label><br>
 <input class="form-control" type="date" id="fechaSemana" onchange="getGrafica()">
 </div>
-<div id="btnLimpiarG" class="col-4">
-<label for="">Paso 3 - Borrar para volver a insertar</label>
-<button style="margin1; border-radius:5px;" class="form-control btn-light" onclick="limpiarGrafica()">Borrar Contenido en Gráfica</button>
 </div>
+<br>
+<div id="btnLimpiarG" class="col-12">
+<label for="">Paso 4 - Borrar para volver a insertar</label>
+<button style="margin1; border-radius:5px;" class="form-control btn-light" onclick="limpiarGrafica()">Borrar Contenido en Gráfica</button>
 </div>
 <br>
 <br>
@@ -86,7 +91,7 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
 
 <script>
   $(document).ready(function(){
-    getPVenta();
+    getZona();
     getTopProdPropio();
     getTopProdCompetencia();
     getTopProdAccesible();
@@ -162,9 +167,31 @@ function getGrafica(){
 };
 
 //Select automáticos
-function getPVenta(){
+$(document).ready(function(){
+    $('#selZona').change(function(){
+      var zona = $("#selZona").val();
+      getPVenta(zona);
+    });
+  })
+
+function getZona() {
   var parametros = {
-    "action": "getPVenta"
+    "action": "getZona"
+  }
+  $.ajax({
+    url: 'visitasAjax.php',
+    data: parametros,
+    success: function (data) {
+      console.log(data);
+      $("#selZona").html(data);
+    }
+  });
+}
+
+function getPVenta(zona){
+  var parametros = {
+    "action": "getPVenta",
+    "zona":zona
   }
   $.ajax({
     url: 'dashboardAjax.php',
@@ -215,7 +242,7 @@ function getTopProdAccesible(){
     data: parametros,
     url: 'dashboardAjax.php',
     success: function (data) {
-        data = jQuery.parseJSON(data);
+      data = jQuery.parseJSON(data);
       console.log(data);
       $("#tablaProdAccesible").html(data.producto);
     }
