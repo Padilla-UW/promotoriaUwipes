@@ -1,8 +1,7 @@
 <?php
 session_start();
-
-include('includes/menu.php');
 include('includes/header.php');
+include('includes/menu.php');
 
 if($_SESSION["tipoUsuario"]!="Administrador"){
   echo '<script type="text/javascript">alert("Inicie sesión nuevamente.");</script>';
@@ -116,6 +115,16 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
           <span aria-hidden="true">&times;</span></button>
       </div>
       <div class="modal-body">
+      <table class="table">
+           <thead>
+               <tr>
+                   <th>Punto de Venta</th>
+                   <th>Fecha</th>
+               </tr>
+           </thead>
+           <tbody id="tablaDetallesVisita">
+           </tbody>
+       </table>
       <table class="table">
            <thead>
                <tr>
@@ -339,7 +348,7 @@ $(document).on("click", "#calendario", function() {
 $(document).on("click", "#btnDetalleModal", function() {
     var idVisita =  $(this).attr("data-id");
     getDetalles(idVisita);
-    console.log("entro boton" +  idVisita);
+    getDetallesVisita(idVisita);
 });
 
 function getDetalles(idVisita){
@@ -352,6 +361,20 @@ function getDetalles(idVisita){
     url:'visitasAjax.php',
     success: function(data){
       $("#tablaDetalles").html(data);
+    }
+  });
+}
+
+function getDetallesVisita(idVisita){
+  var parametros={
+    "action":"getDetallesVisita",
+    "idVisita": idVisita
+  }
+  $.ajax({
+    data:parametros,
+    url:'visitasAjax.php',
+    success: function(data){
+      $("#tablaDetallesVisita").html(data);
     }
   });
 }
@@ -419,4 +442,3 @@ function desaparecerCalendario(){
 <?php
 } //cierre llave else SESSION
 ?>
-
