@@ -7,12 +7,26 @@ $action=(isset($_REQUEST['action'])&& $_REQUEST['action'] !=NULL)?$_REQUEST['act
 
 //SELECT GRAFICA
 if($action=="getPVenta"){
-    $queryZona=mysqli_query($con,"SELECT * From puntoventa");
-    echo "<option value=''>Seleccione Punto de Venta</option>";
+    $zona=(isset($_REQUEST['zona'])&& $_REQUEST['zona'] !=NULL)?$_REQUEST['zona']:'';
+        if($zona != ''){
+            $queryPVenta=mysqli_query($con,"SELECT * From zona z, puntoventa pv WHERE z.idZona = pv.idZona AND pv.idZona = $zona");
+        }else{
+            $queryPVenta=mysqli_query($con,"SELECT * From puntoventa");
+        }
+        echo "<option value=''>Seleccione</option>";
+        while($res = mysqli_fetch_array($queryPVenta)){
+            $idPuntoVenta = $res['idPuntoVenta'];
+            $nombre = $res['nombre'];
+           echo "<option value='".$idPuntoVenta."'>$nombre</option>";
+        }  
+
+}elseif($action=="getZona"){
+    $queryZona=mysqli_query($con,"SELECT * From zona");
+    echo "<option value=''>Seleccione</option>";
    while($res = mysqli_fetch_array($queryZona)){
-       $idPuntoVenta = $res['idPuntoVenta'];
+       $idZona = $res['idZona'];
        $nombre = $res['nombre'];
-      echo "<option value='".$idPuntoVenta."'>$nombre</option>";
+      echo "<option value='".$idZona."'>$nombre</option>";
    } 
 
 //TABLA PRECIOS PRODUCTOS PROPIOS
@@ -48,7 +62,7 @@ while($res=mysqli_fetch_array($query)){
 //TABLA PRECIOS PRODUCTOS PROPIOS EN MÁS PUNTOS DE VENTA (ACCESIBLES)
 }elseif($action=="getPrecioProdAccesible"){
     $queryProductos = "SELECT d.idProducto, p.idProducto, p.nombre, count(DISTINCT(v.idPuntoVenta)) AS puntosVenta FROM 
-    visita v, detallesvisita d, producto p WHERE d.idVisita = v.idVisita AND d.idProducto=p.idProducto GROUP BY d.idProducto ORDER BY puntosVenta DESC LIMIT 5";
+    visita v, detallesvisita d, producto p WHERE d.idVisita = v.idVisita AND d.idProducto=p.idProducto GROUP BY d.idProducto ORDER BY puntosVenta ASC LIMIT 5";
     $query= mysqli_query($con, $queryProductos);
     while($res=mysqli_fetch_array($query)){
         $nombre=$res['nombre'];
@@ -61,7 +75,7 @@ while($res=mysqli_fetch_array($query)){
                 );
               echo json_encode($array);
 
-//GRÁFICA PUNTOS DE VENTA/PRECIO/PRODUCTO
+//GRÁFICA PUNTOS DE VENTA/PRECIO/PRODUCTO/FECHA X SEMANA
 }elseif($action=="getGrafica"){
     $selGrafica=(isset($_REQUEST['selGrafica'])&& $_REQUEST['selGrafica'] !=NULL)?$_REQUEST['selGrafica']:'';
     $fechaSemana=(isset($_REQUEST['fechaSemana'])&& $_REQUEST['fechaSemana'] !=NULL)?$_REQUEST['fechaSemana']:'';

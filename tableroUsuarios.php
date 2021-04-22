@@ -1,7 +1,7 @@
 <?php
 session_start();
-include('includes/menu.php');
 include('includes/header.php');
+include('includes/menu.php');
 
 if($_SESSION["tipoUsuario"]!="Administrador"){
   echo '<script type="text/javascript">alert("Inicie sesión nuevamente.");</script>';
@@ -278,6 +278,7 @@ $("#btnNuevoUsuario").click(function () {
   }
 
   if (nombreAdd != "" && apellidosAdd != "" && telAdd != "" && ciudadAdd != "" && correoAdd != "" && passwordAdd != "" && validate) {
+    if(passwordAdd.length >= 5){
     var parametros = {
       "action": "agregarUsuario",
       "idPersona": idPersona,
@@ -305,11 +306,16 @@ $("#btnNuevoUsuario").click(function () {
           $('#rolAdd').val("");
           $('#correoAdd').val("");
           $('#passwordAdd').val("");
+        }if(data == 0){
+          $('#avisoAgregar').html("<i class='fas fa-exclamation-triangle'></i> Correo ya existente en el sistema").css("color", "red");
         }else{
         $('#avisoAgregar').html("<i class='fas fa-exclamation-triangle'></i> Datos Incorrectos o Vacíos").css("color", "red");
         }
       }
     });
+  }else{
+    $('#avisoAgregar').html("<i class='fas fa-exclamation-triangle'></i> Contraseña mínimo 5 caracteres").css("color", "red");
+  }
   } else {
     $('#avisoAgregar').html("<i class='fas fa-exclamation-triangle'></i> Datos Incorrectos o Vacíos").css("color", "red");
     console.log("Existen campos vacios");
@@ -456,6 +462,13 @@ function getTipoUsuario() {
 $(document).on("click", "#btnCerrarAdd", function () {
   $('#avisoAgregar').html("");
   $('#btnNuevoUsuario').show();
+  $('#nombreAdd').val("");
+  $('#apellidosAdd').val("");
+  $('#telAdd').val("");
+  $('#ciudadAdd').val("");
+  $('#rolAdd').val("");
+  $('#correoAdd').val("");
+  $('#passwordAdd').val("");
 });
 $(document).on("click", "#btnCerrarEdit", function () {
   $('#avisoEditar').html("");

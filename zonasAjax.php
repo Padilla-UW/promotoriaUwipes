@@ -20,18 +20,22 @@ if($action=="getZona"){
 
     if($nombre != ''){
         $sqlTipoN = " WHERE nombre LIKE '%$nombre%'";
-
-        $queryZonas= "Select * FROM zona";
-
-        $queryZonas.=$sqlTipoN." ORDER BY idZona LIMIT $offset,$per_page";
-        
+        $qZonas= "Select * FROM zona";
+        $qZonasCount.=$qZonas.$sqlTipoN;
+        $qZonas.=$sqlTipoN." ORDER BY idZona LIMIT $offset,$per_page";
+            
+            $queryZonas = mysqli_query($con,$qZonas);
+            $queryZonasCount = mysqli_query($con,$qZonasCount);  
     }else{
-        $queryZonas = "Select * FROM zona ORDER BY idZona LIMIT $offset,$per_page";
+        $queryZonas = mysqli_query($con,"Select * FROM zona ORDER BY idZona LIMIT $offset,$per_page");
+        $queryZonasCount = mysqli_query($con,"Select * FROM zona");
     }
+    $total_pages = mysqli_num_rows($queryZonasCount);
+    $total_pages = ceil($total_pages/$per_page);
+    $reload = 'tableroZonas.php';
 
     //tabla
-    $query= mysqli_query($con, $queryZonas);
-    while($res=mysqli_fetch_array($query)){
+    while($res=mysqli_fetch_array($queryZonas)){
         $idZona=$res['idZona'];
         $nombre=$res['nombre'];
         $zonas .= "<tr> 
@@ -43,13 +47,6 @@ if($action=="getZona"){
     } 
 
     //paginación
-    $queryZonas = "SELECT count(*) AS numrows FROM zona";
-            $count_query = mysqli_query($con, $queryZonas);
-
-            if($row= mysqli_fetch_array($count_query)):$numrows = $row['numrows'];endif;
-                $total_pages = ceil($numrows/$per_page);
-                $reload = 'tableroZonas.php';
-        
                 $pagination=paginate($reload, $page, $total_pages, $adjacents);
                 $array = array(
                     "zonas" => $zonas,
@@ -118,19 +115,26 @@ if($action=="getPuntosV"){
         if($idZonaV != '') $sqlTipoZ = " AND pv.idZona = '$idZonaV'";
         if($idVendedorV != '') $sqlTipoV = " AND pv.idVendedor = '$idVendedorV'";
 
-        $queryPuntosV = "Select pv.nombre AS nombrePV, pv.idPuntoVenta, pv.idVendedor, pv.idZona, pv.tipo, z.idZona, z.nombre AS nombreZ, p.idPersona, p.nombre AS nombreV FROM 
+        $qPuntosV = "Select pv.nombre AS nombrePV, pv.idPuntoVenta, pv.idVendedor, pv.idZona, pv.tipo, z.idZona, z.nombre AS nombreZ, p.idPersona, p.nombre AS nombreV FROM 
         persona p, zona z, puntoventa pv WHERE pv.idZona = z.idZona AND pv.idVendedor = p.idPersona";
-
-        $queryPuntosV.=$sqlTipoN.$sqlTipoP.$sqlTipoZ.$sqlTipoV." ORDER BY idPuntoVenta LIMIT $offset,$per_page";
+        $qPuntosVCount.=$qPuntosV.$sqlTipoN.$sqlTipoP.$sqlTipoZ.$sqlTipoV;
+        $qPuntosV.=$sqlTipoN.$sqlTipoP.$sqlTipoZ.$sqlTipoV." ORDER BY idPuntoVenta LIMIT $offset,$per_page";
+            
+            $queryPuntosV = mysqli_query($con,$qPuntosV);
+            $queryPuntosVCount = mysqli_query($con,$qPuntosVCount);
         
     }else{
-        $queryPuntosV = "Select pv.nombre AS nombrePV, pv.idPuntoVenta, pv.idVendedor, pv.idZona, pv.tipo, z.idZona, z.nombre AS nombreZ, p.idPersona, p.nombre AS nombreV FROM 
-        persona p, zona z, puntoventa pv WHERE pv.idZona = z.idZona AND pv.idVendedor = p.idPersona ORDER BY idPuntoVenta LIMIT $offset,$per_page";
+        $queryPuntosV = mysqli_query($con,"Select pv.nombre AS nombrePV, pv.idPuntoVenta, pv.idVendedor, pv.idZona, pv.tipo, z.idZona, z.nombre AS nombreZ, p.idPersona, p.nombre AS nombreV FROM 
+        persona p, zona z, puntoventa pv WHERE pv.idZona = z.idZona AND pv.idVendedor = p.idPersona ORDER BY idPuntoVenta LIMIT $offset,$per_page");
+        $queryPuntosVCount = mysqli_query($con,"Select pv.nombre AS nombrePV, pv.idPuntoVenta, pv.idVendedor, pv.idZona, pv.tipo, z.idZona, z.nombre AS nombreZ, p.idPersona, p.nombre AS nombreV FROM 
+        persona p, zona z, puntoventa pv WHERE pv.idZona = z.idZona AND pv.idVendedor = p.idPersona");
     }
+        $total_pages = mysqli_num_rows($queryPuntosVCount);
+        $total_pages = ceil($total_pages/$per_page);
+        $reload = 'tableroPuntosVenta.php';
 
     //tabla
-    $query= mysqli_query($con, $queryPuntosV);
-    while($res=mysqli_fetch_array($query)){
+    while($res=mysqli_fetch_array($queryPuntosV)){
         $idPuntoVenta=$res['idPuntoVenta'];
         $nombre=$res['nombrePV'];
         $tipo=$res['tipo'];
@@ -148,13 +152,6 @@ if($action=="getPuntosV"){
     } 
 
     //paginación
-    $queryPuntosV = "SELECT count(*) AS numrows FROM persona p, zona z, puntoventa pv WHERE pv.idZona = z.idZona AND pv.idVendedor = p.idPersona";
-            $count_query = mysqli_query($con, $queryPuntosV);
-
-            if($row= mysqli_fetch_array($count_query)):$numrows = $row['numrows'];endif;
-                $total_pages = ceil($numrows/$per_page);
-                $reload = 'tableroPuntosVenta.php';
-        
                 $pagination=paginate($reload, $page, $total_pages, $adjacents);
                 $array = array(
                     "pventa" => $pventa,

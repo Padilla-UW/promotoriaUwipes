@@ -1,7 +1,7 @@
 <?php
 session_start();
-include('includes/menu.php');
 include('includes/header.php');
+include('includes/menu.php');
 
 if($_SESSION["tipoUsuario"]!="Administrador"){
   echo '<script type="text/javascript">alert("Inicie sesión nuevamente.");</script>';
@@ -266,8 +266,10 @@ $("#btnNuevoPuntoV").click(function () {
           $('#tipoAdd').val("0");
           $('#zonaAdd').val("");
           $('#vendedorAdd').val("");
+        }if(data == 0){
+        $('#avisoAgregar').html("<i class='fas fa-exclamation-triangle'></i> Punto de venta existente en zona").css("color", "red");
         }else{
-        $('#avisoAgregar').html("<i class='fas fa-exclamation-triangle'></i> Datos Incorrectos o Vacíos").css("color", "red");
+          $('#avisoAgregar').html("<i class='fas fa-exclamation-triangle'></i> Datos Incorrectos o Vacíos").css("color", "red");
         }
       }
     });
@@ -371,6 +373,10 @@ function getVendedor() {
 $(document).on("click", "#btnCerrarAdd", function () {
   $('#avisoAgregar').html("");
   $('#btnNuevoPuntoV').show();
+  $('#nombreAdd').val("");
+  $('#tipoAdd').val("0");
+  $('#zonaAdd').val("");
+  $('#vendedorAdd').val("");
 });
 $(document).on("click", "#btnCerrarEdit", function () {
   $('#avisoEditar').html("");

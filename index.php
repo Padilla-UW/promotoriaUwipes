@@ -92,5 +92,4 @@ $("#btnLogin").click(function(){
         }
       });
     });
-
 </script>

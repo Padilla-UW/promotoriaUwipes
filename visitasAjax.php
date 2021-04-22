@@ -5,14 +5,28 @@ include('includes/conection.php');
     
 $action=(isset($_REQUEST['action'])&& $_REQUEST['action'] !=NULL)?$_REQUEST['action']:'';
 
-//Inicia parte de VISITAS *****************************************************************************************
+//Inicia parte de VISITAS VENDEDOR ************************************************************************************
 if($action=="getPVenta"){
-    $queryZona=mysqli_query($con,"SELECT * From puntoventa");
+    $zona=(isset($_REQUEST['zona'])&& $_REQUEST['zona'] !=NULL)?$_REQUEST['zona']:'';
+        if($zona != ''){
+            $queryPVenta=mysqli_query($con,"SELECT * From zona z, puntoventa pv WHERE z.idZona = pv.idZona AND pv.idZona = $zona");
+        }else{
+            $queryPVenta=mysqli_query($con,"SELECT * From puntoventa");
+        }
+        echo "<option value=''>Seleccione</option>";
+        while($res = mysqli_fetch_array($queryPVenta)){
+            $idPuntoVenta = $res['idPuntoVenta'];
+            $nombre = $res['nombre'];
+           echo "<option value='".$idPuntoVenta."'>$nombre</option>";
+        }  
+
+}elseif($action=="getZona"){
+    $queryZona=mysqli_query($con,"SELECT * From zona");
     echo "<option value=''>Seleccione</option>";
    while($res = mysqli_fetch_array($queryZona)){
-       $idPuntoVenta = $res['idPuntoVenta'];
+       $idZona = $res['idZona'];
        $nombre = $res['nombre'];
-      echo "<option value='".$idPuntoVenta."'>$nombre</option>";
+      echo "<option value='".$idZona."'>$nombre</option>";
    } 
 
 //SESSIONES de visita
@@ -23,7 +37,7 @@ if($action=="getPVenta"){
 
     $_SESSION['checkVisita']=array(
         'punVenta' => $punVenta
-    );    
+    );   
 
 //Selects automáticos
 }elseif($action=="getFProducto"){
@@ -177,7 +191,7 @@ if($action=="getPVenta"){
                 mysqli_query($con, $insertMatriz);
                 echo $insertMatriz;
                 var_dump($_SESSION);
-        } 
+      } 
 
         unset($_SESSION["fichero"]);
         unset($_SESSION["matrix"]);
@@ -248,6 +262,35 @@ if($action=="getPVenta"){
     'infDer' => $infDer
         );
     }
+
+//guardar imagen
+}elseif($action == "guardarImagen"){
+
+    // $_SESSION['imagenEvidencia']=$img['img'];
+    mysqli_query($con,'BEGIN');
+    if(isset($_FILES['img']) || $_FILES['img']['size']!=0){
+        $queryInsertImg = mysqli_query($con,"INSERT INTO imgdetallesvisita(idDetallesVisita) VALUES (167)");
+        $idImgDetallesVisita=mysqli_insert_id($con);
+        $nombre = $_FILES['img']['name'];
+        $nombre_tmp = $_FILES['img']['tmp_name'];
+        $partes_nombre = explode('.', $nombre);
+        $extension = end($partes_nombre);
+        $ruta ="imgEvidencias/";
+
+        if(move_uploaded_file($nombre_tmp, $ruta.$idImgDetallesVisita.".".$extension)){
+            $nombrenuevo = "img".$idImgDetallesVisita.".".$extension;
+            $rutabd = "imgEvidencias/".$nombrenuevo;
+            $insertRuta = "UPDATE imgdetallesvisita SET ruta ='$rutabd' WHERE idImgDetallesVisita='$idImgDetallesVisita'";
+            $queryUpdateImg = mysqli_query($con, $insertRuta);
+            if($queryInsertImg && $queryUpdateImg){
+                mysqli_query($con,'COMMIT');
+                echo 1;
+            }else{
+                mysqli_query($con,'ROLLBACK');
+                echo 0;  
+            }
+          }
+      }
 }
 
 //Inicia parte de VISITAS ADMIN ***************************************************************************************
@@ -274,20 +317,28 @@ if($action=="getPVisitas"){
         if($fechaInicio !='' && $fechaFin =='') $sqlFecha2 = " AND v.fecha >= '$fechaInicio'";
         if($fechaInicio =='' && $fechaFin !='') $sqlFecha3 = " AND v.fecha <= '$fechaFin'";
 
-        $queryVisitas = "SELECT v.idVisita, v.idVendedor, v.idPuntoVenta, v.fecha, pv.idPuntoVenta, pv.nombre AS nombrePunto,
+        $qVisitas = "SELECT v.idVisita, v.idVendedor, v.idPuntoVenta, v.fecha, pv.idPuntoVenta, pv.nombre AS nombrePunto,
         pv.idVendedor, p.nombre AS nombrePersona, p.idPersona, u.idUsuario, u.idPersona FROM visita v, persona p, puntoventa pv, usuario u WHERE v.idPuntoVenta=pv.idPuntoVenta 
         AND v.idVendedor=u.idUsuario AND u.idPersona=p.idPersona";
-        $queryVisitas.=$sqlVenta.$sqlFecha1.$sqlFecha2.$sqlFecha3.$sqlVendedor.$sqlZona." ORDER BY idVisita LIMIT $offset,$per_page";
-        
+        $qVisitasCount.=$qVisitas.$sqlVenta.$sqlFecha1.$sqlFecha2.$sqlFecha3.$sqlVendedor.$sqlZona;
+        $qVisitas .=$sqlVenta.$sqlFecha1.$sqlFecha2.$sqlFecha3.$sqlVendedor.$sqlZona." ORDER BY idVisita LIMIT $offset,$per_page";
+            $queryVisitas = mysqli_query($con,$qVisitas);
+            $queryVisitasCount = mysqli_query($con,$qVisitasCount);
+
     }else{
-        $queryVisitas = "SELECT v.idVisita, v.idVendedor, v.idPuntoVenta, v.fecha, pv.idPuntoVenta, pv.nombre AS nombrePunto,
+        $queryVisitas = mysqli_query($con,"SELECT v.idVisita, v.idVendedor, v.idPuntoVenta, v.fecha, pv.idPuntoVenta, pv.nombre AS nombrePunto,
         pv.idVendedor, p.nombre AS nombrePersona, p.idPersona, u.idUsuario, u.idPersona FROM visita v, persona p, puntoventa pv, usuario u WHERE v.idPuntoVenta=pv.idPuntoVenta 
-        AND v.idVendedor=u.idUsuario AND u.idPersona=p.idPersona ORDER BY idVisita LIMIT $offset,$per_page";
+        AND v.idVendedor=u.idUsuario AND u.idPersona=p.idPersona ORDER BY idVisita LIMIT $offset,$per_page");
+        $queryVisitasCount = mysqli_query($con,"SELECT v.idVisita, v.idVendedor, v.idPuntoVenta, v.fecha, pv.idPuntoVenta, pv.nombre AS nombrePunto,
+        pv.idVendedor, p.nombre AS nombrePersona, p.idPersona, u.idUsuario, u.idPersona FROM visita v, persona p, puntoventa pv, usuario u WHERE v.idPuntoVenta=pv.idPuntoVenta 
+        AND v.idVendedor=u.idUsuario AND u.idPersona=p.idPersona");
     }
+        $total_pages = mysqli_num_rows($queryVisitasCount);
+        $total_pages = ceil($total_pages/$per_page);
+        $reload = 'tableroVisitas.php';
 
     //tabla
-    $query= mysqli_query($con, $queryVisitas);
-    while($res=mysqli_fetch_array($query)){
+    while($res=mysqli_fetch_array($queryVisitas)){
         $idVisita=$res['idVisita'];
         $vendedor=$res['nombrePersona'];
         $idPuntoVenta=$res['nombrePunto'];
@@ -302,13 +353,6 @@ if($action=="getPVisitas"){
     } 
 
     //paginación
-    $queryVisitas = "SELECT count(*) AS numrows FROM visita v, persona p, puntoventa pv WHERE v.idPuntoVenta=pv.idPuntoVenta AND v.idVendedor=p.idPersona";
-            $count_query = mysqli_query($con, $queryVisitas);
-
-            if($row= mysqli_fetch_array($count_query)):$numrows = $row['numrows'];endif;
-                $total_pages = ceil($numrows/$per_page);
-                $reload = 'tableroVisitas.php';
-        
                 $pagination=paginate($reload, $page, $total_pages, $adjacents);
                 $array = array(
                     "visitas" => $visitas,
@@ -359,6 +403,21 @@ if($action=="getPVisitas"){
                    Matriz </button></td>
                 </tr>";
         } 
+
+}elseif($action=="getDetallesVisita"){
+    $idVisita=(isset($_REQUEST['idVisita'])&& $_REQUEST['idVisita'] !=NULL)?$_REQUEST['idVisita']:'';
+    $query= mysqli_query($con,"SELECT v.idVisita, v.idPuntoVenta, v.fecha, pv.idPuntoVenta, pv.nombre
+    FROM detallesvisita d, visita v, puntoventa pv WHERE v.idVisita = d.idVisita AND v.idVisita = $idVisita AND pv.idPuntoVenta= v.idPuntoVenta LIMIT 1");
+    while($res=mysqli_fetch_array($query)){
+        $idDetallesVisita=$res['idDetallesVisita'];
+        $idPuntoVenta=$res['nombre'];
+        $fecha = $res['fecha'];
+         
+        echo "<tr> 
+                <td> $idPuntoVenta </td>
+                <td> $fecha </td>
+            </tr>";
+    } 
 
 //detalles Matriz
 }elseif($action=="getDetalleMatrizSup"){

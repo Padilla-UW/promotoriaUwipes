@@ -1,7 +1,7 @@
 <?php
 session_start();
-include('includes/menu.php');
 include('includes/header.php');
+include('includes/menu.php');
 
 if($_SESSION["tipoUsuario"]!="Vendedor"){
   echo '<script type="text/javascript">alert("Inicie sesión nuevamente.");</script>';
@@ -31,6 +31,9 @@ if($_SESSION["tipoUsuario"]!="Vendedor"){
 <div style="display: flex; align-items: center; justify-content: center;">
     </div>
     <br>
+    <label for=""><b>Zona</b></label><br>
+    <select name="" id="selZona" class="form-control"></select>
+    <br>
     <label for=""><b>Punto de Venta</b></label><br>
     <select name="" id="selPuntoV" class="form-control"></select> 
     <br>
@@ -45,13 +48,36 @@ if($_SESSION["tipoUsuario"]!="Vendedor"){
 
 <script>
 $(document).ready(function(){
-  getPVenta();  
+  // getPVenta(); 
+  getZona(); 
 });
 
 //Select automáticos
-function getPVenta() {
+$(document).ready(function(){
+    $('#selZona').change(function(){
+      var zona = $("#selZona").val();
+      getPVenta(zona);
+    });
+  })
+
+function getZona() {
   var parametros = {
-    "action": "getPVenta"
+    "action": "getZona"
+  }
+  $.ajax({
+    url: 'visitasAjax.php',
+    data: parametros,
+    success: function (data) {
+      console.log(data);
+      $("#selZona").html(data);
+    }
+  });
+}
+
+function getPVenta(zona) {
+  var parametros = {
+    "action": "getPVenta",
+    "zona": zona
   }
   $.ajax({
     url: 'visitasAjax.php',
