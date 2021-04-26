@@ -43,23 +43,23 @@ if($_SESSION["tipoUsuario"]!="Vendedor"){
 <div style="display: flex; align-items: center; justify-content: center;">
     </div>
     <label for=""><b>Producto</b></label>
-    <select name="" id="selProducto" class="form-control"></select> 
+    <select name="producto" id="selProducto" class="form-control"></select> 
     <br>
     <label for=""><b>Tipo de Exhibición</b></label><br>
     <select name="" id="selTipoExi" class="form-control"></select> 
     <br>
     <label for=""><b>Existencia</b></label><br>
-    <select name="" id="selExistencia" class="form-control">
+    <select name="selector" id="selExistencia" class="form-control">
     <option value="0">¿Está en existencia el producto?</option>
     <option value="Si">Sí</option>
     <option value="No">No</option>
     </select> 
     <br>
     <label for=""><b>Precio</b></label>
-    <input type="text" class="form-control" name="" id="selPrecio" placeholder='$100.00'>
+    <input type="text" class="form-control" name="precio" id="selPrecio" placeholder='$100.00'>
     <br>
     <label for=""><b>Frentes</b></label>
-    <input type="number" class="form-control" name="" id="selFrentes" min="0">
+    <input type="number" class="form-control" name="frentes" id="selFrentes" min="0">
     <br>
     <button type="button" class="btn btn-light" style="margin-top:5px;" data-toggle="modal"
     data-target="#modalMatriz" id="btnMatriz">Matriz <i class="fab fa-buromobelexperte"></i></button>
@@ -226,13 +226,14 @@ if($_SESSION["tipoUsuario"]!="Vendedor"){
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="modalImagenLabel" style="color:#607d8b">Imagen Evidencia</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="btnCerrarMat">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="btnCerrarImg">
           <span aria-hidden="true">&times;</span></button>
       </div>
       <div class="modal-body">
       <label for="">Seleccione su archivo tipo (.png / .jpg) a subir</label>
       <br>
-        <input type="file" name="" id="imgEvidencia">
+        <input type="file" name="imagen" id="imgEvidencia">
+        <br>
           <div id="avisoImagen"> </div>
           <br>
           <button class="btn btn-outline-success" style="margin:1%;" type="button" data-id=""
@@ -320,8 +321,7 @@ $("#btnGuardar").click(function(){
         "selTipoExi": selTipoExi,
         "selExistencia":selExistencia,  
         "selPrecio":selPrecio,
-        "selFrentes":selFrentes
-        
+        "selFrentes":selFrentes 
       }
       $.ajax({
         data:parametros,
@@ -332,30 +332,12 @@ $("#btnGuardar").click(function(){
         $('#selExistencia').val("0");
         $('#selPrecio').val("");
         $('#selFrentes').val("");
-        $('#supIzq').val("");
-        $('#supCen').val("");
-        $('#supDer').val("");
-        $('#cenIzq').val("");
-        $('#centro').val("");
-        $('#cenDer').val("");
-        $('#infIzq').val("");
-        $('#infCen').val("");
-        $('#infDer').val("");
-        $('#txtSupIzq').val("");
-        $('#txtSupCen').val("");
-        $('#txtSupDer').val("");
-        $('#txtCenIzq').val("");
-        $('#txtCentro').val("");
-        $('#txtCenDer').val("");
-        $('#txtInfIzq').val("");
-        $('#txtInfCen').val("");
-        $('#txtInfDer').val("");
         $("#btnFinalizar").removeAttr('disabled');
         }
       });
-  }else{
+    }else{
     $("#mns").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> Datos Incorrectos o Vacíos");
-      }
+  }
     });
 
 //función para mostrar datos en el tbody de la tabla
@@ -497,10 +479,11 @@ $("#btnNuevaMatriz").click(function(){
      (infIzq != "" && txtInfIzq != "") || (infCen != "" && txtInfCen != "") || (infDer != "" && txtInfDer != "")){
         $("#avisoMatriz").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> Sólo 1 producto por sección");
       }else{
+
   if(((supIzq == "" && txtSupIzq != "") || (supIzq != "" && txtSupIzq == "" )) && ((supCen == "" && txtSupCen != "") || (supCen != "" && txtSupCen == "" )) && ((supDer == "" && txtSupDer != "") || (supDer != "" && txtSupDer == "" )) &&
      ((cenIzq == "" && txtCenIzq != "") || (cenIzq != "" && txtCenIzq == "" )) && ((centro == "" && txtCentro != "") || (centro != "" && txtCentro == "" )) && ((cenDer == "" && txtCenDer != "") || (cenDer != "" && txtCenDer == "" )) &&
      ((infIzq == "" && txtInfIzq != "") || (infIzq != "" && txtInfIzq == "" )) && ((infCen == "" && txtInfCen != "") || (infCen != "" && txtInfCen == "" )) && ((infDer == "" && txtInfDer != "") || (infDer != "" && txtInfDer == "" ))){
-
+ 
     $("#avisoMatriz").css("color", "#0f5132").html("<i class='far fa-save'></i> Agregado con Éxito");
 
     var parametros = {
@@ -535,6 +518,12 @@ $(document).on("click", "#btnCerrarF", function(){
   $('#btnConfirmar').show();
 });
 
+$(document).on("click", "#btnCerrarImg", function(){
+  $('#imgEvidencia').val("");
+  $('#avisoImagen').html("");
+  $('#btnNuevaImagen').show();
+});
+
 $(document).on("click", "#btnCerrarMat", function () {
   $('#avisoMatriz').html("");
   $('#btnNuevaMatriz').show();
@@ -561,14 +550,17 @@ $(document).on("click", "#btnCerrarMat", function () {
 //AGREGAR IMG
 $("#btnNuevaImagen").click(function () {
       var img = $("#imgEvidencia")[0].files[0];
-      if(img == ""){
+      var imagen = $("#imgEvidencia").val();
+      if(imagen == ""){
+        $("#avisoImagen").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> Imagen no seleccionada");
         console.log("Imagen no seleccionada");
       }else{
         var extension = img.name.substring(img.name.lastIndexOf("."));
         console.log(extension);
         if(extension != ".png" && extension != ".jpg"){
           console.log("Error de formato");
-        }else {
+          $("#avisoImagen").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> Error en formato de imagen");
+        }else{
           var evidencia = new FormData();
           evidencia.append("action", "guardarImagen");
           evidencia.append("img", img);
@@ -587,11 +579,12 @@ function guardarImagen(evidencia){
           cache: false,
           processData: false,
           success: function(data) {
+            $("#avisoImagen").css("color", "#0f5132").html("<i class='far fa-save'></i> Agregado con Éxito");
+            $('#btnNuevaImagen').hide();
             console.log(data);
         }
     });
 }
-
 
 </script>
 
