@@ -455,7 +455,7 @@ $("#btnConfirmar").click(function(){
     });
 
 //MATRIZ guardar datos
-$("#btnNuevaMatriz").click(function(){
+$("#btnNuevaMatriz").click(function(x){
   var supIzq = $('#supIzq').val();
   var supCen = $('#supCen').val();
   var supDer = $('#supDer').val();
@@ -474,6 +474,16 @@ $("#btnNuevaMatriz").click(function(){
   var txtInfIzq = $('#txtInfIzq').val();
   var txtInfCen = $('#txtInfCen').val();
   var txtInfDer = $('#txtInfDer').val();
+  var prodPrincipal = $('#selProducto').val();
+  var idSupIzq = $('#supIzq>option:selected').data("id");
+  var idSupCen = $('#supCen>option:selected').data("id");
+  var idSupDer = $('#supDer>option:selected').data("id");
+  var idCenIzq = $('#cenIzq>option:selected').data("id");
+  var idCentro = $('#centro>option:selected').data("id");
+  var idCenDer = $('#cenDer>option:selected').data("id");
+  var idInfIzq = $('#infIzq>option:selected').data("id");
+  var idInfCen = $('#infCen>option:selected').data("id");
+  var idInfDer = $('#infDer>option:selected').data("id");
 
   if((supIzq != "" && txtSupIzq != "") || (supCen != "" && txtSupCen != "") || (supDer != "" && txtSupDer != "") || (cenIzq != "" && txtCenIzq != "") || (centro != "" && txtCentro != "") || (cenDer != "" && txtCenDer != "") ||
      (infIzq != "" && txtInfIzq != "") || (infCen != "" && txtInfCen != "") || (infDer != "" && txtInfDer != "")){
@@ -484,8 +494,12 @@ $("#btnNuevaMatriz").click(function(){
      ((cenIzq == "" && txtCenIzq != "") || (cenIzq != "" && txtCenIzq == "" )) && ((centro == "" && txtCentro != "") || (centro != "" && txtCentro == "" )) && ((cenDer == "" && txtCenDer != "") || (cenDer != "" && txtCenDer == "" )) &&
      ((infIzq == "" && txtInfIzq != "") || (infIzq != "" && txtInfIzq == "" )) && ((infCen == "" && txtInfCen != "") || (infCen != "" && txtInfCen == "" )) && ((infDer == "" && txtInfDer != "") || (infDer != "" && txtInfDer == "" ))){
  
-    $("#avisoMatriz").css("color", "#0f5132").html("<i class='far fa-save'></i> Agregado con Éxito");
+  if(idSupIzq != prodPrincipal && idSupCen != prodPrincipal && idSupDer != prodPrincipal && idCenIzq != prodPrincipal && idCentro != prodPrincipal && 
+     idCenDer != prodPrincipal && idInfIzq != prodPrincipal && idInfCen != prodPrincipal && idInfDer != prodPrincipal){
+        $("#avisoMatriz").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> No se hace referencia al producto seleccionado");
+    }else{
 
+    $("#avisoMatriz").css("color", "#0f5132").html("<i class='far fa-save'></i> Agregado con Éxito");
     var parametros = {
         "action": "guardarMatriz",
         "supIzq": (supIzq || txtSupIzq),
@@ -506,6 +520,7 @@ $("#btnNuevaMatriz").click(function(){
           console.log(data);
         }
       });
+    }
   }else{
     $("#avisoMatriz").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> Datos Incorrectos o Vacíos");
       }
