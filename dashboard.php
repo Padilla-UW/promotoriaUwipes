@@ -76,14 +76,18 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
 </div>
 </div>
 <br>
-<div id="btnLimpiarG" class="col-12">
+<div id="btnLimpiarG" class="col-4">
 <label for="">Paso 4 - Borrar para volver a insertar</label>
 <button style="margin1; border-radius:5px;" class="form-control btn-light" onclick="limpiarGrafica()">Borrar Contenido en Gráfica</button>
 </div>
 <br>
 <br>
-<div>
+</div>
+<div class="container">
+<div class="row">
+<div class="col-10">
   <canvas id="myChart"></canvas>
+</div>
 </div>
 </div>
 
