@@ -50,11 +50,12 @@ if($action=="getPVenta"){
    } 
 
 }elseif($action=="getNProducto"){
-    $queryRes=mysqli_query($con,"SELECT * From producto");
-    echo "<option value=''>Seleccione</option>";
+    $queryRes=mysqli_query($con, "SELECT * From producto");
+    echo "<option data-id='' value=''>Seleccione</option>";
    while($res = mysqli_fetch_array($queryRes)){
        $nombre = $res['nombre'];
-      echo "<option value='".$nombre."'>$nombre</option>";
+       $idProducto = $res['idProducto'];
+      echo "<option data-id='$idProducto' value='".$nombre."'>$nombre</option>";
    }  
 
 }elseif($action=="getFTipoExi"){
