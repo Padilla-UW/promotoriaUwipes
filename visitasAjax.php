@@ -55,7 +55,7 @@ if($action=="getPVenta"){
    while($res = mysqli_fetch_array($queryRes)){
        $nombre = $res['nombre'];
       echo "<option value='".$nombre."'>$nombre</option>";
-   } 
+   }  
 
 }elseif($action=="getFTipoExi"){
     $queryRes=mysqli_query($con,"SELECT * From tipoexibicion");
@@ -100,6 +100,7 @@ if($action=="getPVenta"){
                   echo ($existencia);
                   echo ($precio);
                   echo ($frentes);
+                  
                }
            }
        }
@@ -189,6 +190,8 @@ if($action=="getPVenta"){
                 $insertMatriz = "INSERT INTO matrizubicacion(idDetallesVisita, supIzq, supCentro, supDer, centroIzq, centroCentro, centroDer, infIzq, infCentro, infDer)
                 VALUES ('$idDetallesVisita', '$supIzq', '$supCen', '$supDer', '$cenIzq', '$centro', '$cenDer', '$infIzq', '$infCen', '$infDer')"; 
                 mysqli_query($con, $insertMatriz);
+                $updateImgDetalles = "UPDATE `imgdetallesvisita` SET `idDetallesVisita` = '$idDetallesVisita', `ruta`='imgEvidencias/img$idDetallesVisita' WHERE `ruta` = 'imgEvidencias/img'";
+                mysqli_query($con, $updateImgDetalles);
                 echo $insertMatriz;
                 var_dump($_SESSION);
       } 
@@ -265,24 +268,19 @@ if($action=="getPVenta"){
 
 //guardar imagen
 }elseif($action == "guardarImagen"){
-
-    // $_SESSION['imagenEvidencia']=$img['img'];
     mysqli_query($con,'BEGIN');
     if(isset($_FILES['img']) || $_FILES['img']['size']!=0){
-        $queryInsertImg = mysqli_query($con,"INSERT INTO imgdetallesvisita(idDetallesVisita) VALUES (167)");
-        $idImgDetallesVisita=mysqli_insert_id($con);
         $nombre = $_FILES['img']['name'];
         $nombre_tmp = $_FILES['img']['tmp_name'];
         $partes_nombre = explode('.', $nombre);
         $extension = end($partes_nombre);
         $ruta ="imgEvidencias/";
-
-        if(move_uploaded_file($nombre_tmp, $ruta.$idImgDetallesVisita.".".$extension)){
-            $nombrenuevo = "img".$idImgDetallesVisita.".".$extension;
+        if(move_uploaded_file($nombre_tmp, $ruta.".".$extension)){
+            $nombrenuevo = "img";
             $rutabd = "imgEvidencias/".$nombrenuevo;
-            $insertRuta = "UPDATE imgdetallesvisita SET ruta ='$rutabd' WHERE idImgDetallesVisita='$idImgDetallesVisita'";
+            $insertRuta = "INSERT INTO `imgdetallesvisita` (`idImgDetallesVisita`, `idDetallesVisita`, `ruta`) VALUES (NULL, NULL, '$rutabd')";
             $queryUpdateImg = mysqli_query($con, $insertRuta);
-            if($queryInsertImg && $queryUpdateImg){
+            if($queryUpdateImg){
                 mysqli_query($con,'COMMIT');
                 echo 1;
             }else{
@@ -356,7 +354,7 @@ if($action=="getPVisitas"){
                 $pagination=paginate($reload, $page, $total_pages, $adjacents);
                 $array = array(
                     "visitas" => $visitas,
-                    "pagination" => $pagination,
+                    "pagination" => $pagination
                 );
               echo json_encode($array);
 
@@ -399,8 +397,7 @@ if($action=="getPVisitas"){
                     <td> $existencia </td>
                     <td> $precio </td>
                     <td> $frentes </td>
-                    <td><button type='button' data-id='$idDetallesVisita' class='btn' style='padding:0%;margin:0%' id='btnMatrizModal' data-toggle='modal' data-target='#modalMatriz'>
-                   Matriz </button></td>
+                    <td><button type='button' data-id='$idDetallesVisita' class='btn' style='padding:0%;margin:0%' id='btnMatrizModal' data-toggle='modal' data-target='#modalMatriz'><i class='fab fa-buromobelexperte'></i> Matriz</button></td>
                 </tr>";
         } 
 
@@ -414,8 +411,8 @@ if($action=="getPVisitas"){
         $fecha = $res['fecha'];
          
         echo "<tr> 
-                <td> $idPuntoVenta </td>
-                <td> $fecha </td>
+                <td> Punto de Venta: $idPuntoVenta &nbsp &nbsp</td>
+                <td> &nbsp &nbsp Fecha: $fecha </td>
             </tr>";
     } 
 
