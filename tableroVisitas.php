@@ -108,23 +108,14 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
 <!-- Modal Detalles-->
 <div class="modal fade" id="modalDetalles" tabindex="-1" aria-labelledby="modalDetallesLabel" aria-hidden="true">
   <div class="modal-dialog">
-    <div class="modal-content" style="width:120%;">
+    <div class="modal-content" style="width:125%;">
       <div class="modal-header">
         <h5 class="modal-title" id="modalDetallesLabel" style="color:#607d8b">Detalles</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="btnCerrarDetalles">
           <span aria-hidden="true">&times;</span></button>
       </div>
       <div class="modal-body">
-      <table class="table">
-           <thead>
-               <tr>
-                   <th>Punto de Venta</th>
-                   <th>Fecha</th>
-               </tr>
-           </thead>
-           <tbody id="tablaDetallesVisita">
-           </tbody>
-       </table>
+       <label for="" id="detallesVisita"></label>
       <table class="table">
            <thead>
                <tr>
@@ -374,7 +365,7 @@ function getDetallesVisita(idVisita){
     data:parametros,
     url:'visitasAjax.php',
     success: function(data){
-      $("#tablaDetallesVisita").html(data);
+      $("#detallesVisita").html(data);
     }
   });
 }
