@@ -61,11 +61,11 @@ if($_SESSION["tipoUsuario"]!="Vendedor"){
     <label for=""><b>Frentes</b></label>
     <input type="number" class="form-control" name="frentes" id="selFrentes" min="0">
     <br>
+    <input type="file" name="imagen" id="imgEvidencia">
+    <br><br>
     <button type="button" class="btn btn-light" style="margin-top:5px;" data-toggle="modal"
     data-target="#modalMatriz" id="btnMatriz">Matriz <i class="fab fa-buromobelexperte"></i></button>
-    <button type="button" class="btn btn-light" style="margin-top:5px;" data-toggle="modal"
-    data-target="#modalImagen" id="btnImagen">Imagen <i class="far fa-image"></i></button>
-    <br>
+    <br>   
     <div id="mns"></div>
     <br>
     <button class="btn btn-secondary" data-id="" id="btnGuardar"><i class="far fa-save"></i> Guardar</button>
@@ -81,7 +81,7 @@ if($_SESSION["tipoUsuario"]!="Vendedor"){
   <div class="modal-dialog">
     <div class="modal-content" style="width:130%;">
       <div class="modal-header">
-        <h5 class="modal-title" id="modalFinalizarLabel" style="color:#0d6efd">Visita</h5>
+        <h5 class="modal-title" id="modalFinalizarLabel" style="color:#607d8b">Visita</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="btnCerrarF">
           <span aria-hidden="true">&times;</span></button>
       </div>
@@ -219,31 +219,6 @@ if($_SESSION["tipoUsuario"]!="Vendedor"){
 </div>
 <!-- FIN Modal Matriz-->
 
-<!-- Modal Imagen-->
-<div class="modal fade" id="modalImagen" tabindex="-1" aria-labelledby="modalImagenLabel" aria-hidden="true"
-  data-backdrop="static" data-keyboard="false">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="modalImagenLabel" style="color:#607d8b">Imagen Evidencia</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="btnCerrarImg">
-          <span aria-hidden="true">&times;</span></button>
-      </div>
-      <div class="modal-body">
-      <label for="">Seleccione su archivo tipo (.png / .jpg) a subir</label>
-      <br>
-        <input type="file" name="imagen" id="imgEvidencia">
-        <br>
-          <div id="avisoImagen"> </div>
-          <br>
-          <button class="btn btn-outline-success" style="margin:1%;" type="button" data-id=""
-            id="btnNuevaImagen">Guardar <i class="far fa-save"></i></button>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- FIN Modal Imagen-->
-
 <?php include ('includes/footer.php')?>
 
 <script>
@@ -311,9 +286,25 @@ $("#btnGuardar").click(function(){
   var selExistencia = $('#selExistencia').val();
   var selPrecio = $('#selPrecio').val();
   var selFrentes = parseInt( $('#selFrentes').val());
+  var img = $("#imgEvidencia")[0].files[0];
+
+  //parte imagen
+  if(img == ""){
+        console.log("Imagen no seleccionada");
+      }else{
+        var extension = img.name.substring(img.name.lastIndexOf("."));
+        console.log(extension);
+        if(extension != ".png" && extension != ".jpg"){
+          console.log("Error de formato");
+        }else{
+          var evidencia = new FormData();
+          evidencia.append("action", "guardarFichero");
+          evidencia.append("img", img);
+          guardarImagen(evidencia);
+        }
+      }
 
   if(selProducto != "" && selTipoExi != "" && selExistencia != "" && selPrecio != "" && selFrentes >= 0){
-
     $("#mns").css("color", "#0f5132").html("<i class='far fa-save'></i> Agregado con Éxito");
     var parametros = {
         "action": "guardarFichero",
@@ -332,13 +323,30 @@ $("#btnGuardar").click(function(){
         $('#selExistencia').val("0");
         $('#selPrecio').val("");
         $('#selFrentes').val("");
+        $('#imgEvidencia').val("");
         $("#btnFinalizar").removeAttr('disabled');
         }
       });
     }else{
     $("#mns").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> Datos Incorrectos o Vacíos");
   }
+  });
+
+//AGREGAR IMG
+function guardarImagen(evidencia){
+      $.ajax({
+          url: "visitasAjax.php",
+          data: evidencia,
+          type: 'POST',
+          contentType: false,
+          enctype: 'multipart/form-data',
+          cache: false,
+          processData: false,
+          success: function(data) {
+            console.log(data);
+        }
     });
+}
 
 //función para mostrar datos en el tbody de la tabla
 function finalFichero1(){
@@ -449,7 +457,7 @@ $("#btnConfirmar").click(function(){
           console.log(data);
         $('#mns').html("");
         $('#btnConfirmar').hide();
-        setTimeout("redireccionarPagina()", 1500);
+        // setTimeout("redireccionarPagina()", 1500);
         }
       });
     });
@@ -533,12 +541,6 @@ $(document).on("click", "#btnCerrarF", function(){
   $('#btnConfirmar').show();
 });
 
-$(document).on("click", "#btnCerrarImg", function(){
-  $('#imgEvidencia').val("");
-  $('#avisoImagen').html("");
-  $('#btnNuevaImagen').show();
-});
-
 $(document).on("click", "#btnCerrarMat", function () {
   $('#avisoMatriz').html("");
   $('#btnNuevaMatriz').show();
@@ -561,45 +563,6 @@ $(document).on("click", "#btnCerrarMat", function () {
   $('#txtInfCen').val("");
   $('#txtInfDer').val("");
 });
-
-//AGREGAR IMG
-$("#btnNuevaImagen").click(function () {
-      var img = $("#imgEvidencia")[0].files[0];
-      var imagen = $("#imgEvidencia").val();
-      if(imagen == ""){
-        $("#avisoImagen").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> Imagen no seleccionada");
-        console.log("Imagen no seleccionada");
-      }else{
-        var extension = img.name.substring(img.name.lastIndexOf("."));
-        console.log(extension);
-        if(extension != ".png" && extension != ".jpg"){
-          console.log("Error de formato");
-          $("#avisoImagen").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> Error en formato de imagen");
-        }else{
-          var evidencia = new FormData();
-          evidencia.append("action", "guardarImagen");
-          evidencia.append("img", img);
-          guardarImagen(evidencia);
-        }
-      }
-});
-
-function guardarImagen(evidencia){
-      $.ajax({
-          url: "visitasAjax.php",
-          data: evidencia,
-          type: 'POST',
-          contentType: false,
-          enctype: 'multipart/form-data',
-          cache: false,
-          processData: false,
-          success: function(data) {
-            $("#avisoImagen").css("color", "#0f5132").html("<i class='far fa-save'></i> Agregado con Éxito");
-            $('#btnNuevaImagen').hide();
-            console.log(data);
-        }
-    });
-}
 
 </script>
 
