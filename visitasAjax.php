@@ -41,7 +41,7 @@ if($action=="getPVenta"){
 
 //Selects automáticos
 }elseif($action=="getFProducto"){
-    $queryRes=mysqli_query($con,"SELECT * From producto");
+    $queryRes=mysqli_query($con, "SELECT * From producto");
     echo "<option value=''>Seleccione</option>";
    while($res = mysqli_fetch_array($queryRes)){
        $idProducto = $res['idProducto'];
@@ -74,17 +74,40 @@ if($action=="getPVenta"){
     $existencia=(isset($_REQUEST['selExistencia'])&& $_REQUEST['selExistencia'] !=NULL)?$_REQUEST['selExistencia']:'';
     $precio=(isset($_REQUEST['selPrecio'])&& $_REQUEST['selPrecio'] !=NULL)?$_REQUEST['selPrecio']:'';
     $frentes=(isset($_REQUEST['selFrentes'])&& $_REQUEST['selFrentes'] !=NULL)?$_REQUEST['selFrentes']:'';
+    $imgFinal = "imgEvidencias/img";
+    //parte imagen
+    mysqli_query($con,'BEGIN');
+    if(isset($_FILES['img']) || $_FILES['img']['size']!=0){
+        $nombre = $_FILES['img']['name'];
+        $nombre_tmp = $_FILES['img']['tmp_name'];
+        $partes_nombre = explode('.', $nombre);
+        $extension = end($partes_nombre);
+        $ruta ="imgEvidencias/";
+       if(move_uploaded_file($nombre_tmp, $ruta.".".$extension)){
+            $insertRuta = "INSERT INTO `imgdetallesvisita` (`idImgDetallesVisita`, `idDetallesVisita`, `ruta`) VALUES (NULL, NULL, '$imgFinal')";
+            $queryUpdateImg = mysqli_query($con, $insertRuta);
+            if($queryUpdateImg){
+                mysqli_query($con,'COMMIT');
+                echo 1;
+            }else{
+                mysqli_query($con,'ROLLBACK');
+                echo 0;  
+            }
+          }
+      }
    
+    //parte session
     if(isset($_SESSION['fichero'])){
             $count = count($_SESSION['fichero']);
-			$datos=array_column($_SESSION['fichero'], 'producto', 'tipoExi', 'existencia', 'precio', 'frentes');
+			$datos=array_column($_SESSION['fichero'], 'producto', 'tipoExi', 'existencia', 'precio', 'frentes', 'imgFinal');
        if(!in_array($producto, $datos)){
            $_SESSION['fichero'][$count] = array(
 					'producto' => $producto,
 					'tipoExi' =>$tipoExi,
 					'existencia'=> $existencia,
                     'precio'=> $precio,
-                    'frentes'=> $frentes
+                    'frentes'=> $frentes,
+                    'imgFinal'=> $imgFinal
 				);
        }else{
            for($i=0; $i < count($datos); $i++){
@@ -95,12 +118,14 @@ if($action=="getPVenta"){
                   $_SESSION['fichero'][$i]['existencia']= $existencia;
                   $_SESSION['fichero'][$i]['precio']= $precio;
                   $_SESSION['fichero'][$i]['frentes']= $frentes;
+                  $_SESSION['fichero'][$i]['imgFinal']= $imgFinal;
                  
                   echo ($producto);
                   echo ($tipoExi);
                   echo ($existencia);
                   echo ($precio);
                   echo ($frentes);
+                  echo ($imgFinal);
                   
                }
            }
@@ -111,7 +136,8 @@ if($action=="getPVenta"){
 					                           'tipoExi' =>$tipoExi,
 					                           'existencia'=> $existencia,
                                                'precio'=> $precio,
-                                               'frentes'=> $frentes
+                                               'frentes'=> $frentes,
+                                               'imgFinal'=> $imgFinal
 				                                );
         }
 
@@ -154,52 +180,6 @@ if($action=="getPVenta"){
         </tr>";
         } 
  
-//insertar confirmacion en bd
-}elseif($action=="confirmarFichero"){
-    //parte funcional de visita
-    $fecha = date('Y-m-d');
-    $idPuntoVenta=$_SESSION['checkVisita']['punVenta'];
-    $idVendedor= $_SESSION["idUsuario"];
-    
-        $queryVisita="INSERT INTO visita(idVisita, idVendedor, idPuntoVenta, fecha) 
-                VALUES ('', $idVendedor, $idPuntoVenta, '$fecha')";
-                mysqli_query($con,$queryVisita);
-                $idVisita = mysqli_insert_id($con);
-    
-    //parte funcional de detallesVisita y matrizUbicacion
-        $count = count($_SESSION['fichero']);
-        for($i=0;$i<$count; $i++){
-            $producto=$_SESSION['fichero'][$i]['producto'];
-            $tipoExi=$_SESSION['fichero'][$i]['tipoExi'];
-            $existencia=$_SESSION['fichero'][$i]['existencia'];
-            $precio=$_SESSION['fichero'][$i]['precio'];
-            $frentes=$_SESSION['fichero'][$i]['frentes'];
-            $supIzq=$_SESSION['matrix'][$i]['supIzq'];
-            $supCen=$_SESSION['matrix'][$i]['supCen'];
-            $supDer=$_SESSION['matrix'][$i]['supDer'];
-            $cenIzq=$_SESSION['matrix'][$i]['cenIzq'];
-            $centro=$_SESSION['matrix'][$i]['centro'];
-            $cenDer=$_SESSION['matrix'][$i]['cenDer'];
-            $infIzq=$_SESSION['matrix'][$i]['infIzq'];
-            $infCen=$_SESSION['matrix'][$i]['infCen'];
-            $infDer=$_SESSION['matrix'][$i]['infDer'];
-    
-                $queryDetalles="INSERT INTO detallesvisita(idDetallesVisita, idVisita, idProducto, idTipoExibicion, existencia, precio, frentes) 
-                VALUES ('', $idVisita, $producto, $tipoExi, '$existencia', $precio, $frentes)";
-                mysqli_query($con,$queryDetalles);
-                $idDetallesVisita = mysqli_insert_id($con);
-                $insertMatriz = "INSERT INTO matrizubicacion(idDetallesVisita, supIzq, supCentro, supDer, centroIzq, centroCentro, centroDer, infIzq, infCentro, infDer)
-                VALUES ('$idDetallesVisita', '$supIzq', '$supCen', '$supDer', '$cenIzq', '$centro', '$cenDer', '$infIzq', '$infCen', '$infDer')"; 
-                mysqli_query($con, $insertMatriz);
-                $updateImgDetalles = "UPDATE `imgdetallesvisita` SET `idDetallesVisita` = '$idDetallesVisita', `ruta`='imgEvidencias/img$idDetallesVisita' WHERE `ruta` = 'imgEvidencias/img'";
-                mysqli_query($con, $updateImgDetalles);
-                echo $insertMatriz;
-                var_dump($_SESSION);
-      } 
-
-        unset($_SESSION["fichero"]);
-        unset($_SESSION["matrix"]);
-
 //matriz guardar datos
 }elseif($action=="guardarMatriz"){
     $supIzq=(isset($_REQUEST['supIzq'])&& $_REQUEST['supIzq'] !=NULL)?$_REQUEST['supIzq']:''; 
@@ -253,7 +233,7 @@ if($action=="getPVenta"){
            }
        }
    }
-}else{
+      }else{
    $_SESSION['matrix'][0] = array(
     'supIzq' => $supIzq,
     'supCen' => $supCen,
@@ -267,29 +247,53 @@ if($action=="getPVenta"){
         );
     }
 
-//guardar imagen
-}elseif($action == "guardarImagen"){
-    mysqli_query($con,'BEGIN');
-    if(isset($_FILES['img']) || $_FILES['img']['size']!=0){
-        $nombre = $_FILES['img']['name'];
-        $nombre_tmp = $_FILES['img']['tmp_name'];
-        $partes_nombre = explode('.', $nombre);
-        $extension = end($partes_nombre);
-        $ruta ="imgEvidencias/";
-        if(move_uploaded_file($nombre_tmp, $ruta.".".$extension)){
-            $nombrenuevo = "img";
-            $rutabd = "imgEvidencias/".$nombrenuevo;
-            $insertRuta = "INSERT INTO `imgdetallesvisita` (`idImgDetallesVisita`, `idDetallesVisita`, `ruta`) VALUES (NULL, NULL, '$rutabd')";
-            $queryUpdateImg = mysqli_query($con, $insertRuta);
-            if($queryUpdateImg){
-                mysqli_query($con,'COMMIT');
-                echo 1;
-            }else{
-                mysqli_query($con,'ROLLBACK');
-                echo 0;  
-            }
-          }
-      }
+//insertar confirmacion en bd
+}elseif($action=="confirmarFichero"){
+    //parte funcional de visita
+    $fecha = date('Y-m-d');
+    $idPuntoVenta=$_SESSION['checkVisita']['punVenta'];
+    $idVendedor= $_SESSION["idUsuario"];
+    
+        $queryVisita="INSERT INTO visita(idVisita, idVendedor, idPuntoVenta, fecha) 
+                VALUES ('', $idVendedor, $idPuntoVenta, '$fecha')";
+                mysqli_query($con,$queryVisita);
+                $idVisita = mysqli_insert_id($con);
+    
+    //parte funcional de detallesVisita y matrizUbicacion
+        $count = count($_SESSION['fichero']);
+        for($i=0;$i<$count; $i++){
+            $producto=$_SESSION['fichero'][$i]['producto'];
+            $tipoExi=$_SESSION['fichero'][$i]['tipoExi'];
+            $existencia=$_SESSION['fichero'][$i]['existencia'];
+            $precio=$_SESSION['fichero'][$i]['precio'];
+            $frentes=$_SESSION['fichero'][$i]['frentes'];
+            $imgFinal=$_SESSION['fichero'][$i]['imgFinal'];
+            $supIzq=$_SESSION['matrix'][$i]['supIzq'];
+            $supCen=$_SESSION['matrix'][$i]['supCen'];
+            $supDer=$_SESSION['matrix'][$i]['supDer'];
+            $cenIzq=$_SESSION['matrix'][$i]['cenIzq'];
+            $centro=$_SESSION['matrix'][$i]['centro'];
+            $cenDer=$_SESSION['matrix'][$i]['cenDer'];
+            $infIzq=$_SESSION['matrix'][$i]['infIzq'];
+            $infCen=$_SESSION['matrix'][$i]['infCen'];
+            $infDer=$_SESSION['matrix'][$i]['infDer'];
+
+            $queryDetalles="INSERT INTO detallesvisita(idVisita, idProducto, idTipoExibicion, existencia, precio, frentes) 
+            VALUES ($idVisita, $producto, $tipoExi, '$existencia', $precio, $frentes)";
+            mysqli_query($con,$queryDetalles);
+            $idDetallesVisita = mysqli_insert_id($con);
+            $insertMatriz = "INSERT INTO matrizubicacion(idDetallesVisita, supIzq, supCentro, supDer, centroIzq, centroCentro, centroDer, infIzq, infCentro, infDer)
+            VALUES ('$idDetallesVisita', '$supIzq', '$supCen', '$supDer', '$cenIzq', '$centro', '$cenDer', '$infIzq', '$infCen', '$infDer')"; 
+            mysqli_query($con, $insertMatriz);
+            $updateImgDetalles = "UPDATE `imgdetallesvisita` SET `idDetallesVisita` = '$idDetallesVisita', `ruta`='$imgFinal$idDetallesVisita' WHERE `ruta` = '$imgFinal'";
+            mysqli_query($con, $updateImgDetalles);
+            echo $insertMatriz;
+            var_dump($_SESSION);
+      } 
+
+        unset($_SESSION["fichero"]);
+        unset($_SESSION["matrix"]);
+
 }
 
 //Inicia parte de VISITAS ADMIN ***************************************************************************************
