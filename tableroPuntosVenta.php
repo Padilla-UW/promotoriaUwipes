@@ -147,8 +147,11 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
           <br>
           <div id="avisoAgregar"> </div>
           <br>
+          <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" id="btnCerrarAdd">Cerrar</button>
           <button class="btn btn-outline-success" type="button" data-id="" id="btnNuevoPuntoV">Agregar 
           <i class="far fa-save"></i></button>
+          </div>
       </div>
     </div>
   </div>
@@ -187,8 +190,11 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
           <br>
           <div id="avisoEditar"> </div>
           <br>
+          <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" id="btnCerrarEdit">Cerrar</button>
           <button type="button" class="btn btn-outline-success" style="margin:1%;" data-id="" id="btnEditarPuntoV">
           Guardar <i class="far fa-save"></i></button>
+          </div>
       </div>
     </div>
   </div>
