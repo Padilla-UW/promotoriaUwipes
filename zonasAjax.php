@@ -50,7 +50,7 @@ if($action=="getZona"){
                 $pagination=paginate($reload, $page, $total_pages, $adjacents);
                 $array = array(
                     "zonas" => $zonas,
-                    "pagination" => $pagination,
+                    "pagination" => $pagination
                 );
               echo json_encode($array);
 
@@ -63,7 +63,7 @@ if($action=="getZona"){
             mysqli_query($con,'ROLLBACK');
             echo 0;
         }else{      
-        $insertZona = "INSERT INTO zona (idZona, nombre) VALUES ('', '$nombreAdd')";
+        $insertZona = "INSERT INTO zona (nombre) VALUES ('$nombreAdd')";
             mysqli_query($con, $insertZona);
             mysqli_query($con,'COMMIT');
             echo 1;
@@ -155,7 +155,7 @@ if($action=="getPuntosV"){
                 $pagination=paginate($reload, $page, $total_pages, $adjacents);
                 $array = array(
                     "pventa" => $pventa,
-                    "pagination" => $pagination,
+                    "pagination" => $pagination
                 );
               echo json_encode($array);
 
@@ -172,8 +172,8 @@ if($action=="getPuntosV"){
         mysqli_query($con,'ROLLBACK');
         echo 0;
         }else{      
-        $insertPuntoV = "INSERT INTO puntoventa (idPuntoVenta, idVendedor, idZona, nombre, tipo)
-        VALUES ('', '$vendedorAdd', '$zonaAdd', '$nombreAdd', '$tipoAdd')";
+        $insertPuntoV = "INSERT INTO puntoventa (idVendedor, idZona, nombre, tipo)
+        VALUES ('$vendedorAdd', '$zonaAdd', '$nombreAdd', '$tipoAdd')";
         mysqli_query($con, $insertPuntoV);
         mysqli_query($con,'COMMIT');
         echo 1;
