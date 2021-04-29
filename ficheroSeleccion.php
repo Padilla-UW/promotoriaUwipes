@@ -287,9 +287,10 @@ $("#btnGuardar").click(function(){
   var selPrecio = $('#selPrecio').val();
   var selFrentes = parseInt( $('#selFrentes').val());
   var img = $("#imgEvidencia")[0].files[0];
+  var imagen = $('#imgEvidencia').val();
 
   //parte imagen
-  if(img == ""){
+  if(imagen == ""){
         console.log("Imagen no seleccionada");
       }else{
         var extension = img.name.substring(img.name.lastIndexOf("."));
@@ -300,6 +301,8 @@ $("#btnGuardar").click(function(){
           var evidencia = new FormData();
           evidencia.append("action", "guardarFichero");
           evidencia.append("img", img);
+          evidencia.append("selProducto", selProducto);
+
           guardarImagen(evidencia);
         }
       }
