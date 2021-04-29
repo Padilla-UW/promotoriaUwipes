@@ -48,7 +48,6 @@ if($_SESSION["tipoUsuario"]!="Vendedor"){
 
 <script>
 $(document).ready(function(){
-  // getPVenta(); 
   getZona(); 
 });
 
