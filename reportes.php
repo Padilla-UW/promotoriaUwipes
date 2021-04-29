@@ -29,7 +29,7 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
   <div class="row">
     <div class="col">
       <h2>Reportes</h2>
-      <p>Reporte en Excel con los siguientes datos: Fecha, Zona, Punto de Venta, Vendedor, .</p>
+      <p>Reporte en Excel con los siguientes datos: Fecha, Zona, Punto de Venta y Vendedor.</p>
     </div>
   </div>
 </div>
