@@ -443,7 +443,7 @@ $("#btnConfirmar").click(function(){
           console.log(data);
         $('#mns').html("");
         $('#btnConfirmar').hide();
-        // setTimeout("redireccionarPagina()", 1500);
+        setTimeout("redireccionarPagina()", 1500);
         }
       });
     });
