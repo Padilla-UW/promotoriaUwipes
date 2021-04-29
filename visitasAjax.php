@@ -290,7 +290,7 @@ if($action=="getPVenta"){
             VALUES ('$idDetallesVisita', '$supIzq', '$supCen', '$supDer', '$cenIzq', '$centro', '$cenDer', '$infIzq', '$infCen', '$infDer')"; 
             mysqli_query($con, $insertMatriz);
 
-            $updateImgDetalles = "UPDATE imgdetallesvisita SET idDetallesVisita = '$idDetallesVisita' WHERE `ruta` = '$rutaFinal'";
+            $updateImgDetalles = "UPDATE imgdetallesvisita SET idDetallesVisita = '$idDetallesVisita', ruta = 'imgEvidencias/img$idDetallesVisita' WHERE `ruta` = '$rutaFinal'";
             mysqli_query($con, $updateImgDetalles);
 
             echo $insertMatriz;
