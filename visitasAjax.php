@@ -32,8 +32,6 @@ if($action=="getPVenta"){
 //SESSIONES de visita
 }elseif($action=="entrarVisita"){
     $punVenta=(isset($_REQUEST['selPuntoV'])&& $_REQUEST['selPuntoV'] !=NULL)?$_REQUEST['selPuntoV']:'';
-    
-    $_SESSION['checkUsuario'] = $row['correo'];
 
     $_SESSION['checkVisita']=array(
         'punVenta' => $punVenta
@@ -69,12 +67,14 @@ if($action=="getPVenta"){
 
 //guarda datos en fichero boton guardar
 }elseif($action=="guardarFichero"){
+
     $producto=(isset($_REQUEST['selProducto'])&& $_REQUEST['selProducto'] !=NULL)?$_REQUEST['selProducto']:'';
     $tipoExi=(isset($_REQUEST['selTipoExi'])&& $_REQUEST['selTipoExi'] !=NULL)?$_REQUEST['selTipoExi']:'';
     $existencia=(isset($_REQUEST['selExistencia'])&& $_REQUEST['selExistencia'] !=NULL)?$_REQUEST['selExistencia']:'';
     $precio=(isset($_REQUEST['selPrecio'])&& $_REQUEST['selPrecio'] !=NULL)?$_REQUEST['selPrecio']:'';
     $frentes=(isset($_REQUEST['selFrentes'])&& $_REQUEST['selFrentes'] !=NULL)?$_REQUEST['selFrentes']:'';
     $imgFinal = "imgEvidencias/img";
+    $rutaFinal = "";
     //parte imagen
     mysqli_query($con,'BEGIN');
     if(isset($_FILES['img']) || $_FILES['img']['size']!=0){
@@ -83,10 +83,18 @@ if($action=="getPVenta"){
         $partes_nombre = explode('.', $nombre);
         $extension = end($partes_nombre);
         $ruta ="imgEvidencias/";
-       if(move_uploaded_file($nombre_tmp, $ruta.".".$extension)){
-            $insertRuta = "INSERT INTO `imgdetallesvisita` (`idImgDetallesVisita`, `idDetallesVisita`, `ruta`) VALUES (NULL, NULL, '$imgFinal')";
-            $queryUpdateImg = mysqli_query($con, $insertRuta);
-            if($queryUpdateImg){
+
+        $insertRuta = "SELECT MAX(idImgDetallesVisita)+1 as Siguiente FROM imgdetallesvisita";
+        $queryUpdateImg = mysqli_fetch_array(mysqli_query($con, $insertRuta));
+        $rutaFinal = $imgFinal.$queryUpdateImg['Siguiente'];
+
+       if(move_uploaded_file($nombre_tmp, $ruta."Img".$queryUpdateImg['Siguiente'].".".$extension)){
+            
+
+            // $ultimoId = mysqli_insert_id($con);
+            $insertRuta2 = "INSERT INTO imgdetallesvisita(idDetallesVisita, ruta) VALUES (null,'$rutaFinal')";
+            $queryUpdateImg2 = mysqli_query($con, $insertRuta2);
+            if($queryUpdateImg && $queryUpdateImg2){
                 mysqli_query($con,'COMMIT');
                 echo 1;
             }else{
@@ -98,48 +106,48 @@ if($action=="getPVenta"){
    
     //parte session
     if(isset($_SESSION['fichero'])){
-            $count = count($_SESSION['fichero']);
-			$datos=array_column($_SESSION['fichero'], 'producto', 'tipoExi', 'existencia', 'precio', 'frentes', 'imgFinal');
-       if(!in_array($producto, $datos)){
-           $_SESSION['fichero'][$count] = array(
-					'producto' => $producto,
-					'tipoExi' =>$tipoExi,
-					'existencia'=> $existencia,
-                    'precio'=> $precio,
-                    'frentes'=> $frentes,
-                    'imgFinal'=> $imgFinal
-				);
-       }else{
-           for($i=0; $i < count($datos); $i++){
-               
-               if($datos[$i]==$producto){
-                  $_SESSION['fichero'][$i]['producto']=$producto;
-                  $_SESSION['fichero'][$i]['tipoExi']= $tipoExi;
-                  $_SESSION['fichero'][$i]['existencia']= $existencia;
-                  $_SESSION['fichero'][$i]['precio']= $precio;
-                  $_SESSION['fichero'][$i]['frentes']= $frentes;
-                  $_SESSION['fichero'][$i]['imgFinal']= $imgFinal;
-                 
-                  echo ($producto);
-                  echo ($tipoExi);
-                  echo ($existencia);
-                  echo ($precio);
-                  echo ($frentes);
-                  echo ($imgFinal);
-                  
-               }
+        $count = count($_SESSION['fichero']);
+        $datos=array_column($_SESSION['fichero'], 'producto', 'tipoExi', 'existencia', 'precio', 'frentes', 'rutaFinal');
+   if(!in_array($producto, $datos)){
+       $_SESSION['fichero'][$count] = array(
+                'producto' => $producto,
+                'tipoExi' =>$tipoExi,
+                'existencia'=> $existencia,
+                'precio'=> $precio,
+                'frentes'=> $frentes,
+                'rutaFinal'=> $rutaFinal
+            );
+   }else{
+       for($i=0; $i < count($datos); $i++){
+           
+           if($datos[$i]==$producto){
+              $_SESSION['fichero'][$i]['producto']=$producto;
+              $_SESSION['fichero'][$i]['tipoExi']= $tipoExi;
+              $_SESSION['fichero'][$i]['existencia']= $existencia;
+              $_SESSION['fichero'][$i]['precio']= $precio;
+              $_SESSION['fichero'][$i]['frentes']= $frentes;
+              $_SESSION['fichero'][$i]['rutaFinal']= $rutaFinal;
+             
+              echo ($producto);
+              echo ($tipoExi);
+              echo ($existencia);
+              echo ($precio);
+              echo ($frentes);
+              echo ($rutaFinal);
+              
            }
        }
-   }else{
-       $_SESSION['fichero'][0] = array(
-					                           'producto' => $producto,
-					                           'tipoExi' =>$tipoExi,
-					                           'existencia'=> $existencia,
-                                               'precio'=> $precio,
-                                               'frentes'=> $frentes,
-                                               'imgFinal'=> $imgFinal
-				                                );
-        }
+   }
+}else{
+   $_SESSION['fichero'][0] = array(
+                                           'producto' => $producto,
+                                           'tipoExi' =>$tipoExi,
+                                           'existencia'=> $existencia,
+                                           'precio'=> $precio,
+                                           'frentes'=> $frentes,
+                                           'rutaFinal'=> $rutaFinal
+                                            );
+    }
 
 //mostrar datos en guardar tabla 1
 }elseif($action=="finalFichero1"){
@@ -254,8 +262,8 @@ if($action=="getPVenta"){
     $idPuntoVenta=$_SESSION['checkVisita']['punVenta'];
     $idVendedor= $_SESSION["idUsuario"];
     
-        $queryVisita="INSERT INTO visita(idVisita, idVendedor, idPuntoVenta, fecha) 
-                VALUES ('', $idVendedor, $idPuntoVenta, '$fecha')";
+        $queryVisita="INSERT INTO visita(idVendedor, idPuntoVenta, fecha) 
+                VALUES ($idVendedor, $idPuntoVenta, '$fecha')";
                 mysqli_query($con,$queryVisita);
                 $idVisita = mysqli_insert_id($con);
     
@@ -267,7 +275,7 @@ if($action=="getPVenta"){
             $existencia=$_SESSION['fichero'][$i]['existencia'];
             $precio=$_SESSION['fichero'][$i]['precio'];
             $frentes=$_SESSION['fichero'][$i]['frentes'];
-            $imgFinal=$_SESSION['fichero'][$i]['imgFinal'];
+            $rutaFinal=$_SESSION['fichero'][$i]['rutaFinal'];
             $supIzq=$_SESSION['matrix'][$i]['supIzq'];
             $supCen=$_SESSION['matrix'][$i]['supCen'];
             $supDer=$_SESSION['matrix'][$i]['supDer'];
@@ -285,8 +293,10 @@ if($action=="getPVenta"){
             $insertMatriz = "INSERT INTO matrizubicacion(idDetallesVisita, supIzq, supCentro, supDer, centroIzq, centroCentro, centroDer, infIzq, infCentro, infDer)
             VALUES ('$idDetallesVisita', '$supIzq', '$supCen', '$supDer', '$cenIzq', '$centro', '$cenDer', '$infIzq', '$infCen', '$infDer')"; 
             mysqli_query($con, $insertMatriz);
-            $updateImgDetalles = "UPDATE `imgdetallesvisita` SET `idDetallesVisita` = '$idDetallesVisita', `ruta`='$imgFinal$idDetallesVisita' WHERE `ruta` = '$imgFinal'";
+
+            $updateImgDetalles = "UPDATE imgdetallesvisita SET idDetallesVisita = '$idDetallesVisita' WHERE `ruta` = '$rutaFinal'";
             mysqli_query($con, $updateImgDetalles);
+
             echo $insertMatriz;
             var_dump($_SESSION);
       } 
