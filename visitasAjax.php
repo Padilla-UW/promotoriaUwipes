@@ -1,7 +1,8 @@
 <?php
 session_start();
 // añadimos conexion y cachamos datos
-include('includes/conection.php');   
+include('includes/conection.php');
+    
 $action=(isset($_REQUEST['action'])&& $_REQUEST['action'] !=NULL)?$_REQUEST['action']:'';
 
 //Inicia parte de VISITAS VENDEDOR ************************************************************************************
@@ -88,6 +89,9 @@ if($action=="getPVenta"){
         $rutaFinal = $imgFinal.$queryUpdateImg['Siguiente'];
 
        if(move_uploaded_file($nombre_tmp, $ruta."Img".$queryUpdateImg['Siguiente'].".".$extension)){
+            
+
+            // $ultimoId = mysqli_insert_id($con);
             $insertRuta2 = "INSERT INTO imgdetallesvisita(idDetallesVisita, ruta) VALUES (null,'$rutaFinal')";
             $queryUpdateImg2 = mysqli_query($con, $insertRuta2);
             if($queryUpdateImg && $queryUpdateImg2){
