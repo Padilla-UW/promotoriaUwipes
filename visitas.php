@@ -91,9 +91,10 @@ function getPVenta(zona) {
 
 //Botón visita valida o redirecciona
 $("#btnVisita").click(function(){
+  var selZona = $('#selZona').val();
   var selPuntoV = $('#selPuntoV').val();
  
-  if(selPuntoV != "") {
+  if(selZona != "" && selPuntoV != "") {
     window.location="ficheroSeleccion.php";
     var parametros = {
         "action": "entrarVisita",
