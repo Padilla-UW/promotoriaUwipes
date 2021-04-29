@@ -49,7 +49,7 @@ if($action=="getVendedor"){
         $queryGeneral="SELECT v.idVisita, v.idVendedor, v.idPuntoVenta, v.fecha, pv.idPuntoVenta, pv.nombre AS nomPVenta,
         u.idUsuario, u.idPersona, p.idPersona, p.nombre AS nomPersona, pv.idZona, z.idZona, z.nombre AS nomZona 
         FROM visita v, puntoventa pv, usuario u, persona p, zona z WHERE v.idVendedor=u.idUsuario AND u.idPersona=p.idPersona 
-        AND v.idPuntoVenta=pv.idPuntoVenta AND pv.idZona=z.idZona ORDER BY fecha";
+        AND v.idPuntoVenta=pv.idPuntoVenta AND pv.idZona=z.idZona";
 
     //Validación con cierto vendedor
         if($idVendedor !=''){
