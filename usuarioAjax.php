@@ -134,12 +134,12 @@ if($action=="getUsuarios"){
         mysqli_query($con,'ROLLBACK');
         echo 0;
         }else{      
-            $insertPersona = "INSERT INTO persona (idPersona, nombre, apellidos, telefono, ciudad)
-            VALUES ('', '$nombreAdd', '$apellidosAdd', '$telAdd', '$ciudadAdd')"; 
+            $insertPersona = "INSERT INTO persona (nombre, apellidos, telefono, ciudad)
+            VALUES ('$nombreAdd', '$apellidosAdd', '$telAdd', '$ciudadAdd')"; 
             mysqli_query($con, $insertPersona);
             $idPersona = mysqli_insert_id($con);
-            $insertUsuario = "INSERT INTO usuario (idUsuario, idPersona, idTipoUsuario, correo, contrasena)
-            VALUES ('', '$idPersona', '$rolAdd', '$correoAdd', SHA1('$passwordAdd'))";
+            $insertUsuario = "INSERT INTO usuario (idPersona, idTipoUsuario, correo, contrasena)
+            VALUES ('$idPersona', '$rolAdd', '$correoAdd', SHA1('$passwordAdd'))";
             mysqli_query($con, $insertUsuario);
         mysqli_query($con,'COMMIT');
         echo 1;
