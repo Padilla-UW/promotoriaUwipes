@@ -302,24 +302,23 @@ $("#btnGuardar").click(function(){
           evidencia.append("action", "guardarFichero");
           evidencia.append("img", img);
           evidencia.append("selProducto", selProducto);
-
-          guardarImagen(evidencia);
+          evidencia.append("selTipoExi", selTipoExi);
+          evidencia.append("selExistencia", selExistencia);
+          evidencia.append("selPrecio", selPrecio);
+          evidencia.append("selFrentes", selFrentes);
         }
       }
 
   if(selProducto != "" && selTipoExi != "" && selExistencia != "" && selPrecio != "" && selFrentes >= 0){
     $("#mns").css("color", "#0f5132").html("<i class='far fa-save'></i> Agregado con Éxito");
-    var parametros = {
-        "action": "guardarFichero",
-        "selProducto": selProducto,
-        "selTipoExi": selTipoExi,
-        "selExistencia":selExistencia,  
-        "selPrecio":selPrecio,
-        "selFrentes":selFrentes 
-      }
       $.ajax({
-        data:parametros,
+        data: evidencia,
         url:'visitasAjax.php',
+        type: 'POST',
+        contentType: false,
+        enctype: 'multipart/form-data',
+        cache: false,
+        processData: false,
         success:function(data){
         $('#selProducto').val("");
         $('#selTipoExi').val("");
@@ -334,22 +333,6 @@ $("#btnGuardar").click(function(){
     $("#mns").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> Datos Incorrectos o Vacíos");
   }
   });
-
-//AGREGAR IMG
-function guardarImagen(evidencia){
-      $.ajax({
-          url: "visitasAjax.php",
-          data: evidencia,
-          type: 'POST',
-          contentType: false,
-          enctype: 'multipart/form-data',
-          cache: false,
-          processData: false,
-          success: function(data) {
-            console.log(data);
-        }
-    });
-}
 
 //función para mostrar datos en el tbody de la tabla
 function finalFichero1(){
