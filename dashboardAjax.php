@@ -31,12 +31,14 @@ if($action=="getPVenta"){
 
 //TABLA PRECIOS PRODUCTOS PROPIOS BARATO
 }elseif($action=="getPrecioProdPropio"){
-$queryProductos = "SELECT * FROM producto WHERE procedencia='Propio' ORDER BY precio ASC LIMIT 5";
+$queryProductos = "SELECT * FROM producto p, imgProducto i WHERE procedencia='Propio' AND p.idProducto=i.idProducto ORDER BY precio ASC LIMIT 5";
 $query= mysqli_query($con, $queryProductos);
 while($res=mysqli_fetch_array($query)){
     $nombre=$res['nombre'];
+    $img=$res['idProducto'];
     $producto .= "<tr> 
             <td> $nombre </td>
+            <td><img width='150px' height='auto' src='imgProductos/".$img.".png'> </td>
         </tr>";
 } 
             $array = array(
@@ -46,12 +48,14 @@ while($res=mysqli_fetch_array($query)){
 
 //TABLA PRECIOS PRODUCTOS COMPETENCIA BARATO
 }elseif($action=="getPrecioProdCompetencia"){
-    $queryProductos = "SELECT * FROM producto WHERE procedencia='Competencia' ORDER BY precio ASC LIMIT 5";
+    $queryProductos = "SELECT * FROM producto p, imgProducto i WHERE procedencia='Competencia' AND p.idProducto=i.idProducto ORDER BY precio ASC LIMIT 5";
     $query= mysqli_query($con, $queryProductos);
     while($res=mysqli_fetch_array($query)){
         $nombre=$res['nombre'];
+        $img=$res['idProducto'];
         $producto .= "<tr> 
                 <td> $nombre </td>
+                <td><img width='150px' height='auto' src='imgProductos/".$img.".png'> </td>
             </tr>";
     } 
                 $array = array(
@@ -61,15 +65,17 @@ while($res=mysqli_fetch_array($query)){
             
 //TABLA PRECIOS PRODUCTOS PROPIOS EN MÁS PUNTOS DE VENTA (ACCESIBLES) BARATO
 }elseif($action=="getPrecioProdAccesible"){
-    $queryProductos = "SELECT d.idProducto, p.idProducto, p.nombre, count(DISTINCT(v.idPuntoVenta)) AS puntosVenta FROM 
-    visita v, detallesvisita d, producto p WHERE d.idVisita = v.idVisita AND d.idProducto=p.idProducto GROUP BY d.idProducto ORDER BY puntosVenta ASC LIMIT 5";
+    $queryProductos = "SELECT d.idProducto, p.idProducto, p.nombre, i.idProducto, count(DISTINCT(v.idPuntoVenta)) AS puntosVenta FROM 
+    visita v, detallesvisita d, producto p, imgproducto i WHERE d.idVisita = v.idVisita AND d.idProducto=p.idProducto AND p.idProducto=i.idProducto GROUP BY d.idProducto ORDER BY puntosVenta ASC LIMIT 5";
     $query= mysqli_query($con, $queryProductos);
     while($res=mysqli_fetch_array($query)){
         $nombre=$res['nombre'];
         $numPV=$res['puntosVenta'];
+        $img=$res['idProducto'];
         $producto .= "<tr> 
                 <td> $nombre </td>
                 <td> $numPV </td>
+                <td><img width='150px' height='auto' src='imgProductos/".$img.".png'> </td>
             </tr>";
     } 
                 $array = array(
@@ -79,12 +85,14 @@ while($res=mysqli_fetch_array($query)){
 
 //TABLA PRECIOS PRODUCTOS PROPIOS CARO
 }elseif($action=="getPrecioProdPropioCaro"){
-    $queryProductos = "SELECT * FROM producto WHERE procedencia='Propio' ORDER BY precio DESC LIMIT 5";
+    $queryProductos = "SELECT * FROM producto p, imgProducto i WHERE procedencia='Propio' AND p.idProducto=i.idProducto ORDER BY precio DESC LIMIT 5";
     $query= mysqli_query($con, $queryProductos);
     while($res=mysqli_fetch_array($query)){
         $nombre=$res['nombre'];
+        $img=$res['idProducto'];
         $producto .= "<tr> 
                 <td> $nombre </td>
+                <td><img width='150px' height='auto' src='imgProductos/".$img.".png'> </td>
             </tr>";
     } 
                 $array = array(
@@ -94,12 +102,14 @@ while($res=mysqli_fetch_array($query)){
     
 //TABLA PRECIOS PRODUCTOS COMPETENCIA CARO
 }elseif($action=="getPrecioProdCompetenciaCaro"){
-        $queryProductos = "SELECT * FROM producto WHERE procedencia='Competencia' ORDER BY precio DESC LIMIT 5";
+        $queryProductos = "SELECT * FROM producto p, imgProducto i WHERE procedencia='Competencia' AND p.idProducto=i.idProducto ORDER BY precio DESC LIMIT 5";
         $query= mysqli_query($con, $queryProductos);
         while($res=mysqli_fetch_array($query)){
             $nombre=$res['nombre'];
+            $img=$res['idProducto'];
             $producto .= "<tr> 
                     <td> $nombre </td>
+                    <td><img width='150px' height='auto' src='imgProductos/".$img.".png'> </td>
                 </tr>";
         } 
                     $array = array(
@@ -109,15 +119,17 @@ while($res=mysqli_fetch_array($query)){
                 
 //TABLA PRECIOS PRODUCTOS PROPIOS EN MÁS PUNTOS DE VENTA CARO (ACCESIBLES)
 }elseif($action=="getPrecioProdAccesibleCaro"){
-        $queryProductos = "SELECT d.idProducto, p.idProducto, p.nombre, count(DISTINCT(v.idPuntoVenta)) AS puntosVenta FROM 
-        visita v, detallesvisita d, producto p WHERE d.idVisita = v.idVisita AND d.idProducto=p.idProducto GROUP BY d.idProducto ORDER BY puntosVenta DESC LIMIT 5";
+        $queryProductos = "SELECT d.idProducto, p.idProducto, p.nombre, i.idProducto, count(DISTINCT(v.idPuntoVenta)) AS puntosVenta FROM 
+        visita v, detallesvisita d, producto p, imgproducto i WHERE d.idVisita = v.idVisita AND d.idProducto=p.idProducto AND p.idProducto=i.idProducto GROUP BY d.idProducto ORDER BY puntosVenta DESC LIMIT 5";
         $query= mysqli_query($con, $queryProductos);
         while($res=mysqli_fetch_array($query)){
             $nombre=$res['nombre'];
             $numPV=$res['puntosVenta'];
+            $img=$res['idProducto'];
             $producto .= "<tr> 
                     <td> $nombre </td>
                     <td> $numPV </td>
+                    <td><img width='150px' height='auto' src='imgProductos/".$img.".png'> </td>
                 </tr>";
         } 
                     $array = array(
