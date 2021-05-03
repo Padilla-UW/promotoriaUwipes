@@ -50,7 +50,7 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
     <table id="tablaAccesible" class="table" style="margin-top:5px;">
         <thead>
           <tr class="table-success">
-            <th>PRODUCTOS + BARATOS ACCESIBLES</th>
+            <th>PRODUCTOS - ACCESIBLES</th>
             <th># PUNTOS VENTA</th>
             <th></th>
           </tr>
@@ -90,7 +90,7 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
     <table id="tablaAccesible" class="table" style="margin-top:5px;">
         <thead>
           <tr class="table-success">
-            <th>PRODUCTOS + CAROS ACCESIBLES</th>
+            <th>PRODUCTOS + ACCESIBLES</th>
             <th># PUNTOS VENTA</th>
             <th></th>
           </tr>
