@@ -85,6 +85,7 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
   <thead>
     <tr>
       <th>Vendedor</th>
+      <th>Zona</th>
       <th>Punto Venta</th>
       <th>Fecha</th>
       <th>Ver</th>
@@ -135,6 +136,35 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
   </div>
 </div>
 <!-- FIN Modal Detalles-->
+
+<!-- Modal Evidencia-->
+<div class="modal fade" id="modalEvidencia" tabindex="-1" aria-labelledby="modalEvidenciaLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content" style="width:125%;">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalEvidenciaLabel" style="color:#607d8b">Evidencia</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="btnCerrarEvidencia">
+          <span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body">
+      <table class="table table-borderless">
+           <thead>
+               <tr>
+                   <th>Producto seleccionado</th>
+                   <th>Frentes</th>
+                   <th>Precio</th>
+                   <th>Fecha</th>
+                   <th>Evidencia</th>
+               </tr>
+           </thead>
+           <tbody id="evidenciaVisita">
+           </tbody>
+       </table>
+       </div>
+    </div>
+  </div>
+</div>
+<!-- FIN Modal Evidencia-->
 
 <!-- Modal Matriz-->
 <div class="modal fade" id="modalMatriz" tabindex="-1" aria-labelledby="modalMatrizLabel" aria-hidden="true">
@@ -356,6 +386,28 @@ function getDetalles(idVisita){
   });
 }
 
+//imágenes evidencia
+$(document).on("click", "#btnEvidenciaModal", function() {
+    var idVisita =  $(this).attr("data-id");
+    
+    getDetallesEvidencia(idVisita);
+});
+
+function getDetallesEvidencia(idVisita){
+  var parametros={
+    "action":"getEvidencia",
+    "idVisita": idVisita
+  }
+  $.ajax({
+    data:parametros,
+    url:'visitasAjax.php',
+    success: function(data){
+      $("#evidenciaVisita").html(data);
+    }
+  });
+}
+
+//detalles tabla principal
 function getDetallesVisita(idVisita){
   var parametros={
     "action":"getDetallesVisita",
