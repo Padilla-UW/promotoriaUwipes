@@ -6,7 +6,8 @@ if($_SESSION["tipoUsuario"]=="Administrador"){
 
 <!-- MENÚ ADMINISTRADOR -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">NavbarAdmin</a>
+  <a class="navbar-brand" href="#">
+  <img src="logo/logoUwipes.png" alt="" style="height: 42px;"></a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -18,6 +19,9 @@ if($_SESSION["tipoUsuario"]=="Administrador"){
       </li>
       <li class="nav-item">
         <a class="nav-link" href="tableroVisitas.php">Visitas</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="reportes.php">Reportes</a>
       </li>
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -41,7 +45,7 @@ if($_SESSION["tipoUsuario"]=="Administrador"){
 
 <!-- Menú Vendedores -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">NavbarVendedor</a>
+  <a class="navbar-brand" href="#"><img src="logo/logoUwipes.png" alt="" style="height: 42px;"></a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -55,7 +59,6 @@ if($_SESSION["tipoUsuario"]=="Administrador"){
         <a href="cerrarSesion.php" class="btn btn-light">Cerrar Sesión</a>
   </div>
 </nav>
-
 
 <?php
 } //cierre else SESSION para menú
