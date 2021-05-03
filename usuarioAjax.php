@@ -82,21 +82,20 @@ if($action=="getUsuarios"){
     $correoEdit=(isset($_REQUEST['correoEdit'])&& $_REQUEST['correoEdit'] !=NULL)?$_REQUEST['correoEdit']:'';
 
     mysqli_query($con,'BEGIN');
-    $duplicado=mysqli_query($con, "SELECT correo FROM usuario WHERE correo='$correoEdit'");
+    $updatePersona = "UPDATE usuario u, persona p SET nombre='$nombreEdit', apellidos='$apellidosEdit', 
+    telefono='$telEdit', ciudad='$ciudadEdit' WHERE p.idPersona=u.idPersona AND p.idPersona= $idPersona"; 
+    $conUpdatePersona = mysqli_query($con, $updatePersona);
+    $updateUsuario = "UPDATE usuario u, persona p SET u.idTipoUsuario='$rolEdit', u.correo='$correoEdit' 
+    WHERE p.idPersona=u.idPersona AND p.idPersona= $idPersona";
+    $conUpdateUsuario = mysqli_query($con, $updateUsuario);
 
-    if(mysqli_num_rows($duplicado)>0){
+    if($conUpdatePersona && $conUpdateUsuario ){
+        mysqli_query($con,'COMMIT');
+        echo 1;
+    }else{
         mysqli_query($con,'ROLLBACK');
-        echo 0;
-        }else{      
-            $updatePersona = "UPDATE usuario u, persona p SET nombre='$nombreEdit', apellidos='$apellidosEdit', 
-            telefono='$telEdit', ciudad='$ciudadEdit' WHERE p.idPersona=u.idPersona AND p.idPersona= $idPersona"; 
-            mysqli_query($con, $updatePersona);
-            $updateUsuario = "UPDATE usuario u, persona p SET u.idTipoUsuario='$rolEdit', u.correo='$correoEdit' 
-            WHERE p.idPersona=u.idPersona AND p.idPersona= $idPersona";
-            mysqli_query($con, $updateUsuario);
-            mysqli_query($con,'COMMIT');
-            echo 1;
-        }
+        echo 0; 
+    }
 
 //parte de editar contraseña
 }elseif($action=="editPassword"){
