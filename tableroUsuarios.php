@@ -314,8 +314,6 @@ $("#btnNuevoUsuario").click(function () {
           $('#passwordAdd').val("");
         }if(data == 0){
           $('#avisoAgregar').html("<i class='fas fa-exclamation-triangle'></i> Correo ya existente en el sistema").css("color", "red");
-        }else{
-        $('#avisoAgregar').html("<i class='fas fa-exclamation-triangle'></i> Datos Incorrectos o Vacíos").css("color", "red");
         }
       }
     });
