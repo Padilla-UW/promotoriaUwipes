@@ -23,10 +23,11 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
 <br>
   <div class="row">
     <div class="col">
-      <table id="tablaPropio" class="table table-info" style="margin-top:5px;">
+      <table id="tablaPropio" class="table" style="margin-top:5px;">
         <thead>
-          <tr>
-            <th>PRODUCTOS + BARATOS PROPIOS</th>
+          <tr class="table-info">
+            <th>PRODUCTOS + BARATOS <br>
+            PROPIOS</th>
           </tr>
         </thead>
         <tbody id="tablaProdPropio">
@@ -34,10 +35,11 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
       </table>
     </div>
     <div class="col">
-    <table id="tablaCompetencia" class="table table-warning" style="margin-top:5px;">
+    <table id="tablaCompetencia" class="table" style="margin-top:5px;">
         <thead>
-          <tr>
-            <th>PRODUCTOS + BARATOS COMPETENCIA</th>
+          <tr class="table-warning">
+            <th>PRODUCTOS + BARATOS <br>
+            COMPETENCIA</th>
           </tr>
         </thead>
         <tbody id="tablaProdCompetencia">
@@ -45,13 +47,51 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
       </table>
     </div>
     <div class="col">
-    <table id="tablaAccesible" class="table table-success" style="margin-top:5px;">
+    <table id="tablaAccesible" class="table" style="margin-top:5px;">
         <thead>
-          <tr>
-            <th>PRODUCTOS + ACCESIBLES</th>
+          <tr class="table-success">
+            <th>PRODUCTOS + BARATOS ACCESIBLES</th>
+            <th># PUNTOS VENTA</th>
           </tr>
         </thead>
         <tbody id="tablaProdAccesible">
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col">
+      <table id="tablaPropio" class="table" style="margin-top:5px;">
+        <thead>
+          <tr class="table-info">
+            <th>PRODUCTOS + CAROS <br> PROPIOS</th>
+          </tr>
+        </thead>
+        <tbody id="tablaProdPropioCaro">
+        </tbody>
+      </table>
+    </div>
+    <div class="col">
+    <table id="tablaCompetencia" class="table" style="margin-top:5px;">
+        <thead>
+          <tr class="table-warning">
+            <th>PRODUCTOS + CAROS <br> COMPETENCIA</th>
+          </tr>
+        </thead>
+        <tbody id="tablaProdCompetenciaCaro">
+        </tbody>
+      </table>
+    </div>
+    <div class="col">
+    <table id="tablaAccesible" class="table" style="margin-top:5px;">
+        <thead>
+          <tr class="table-success">
+            <th>PRODUCTOS + CAROS ACCESIBLES</th>
+            <th># PUNTOS VENTA</th>
+          </tr>
+        </thead>
+        <tbody id="tablaProdAccesibleCaro">
         </tbody>
       </table>
     </div>
@@ -96,9 +136,12 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
 <script>
   $(document).ready(function(){
     getZona();
-    getTopProdPropio();
-    getTopProdCompetencia();
-    getTopProdAccesible();
+    getBaratoProdPropio();
+    getBaratoProdCompetencia();
+    getBaratoProdAccesible();
+    getCaroProdPropio();
+    getCaroProdCompetencia();
+    getCaroProdAccesible();
     $('#btnLimpiarG').hide();
 });
 
@@ -207,8 +250,8 @@ function getPVenta(zona){
   });
 }
 
-//Tablas
-function getTopProdPropio(){
+//Tablas barato
+function getBaratoProdPropio(){
   var parametros = {
     "action": "getPrecioProdPropio"
   }
@@ -223,7 +266,7 @@ function getTopProdPropio(){
   });
 }
 
-function getTopProdCompetencia(){
+function getBaratoProdCompetencia(){
   var parametros = {
     "action": "getPrecioProdCompetencia"
   }
@@ -238,7 +281,7 @@ function getTopProdCompetencia(){
   });
 }
 
-function getTopProdAccesible(){
+function getBaratoProdAccesible(){
   var parametros = {
     "action": "getPrecioProdAccesible"
   }
@@ -252,6 +295,53 @@ function getTopProdAccesible(){
     }
   });
 }
+
+//tablas caro
+function getCaroProdPropio(){
+  var parametros = {
+    "action": "getPrecioProdPropioCaro"
+  }
+  $.ajax({
+    data: parametros,
+    url: 'dashboardAjax.php',
+    success: function (data) {
+        data = jQuery.parseJSON(data);
+      console.log(data);
+      $("#tablaProdPropioCaro").html(data.producto);
+    }
+  });
+}
+
+function getCaroProdCompetencia(){
+  var parametros = {
+    "action": "getPrecioProdCompetenciaCaro"
+  }
+  $.ajax({
+    data: parametros,
+    url: 'dashboardAjax.php',
+    success: function (data) {
+        data = jQuery.parseJSON(data);
+      console.log(data);
+      $("#tablaProdCompetenciaCaro").html(data.producto);
+    }
+  });
+}
+
+function getCaroProdAccesible(){
+  var parametros = {
+    "action": "getPrecioProdAccesibleCaro"
+  }
+  $.ajax({
+    data: parametros,
+    url: 'dashboardAjax.php',
+    success: function (data) {
+      data = jQuery.parseJSON(data);
+      console.log(data);
+      $("#tablaProdAccesibleCaro").html(data.producto);
+    }
+  });
+}
+
 
 function limpiarGrafica(){
   location.reload();
