@@ -26,8 +26,8 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
       <table id="tablaPropio" class="table" style="margin-top:5px;">
         <thead>
           <tr class="table-info">
-            <th>PRODUCTOS + BARATOS <br>
-            PROPIOS</th>
+            <th>PRODUCTOS + BARATOS PROPIOS</th>
+            <th></th>
           </tr>
         </thead>
         <tbody id="tablaProdPropio">
@@ -38,8 +38,8 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
     <table id="tablaCompetencia" class="table" style="margin-top:5px;">
         <thead>
           <tr class="table-warning">
-            <th>PRODUCTOS + BARATOS <br>
-            COMPETENCIA</th>
+            <th>PRODUCTOS + BARATOS COMPETENCIA</th>
+            <th></th>
           </tr>
         </thead>
         <tbody id="tablaProdCompetencia">
@@ -52,6 +52,7 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
           <tr class="table-success">
             <th>PRODUCTOS + BARATOS ACCESIBLES</th>
             <th># PUNTOS VENTA</th>
+            <th></th>
           </tr>
         </thead>
         <tbody id="tablaProdAccesible">
@@ -65,7 +66,8 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
       <table id="tablaPropio" class="table" style="margin-top:5px;">
         <thead>
           <tr class="table-info">
-            <th>PRODUCTOS + CAROS <br> PROPIOS</th>
+            <th>PRODUCTOS + CAROS PROPIOS</th>
+            <th></th>
           </tr>
         </thead>
         <tbody id="tablaProdPropioCaro">
@@ -76,7 +78,8 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
     <table id="tablaCompetencia" class="table" style="margin-top:5px;">
         <thead>
           <tr class="table-warning">
-            <th>PRODUCTOS + CAROS <br> COMPETENCIA</th>
+            <th>PRODUCTOS + CAROS COMPETENCIA</th>
+            <th></th>
           </tr>
         </thead>
         <tbody id="tablaProdCompetenciaCaro">
@@ -89,6 +92,7 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
           <tr class="table-success">
             <th>PRODUCTOS + CAROS ACCESIBLES</th>
             <th># PUNTOS VENTA</th>
+            <th></th>
           </tr>
         </thead>
         <tbody id="tablaProdAccesibleCaro">
@@ -341,7 +345,6 @@ function getCaroProdAccesible(){
     }
   });
 }
-
 
 function limpiarGrafica(){
   location.reload();
