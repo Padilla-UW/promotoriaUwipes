@@ -20,6 +20,13 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
 
 <!-- Tablas Productos -->
 <div class="container">
+  <div class="row">
+    <div class="col">
+      <h4>TABLEROS</h4>
+    </div>
+  </div>
+</div>
+<div class="container">
 <br>
   <div class="row">
     <div class="col">
@@ -104,6 +111,13 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
 <br>
 
 <!-- Gráfica -->
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h4>GRÁFICA</h4>
+    </div>
+  </div>
+</div>
 <div class="container">
 <div class="row">
 <div class="col-4">
