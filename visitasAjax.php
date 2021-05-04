@@ -39,7 +39,7 @@ if($action=="getPVenta"){
 
 //Selects automáticos
 }elseif($action=="getFProducto"){
-    $queryRes=mysqli_query($con, "SELECT * From producto");
+    $queryRes=mysqli_query($con, "SELECT * From producto ORDER BY nombre ASC");
     echo "<option value=''>Seleccione</option>";
    while($res = mysqli_fetch_array($queryRes)){
        $idProducto = $res['idProducto'];
@@ -48,7 +48,7 @@ if($action=="getPVenta"){
    } 
 
 }elseif($action=="getNProducto"){
-    $queryRes=mysqli_query($con, "SELECT * From producto");
+    $queryRes=mysqli_query($con, "SELECT * From producto ORDER BY nombre ASC");
     echo "<option data-id='' value=''>Seleccione</option>";
    while($res = mysqli_fetch_array($queryRes)){
        $nombre = $res['nombre'];
