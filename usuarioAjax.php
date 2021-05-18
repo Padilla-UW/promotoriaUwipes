@@ -26,14 +26,14 @@ if($action=="getUsuarios"){
         $qUsuarios = "SELECT p.nombre, p.idPersona, u.correo, p.ciudad, u.idTipoUsuario, t.idTipoUsuario, t.tipoUsuario FROM 
         usuario u, persona p, tipousuario t WHERE u.idPersona = p.idPersona AND t.idTipoUsuario=u.idTipoUsuario AND p.idPersona=u.idPersona";
         $qUsuariosCount.=$qUsuarios.$sqlTipoU.$sqlTipoN;
-        $qUsuarios.=$sqlTipoU.$sqlTipoN." ORDER BY idPersona LIMIT $offset,$per_page";
+        $qUsuarios.=$sqlTipoU.$sqlTipoN." ORDER BY nombre ASC LIMIT $offset,$per_page";
             
             $queryUsuarios = mysqli_query($con,$qUsuarios);
             $queryUsuariosCount = mysqli_query($con,$qUsuariosCount);
         
     }else{
         $queryUsuarios=mysqli_query($con,"SELECT p.nombre, p.idPersona, u.correo, p.ciudad, u.idTipoUsuario, t.idTipoUsuario, t.tipoUsuario FROM 
-        usuario u, persona p, tipousuario t WHERE u.idPersona = p.idPersona AND t.idTipoUsuario=u.idTipoUsuario ORDER BY idPersona LIMIT $offset,$per_page");
+        usuario u, persona p, tipousuario t WHERE u.idPersona = p.idPersona AND t.idTipoUsuario=u.idTipoUsuario ORDER BY nombre ASC LIMIT $offset,$per_page");
         $queryUsuariosCount =mysqli_query($con, "SELECT p.nombre, p.idPersona, u.correo, p.ciudad, u.idTipoUsuario, t.idTipoUsuario, t.tipoUsuario FROM 
         usuario u, persona p, tipousuario t WHERE u.idPersona = p.idPersona AND t.idTipoUsuario=u.idTipoUsuario AND p.idPersona=u.idPersona");
     }
