@@ -22,12 +22,12 @@ if($action=="getZona"){
         $sqlTipoN = " WHERE nombre LIKE '%$nombre%'";
         $qZonas= "Select * FROM zona";
         $qZonasCount.=$qZonas.$sqlTipoN;
-        $qZonas.=$sqlTipoN." ORDER BY idZona LIMIT $offset,$per_page";
+        $qZonas.=$sqlTipoN." ORDER BY nombre ASC LIMIT $offset,$per_page";
             
             $queryZonas = mysqli_query($con,$qZonas);
             $queryZonasCount = mysqli_query($con,$qZonasCount);  
     }else{
-        $queryZonas = mysqli_query($con,"Select * FROM zona ORDER BY idZona LIMIT $offset,$per_page");
+        $queryZonas = mysqli_query($con,"Select * FROM zona ORDER BY nombre ASC LIMIT $offset,$per_page");
         $queryZonasCount = mysqli_query($con,"Select * FROM zona");
     }
     $total_pages = mysqli_num_rows($queryZonasCount);
@@ -118,14 +118,14 @@ if($action=="getPuntosV"){
         $qPuntosV = "Select pv.nombre AS nombrePV, pv.idPuntoVenta, pv.idVendedor, pv.idZona, pv.tipo, z.idZona, z.nombre AS nombreZ, p.idPersona, p.nombre AS nombreV FROM 
         persona p, zona z, puntoventa pv WHERE pv.idZona = z.idZona AND pv.idVendedor = p.idPersona";
         $qPuntosVCount.=$qPuntosV.$sqlTipoN.$sqlTipoP.$sqlTipoZ.$sqlTipoV;
-        $qPuntosV.=$sqlTipoN.$sqlTipoP.$sqlTipoZ.$sqlTipoV." ORDER BY idPuntoVenta LIMIT $offset,$per_page";
+        $qPuntosV.=$sqlTipoN.$sqlTipoP.$sqlTipoZ.$sqlTipoV." ORDER BY nombrePV ASC LIMIT $offset,$per_page";
             
             $queryPuntosV = mysqli_query($con,$qPuntosV);
             $queryPuntosVCount = mysqli_query($con,$qPuntosVCount);
         
     }else{
         $queryPuntosV = mysqli_query($con,"Select pv.nombre AS nombrePV, pv.idPuntoVenta, pv.idVendedor, pv.idZona, pv.tipo, z.idZona, z.nombre AS nombreZ, p.idPersona, p.nombre AS nombreV FROM 
-        persona p, zona z, puntoventa pv WHERE pv.idZona = z.idZona AND pv.idVendedor = p.idPersona ORDER BY idPuntoVenta LIMIT $offset,$per_page");
+        persona p, zona z, puntoventa pv WHERE pv.idZona = z.idZona AND pv.idVendedor = p.idPersona ORDER BY nombrePV ASC LIMIT $offset,$per_page");
         $queryPuntosVCount = mysqli_query($con,"Select pv.nombre AS nombrePV, pv.idPuntoVenta, pv.idVendedor, pv.idZona, pv.tipo, z.idZona, z.nombre AS nombreZ, p.idPersona, p.nombre AS nombreV FROM 
         persona p, zona z, puntoventa pv WHERE pv.idZona = z.idZona AND pv.idVendedor = p.idPersona");
     }
@@ -236,6 +236,123 @@ if($action=="getPuntosV"){
     while($res = mysqli_fetch_array($vende)){
         echo "<a class='dropdown-item opcFilVendedorV' href='#' data-id='".$res['idPersona']."' data-vendedorV='".$res['nombre']."'>".$res['nombre']."</a>";         
     }   
+}
+
+//Inicia parte de SUCURSALES **********************************************************************************
+
+if($action=="getSucursal"){
+    //paginación
+    include 'includes/pagination.php';
+    $page = (isset($_REQUEST['page']) && !empty($_REQUEST['page']))?$_REQUEST['page']:1;
+    $per_page = 8; //la cantidad de registros que desea mostrar
+    $adjacents  = 3; //brecha entre páginas después de varios adyacentes
+    $offset = ($page - 1) * $per_page;
+
+    //filtrado x nombre/pventa
+    $nombre=(isset($_REQUEST['busquedaNombre'])&& $_REQUEST['busquedaNombre'] !=NULL)?$_REQUEST['busquedaNombre']:'';
+    $idPuntoVenta=(isset($_REQUEST['idPuntoVenta'])&& $_REQUEST['idPuntoVenta'] !=NULL)?$_REQUEST['idPuntoVenta']:'';
+
+    if($nombre != '' || $idPuntoVenta != ''){
+        if($nombre != '') $sqlTipoN = " AND s.nombre LIKE '%$nombre%'";
+        if($idPuntoVenta != '') $sqlTipoZ = " AND s.idPuntoVenta = '$idPuntoVenta'";
+
+        $qPuntosV = "Select s.nombre as nombreSuc, s.numero, s.idPuntoVenta, s.idSucursal, pv.idPuntoVenta, pv.nombre as nombrePuntoV From sucursal s, puntoventa pv WHERE pv.idPuntoVenta=s.idPuntoVenta";
+        $qPuntosVCount.=$qPuntosV.$sqlTipoN.$sqlTipoZ;
+        $qPuntosV.=$sqlTipoN.$sqlTipoZ." ORDER BY nombreSuc ASC LIMIT $offset,$per_page";
+            
+            $queryPuntosV = mysqli_query($con,$qPuntosV);
+            $queryPuntosVCount = mysqli_query($con,$qPuntosVCount);
+        
+    }else{
+        $queryPuntosV = mysqli_query($con,"Select s.nombre as nombreSuc, s.numero, s.idPuntoVenta, s.idSucursal, pv.idPuntoVenta, pv.nombre as nombrePuntoV From sucursal s, puntoventa pv WHERE pv.idPuntoVenta=s.idPuntoVenta ORDER BY nombreSuc ASC LIMIT $offset,$per_page");
+        $queryPuntosVCount = mysqli_query($con,"Select s.nombre as nombreSuc, s.numero, s.idPuntoVenta, s.idSucursal, pv.idPuntoVenta, pv.nombre as nombrePuntoV From sucursal s, puntoventa pv WHERE pv.idPuntoVenta=s.idPuntoVenta");
+    }
+        $total_pages = mysqli_num_rows($queryPuntosVCount);
+        $total_pages = ceil($total_pages/$per_page);
+        $reload = 'tableroSucursales.php';
+
+    //tabla
+    while($res=mysqli_fetch_array($queryPuntosV)){
+        $idSucursal=$res['idSucursal'];
+        $nombre=$res['nombreSuc'];
+        $numero=$res['numero'];
+        $idPuntoVenta = $res['nombrePuntoV'];
+        $pventa .= "<tr> 
+                <th> $nombre </th>
+                <td> $numero </td>
+                <td> $idPuntoVenta </td>
+                <td><button type='button' data-id='$idSucursal' class='btn' id='btnEditModalS' data-toggle='modal' data-target='#modalEditar'>Datos <i class='far fa-edit'></i>
+              </svg></button>
+              </td>
+            </tr>";
+    } 
+
+    //paginación
+                $pagination=paginate($reload, $page, $total_pages, $adjacents);
+                $array = array(
+                    "pventa" => $pventa,
+                    "pagination" => $pagination
+                );
+              echo json_encode($array);
+
+//Agregar
+}elseif($action=="agregarSuc"){
+    $nombreAdd=(isset($_REQUEST['nombreAdd'])&& $_REQUEST['nombreAdd'] !=NULL)?$_REQUEST['nombreAdd']:'';
+    $numeroAdd=(isset($_REQUEST['numeroAdd'])&& $_REQUEST['numeroAdd'] !=NULL)?$_REQUEST['numeroAdd']:'';
+    $pventaAdd=(isset($_REQUEST['pventaAdd'])&& $_REQUEST['pventaAdd'] !=NULL)?$_REQUEST['pventaAdd']:'';
+
+        mysqli_query($con,'BEGIN');
+        $insertSuc = "INSERT INTO sucursal (idPuntoVenta, nombre, numero)
+        VALUES ('$pventaAdd', '$nombreAdd', '$numeroAdd')"; 
+        $agregarSuc=mysqli_query($con, $insertSuc);
+    
+        if($agregarSuc){
+            mysqli_query($con,'COMMIT');
+            echo 1;
+        }else{
+            mysqli_query($con,'ROLLBACK');
+            echo 0; 
+        }
+        
+//Editar
+}elseif($action=="getDatosSuc"){
+    $idSucursal=(isset($_REQUEST['idSucursal'])&& $_REQUEST['idSucursal'] !=NULL)?$_REQUEST['idSucursal']:'';
+    $query=mysqli_fetch_array(mysqli_query($con,"SELECT * FROM sucursal WHERE idSucursal = $idSucursal"));
+    echo json_encode($query);
+
+}elseif($action=="editarSuc"){
+    $idSucursal=(isset($_REQUEST['idSucursal'])&& $_REQUEST['idSucursal'] !=NULL)?$_REQUEST['idSucursal']:''; 
+    $nombreEdit=(isset($_REQUEST['nombreEdit'])&& $_REQUEST['nombreEdit'] !=NULL)?$_REQUEST['nombreEdit']:'';
+    $numeroEdit=(isset($_REQUEST['numeroEdit'])&& $_REQUEST['numeroEdit'] !=NULL)?$_REQUEST['numeroEdit']:'';
+    $pventaEdit=(isset($_REQUEST['pventaEdit'])&& $_REQUEST['pventaEdit'] !=NULL)?$_REQUEST['pventaEdit']:'';
+
+    mysqli_query($con,'BEGIN');
+    $updateS = "UPDATE sucursal SET idPuntoVenta='$pventaEdit', nombre='$nombreEdit', numero='$numeroEdit' WHERE idSucursal= $idSucursal"; 
+    $conUpdate=mysqli_query($con, $updateS);
+
+    if($conUpdate){
+        mysqli_query($con,'COMMIT');
+        echo 1;
+    }else{
+        mysqli_query($con,'ROLLBACK');
+        echo 0; 
+    }
+
+//filtros y selects automaticos
+}elseif($action == "getPVentaFiltro"){
+    $visitas = mysqli_query($con,"SELECT * FROM puntoventa"); 
+    while($res = mysqli_fetch_array($visitas)){
+        echo "<a class='dropdown-item opcFilPunVenta' href='#' data-id='".$res['idPuntoVenta']."' data-tipVisita='".$res['nombre']."'>".$res['nombre']."</a>";         
+    } 
+
+}elseif($action == "getPVenta"){
+    $queryRes=mysqli_query($con,"SELECT * From puntoventa");
+    echo "<option value=''>Seleccione</option>";
+   while($res = mysqli_fetch_array($queryRes)){
+       $idPuntoVenta = $res['idPuntoVenta'];
+       $nombre = $res['nombre'];
+      echo "<option value='".$idPuntoVenta."'>$nombre</option>";
+   } 
 }
 
 ?>
