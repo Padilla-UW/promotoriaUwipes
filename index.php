@@ -93,4 +93,17 @@ $("#btnLogin").click(function(){
       });
     });
 
+//Entrar con Enter que es tecla 13
+var input = $('#passwordLogin')[0];
+input.addEventListener("keyup", function(event) {
+  if(event.keyCode === 13) {
+    $("#btnLogin").click();
+  }
+});
+var input2 = $('#correoLogin')[0];
+input2.addEventListener("keyup", function(event) {
+  if(event.keyCode === 13) {
+    $("#btnLogin").click();
+  }
+});
 </script>
