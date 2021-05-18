@@ -42,9 +42,17 @@ if($_SESSION["tipoUsuario"]!="Vendedor"){
 <div class="col-12 col-lg-6">
 <div style="display: flex; align-items: center; justify-content: center;">
     </div>
+    <div class="row">
+    <div class="col-8">
     <label for=""><b>Producto</b></label>
     <select name="producto" id="selProducto" class="form-control"></select> 
-    <br>
+    <br></div>
+    <div class="col-4">
+    <label for=""> </label><br>
+    <button type="button" class="btn btn-light" style="margin-top:7px;" id="btnAddProducto" data-toggle="modal"
+        data-target="#modalNvoProducto">Agregar <i class="fas fa-plus"></i></button>
+    </div>
+    </div>
     <label for=""><b>Tipo de Exhibición</b></label><br>
     <select name="" id="selTipoExi" class="form-control"></select> 
     <br>
@@ -219,6 +227,87 @@ if($_SESSION["tipoUsuario"]!="Vendedor"){
 </div>
 <!-- FIN Modal Matriz-->
 
+<!-- Modal Agregar Producto-->
+<div class="modal fade" id="modalNvoProducto" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Agregar Producto</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row justify-content-center">
+                        <div class="col-10">
+                            <form>
+                                <div class="form-row">
+                                    <div class="form-group col-12">
+                                        <label for="nombreProd">Nombre</label>
+                                        <input type="text" class="form-control" id="nombreProd">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-12">
+                                        <label for="categoriaProd">Categoria</label>
+                                        <select id="categoriaProd" class="form-control">
+                                            
+                                          </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-12">
+                                        <label for="procedenciaProd">Procedencia</label>
+                                        <select id="procedenciaProd" class="form-control">
+                                            <option value="Propio">Propio</option>
+                                            <option value="Competencia">Competencia</option>
+                                          </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-12">
+                                        <label for="segmentoProd">Segmento</label>
+                                        <select id="segmentoProd" class="form-control">
+                                            <option value="Alto">Alto</option>
+                                            <option value="Medio">Medio</option>
+                                            <option value="Bajo">Bajo</option>
+                                          </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-6">
+                                        <label for="conteoProd">Conteo</label>
+                                        <input type="number" min="1" class="form-control" id="conteoProd">
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label for="precioProd">Precio</label>
+                                        <input type="number" min="0" class="form-control" id="precioProd">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-12">
+                                        <label for="precioProd">Imagen</label>
+                                        <input type="file" class="form-control-file" id="imgProd" lang="es">
+                                    </div>
+                                </div>
+                                <div class="row justify-content-center">
+                                    <div class="col-10 text-center p-2 rounded" id="msjAgregarProd">
+
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" id="btnAgregarProd" class="btn btn-outline-success">Agregar <i class="far fa-save"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+<!--Fin Modal Agregar Producto-->
+
 <?php include ('includes/footer.php')?>
 
 <script>
@@ -226,6 +315,7 @@ $(document).ready(function(){
     getFProducto(); 
     getNProducto(); 
     getFTipoExi();
+    getCategoria();
 });
 
 //Select automáticos
@@ -292,6 +382,13 @@ $("#btnGuardar").click(function(){
   //parte imagen
   if(imagen == ""){
         console.log("Imagen no seleccionada");
+          var evidencia = new FormData();
+          evidencia.append("action", "guardarFichero");
+          evidencia.append("selProducto", selProducto);
+          evidencia.append("selTipoExi", selTipoExi);
+          evidencia.append("selExistencia", selExistencia);
+          evidencia.append("selPrecio", selPrecio);
+          evidencia.append("selFrentes", selFrentes);
       }else{
         var extension = img.name.substring(img.name.lastIndexOf("."));
         console.log(extension);
@@ -549,6 +646,83 @@ $(document).on("click", "#btnCerrarMat", function () {
   $('#txtInfCen').val("");
   $('#txtInfDer').val("");
 });
+
+//Agregar producto
+$("#btnAgregarProd").click(function() {
+            var nombre = $("#nombreProd").val();
+            var categoria = $("#categoriaProd").val();
+            var segmento = $("#segmentoProd").val();
+            var precio = $("#precioProd").val();
+            var conteo = $("#conteoProd").val();
+            var procedencia = $("#procedenciaProd").val();
+            var img = $("#imgProd")[0].files[0];
+
+            if (!nombre || !categoria || !segmento || !precio || !conteo || !img) {
+                console.log("LLena todos los datos");
+            } else {
+                var extension = img.name.substring(img.name.lastIndexOf("."));
+                console.log(extension);
+                if (extension != ".png" && extension != ".jpg") {
+                    $("#msjAgregarProd").removeClass("border-success border-danger");
+                    $("#msjAgregarProd").html("Formato no permitido <i class='fas fa-exclamation' style = 'color:#ffc107;'></i>");
+                    $("#msjAgregarProd").addClass("border border-warning");
+                } else {
+                    var producto = new FormData();
+                    producto.append("action", "agregarProducto");
+                    producto.append("nombre", nombre);
+                    producto.append("categoria", categoria);
+                    producto.append("segmento", segmento);
+                    producto.append("conteo", conteo);
+                    producto.append("precio", precio);
+                    producto.append("procedencia", procedencia);
+                    producto.append("img", img);
+                    agregarProducto(producto);
+                }
+            }
+        });
+
+        function agregarProducto(producto) {
+            $.ajax({
+                url: "productosAjax.php",
+                data: producto,
+                type: 'POST',
+                contentType: false,
+                enctype: 'multipart/form-data',
+                cache: false,
+                processData: false,
+                success: function(data) {
+                    if (data == 1) {
+                        $("#msjAgregarProd").html("Producto Guardado <i class='fas fa-check-double' style='color:#28a745;'></i>");
+                        $("#msjAgregarProd").removeClass("border-warning border-danger");
+                        $("#msjAgregarProd").addClass("border border-success");
+                        getFProducto(); 
+
+                    } else if (data == 2) {
+                        $("#msjAgregarProd").html("Producto repetido <i class='fas fa-exclamation' style = 'color:#ffc107;'></i>");
+                        $("#msjAgregarProd").removeClass("border-success border-danger");
+                        $("#msjAgregarProd").addClass("border border-warning ");
+                    } else {
+                        $("#msjAgregarProd").html("Error <i class='fas fa-times' style='color:#dc3545;'></i>");
+                        $("#msjAgregarProd").removeClass("border-success border-warning");
+                        $("#msjAgregarProd").addClass("border border-danger");
+                    }
+                }
+            });
+        }
+
+function getCategoria() {
+  var parametros = {
+    "action": "getCategoria"
+  }
+  $.ajax({
+    url: 'visitasAjax.php',
+    data: parametros,
+    success: function (data) {
+      console.log(data);
+      $("#categoriaProd").html(data);
+    }
+  });
+}
 
 </script>
 
