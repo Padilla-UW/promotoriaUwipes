@@ -77,6 +77,11 @@ if($action=="getPVenta"){
     $rutaFinal = "";
     //parte imagen
     mysqli_query($con,'BEGIN');
+    $directorio = "imgEvidencias";
+                if (!file_exists($directorio)) {
+                     mkdir($directorio, 0777, true);
+                }
+
     if(isset($_FILES['img']) || $_FILES['img']['size']!=0){
         $nombre = $_FILES['img']['name'];
         $nombre_tmp = $_FILES['img']['tmp_name'];
@@ -301,6 +306,62 @@ if($action=="getPVenta"){
         unset($_SESSION["fichero"]);
         unset($_SESSION["matrix"]);
 
+//agregar producto si no existe
+}elseif($action == "agregarProducto"){
+    $nombre=(isset($_REQUEST['nombre'])&& $_REQUEST['nombre'] !=NULL)?$_REQUEST['nombre']:'';
+        $segmento=(isset($_REQUEST['segmento'])&& $_REQUEST['segmento'] !=NULL)?$_REQUEST['segmento']:'';
+        $categoria=(isset($_REQUEST['categoria'])&& $_REQUEST['categoria'] !=NULL)?$_REQUEST['categoria']:'';
+        $conteo=(isset($_REQUEST['conteo'])&& $_REQUEST['conteo'] !=NULL)?$_REQUEST['conteo']:'';
+        $precio=(isset($_REQUEST['precio'])&& $_REQUEST['precio'] !=NULL)?$_REQUEST['precio']:'';
+        $procedencia=(isset($_REQUEST['procedencia'])&& $_REQUEST['procedencia'] !=NULL)?$_REQUEST['procedencia']:'';
+        $repetidos=existeProducto($nombre,'',$con);
+        if($repetidos > 0){
+            echo 2;
+        }else{
+            mysqli_query($con,'BEGIN');  
+            $queryInsertProd = mysqli_query($con,"INSERT INTO producto(idCategoria,nombre,segmento,conteo,precio,procedencia) VALUES ('$categoria','$nombre','$segmento', '$conteo', '$precio', '$procedencia')");
+            $idProducto=mysqli_insert_id($con); 
+            $directorio = "imgProductos";
+                if (!file_exists($directorio)) {
+                     mkdir($directorio, 0777, true);
+                }
+             
+            if(isset($_FILES['img']) || $_FILES['img']['size']!=0){
+                $queryInsertImg = mysqli_query($con,"INSERT INTO imgproducto(idProducto) VALUES ($idProducto)");
+                $ultimoId=mysqli_insert_id($con);
+                $nombre = $_FILES['img']['name'];
+                $nombre_tmp = $_FILES['img']['tmp_name'];
+                $partes_nombre = explode('.', $nombre);
+                $extension = end($partes_nombre);
+                $ruta ="imgProductos/";
+    
+                if(move_uploaded_file($nombre_tmp, $ruta.$ultimoId.".".$extension)){
+                    $nombrenuevo = $ultimoId.".".$extension;
+                    $rutabd = "imgProductos/".$nombrenuevo;
+                    $insertRuta = "UPDATE imgproducto SET ruta='$rutabd' WHERE idImgProducto='$ultimoId'";
+                    $queryUpdateImg = mysqli_query($con, $insertRuta);
+                    if($queryInsertProd && $queryInsertImg && $queryUpdateImg ){
+                        mysqli_query($con,'COMMIT');
+                        echo 1;
+                    }else{
+                        mysqli_query($con,'ROLLBACK');
+                        echo 0;  
+                    }
+                  }else{
+                    mysqli_query($con,'ROLLBACK');
+                    echo 0;
+                  }
+              }    
+        }
+}elseif($action=="getCategoria"){
+    $queryRes=mysqli_query($con,"SELECT * From categoria");
+    echo "<option value=''>Seleccione</option>";
+   while($res = mysqli_fetch_array($queryRes)){
+       $idCategoria = $res['idCategoria'];
+       $categoria = $res['categoria'];
+      echo "<option value='".$idCategoria."'>$categoria</option>";
+   }
+
 }
 
 //Inicia parte de VISITAS ADMIN ***************************************************************************************
@@ -495,8 +556,6 @@ if($action=="getPVisitas"){
     $fecha = $res['fecha'];
     $frentes = $res['frentes'];
     $precio = $res['precio'];
-    echo ('hola');
-    echo $imagen;
 
     echo "<tr> 
             <td>$idProducto</td>
@@ -506,6 +565,5 @@ if($action=="getPVisitas"){
             <td><img width='250px' height='auto' src='imgEvidencias/".$imagen.".png'> </td>
         </tr>";
     }
-
 }
 ?>
