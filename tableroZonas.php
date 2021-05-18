@@ -48,7 +48,16 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
 <!-- Filtrados Búsqueda -->
 <div class="container" style="margin-top:10px">
   <div class="row justify-content-between">
-    <div class="col-6 col-lg-5" id="filtros"></div>
+    <div class="col-6 col-lg-5" id="filtros">
+    <div class="btn-group" role="group">
+        <button id="filtroPVendedor" type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
+          <i class="fas fa-filter"></i> Vendedor
+        </button>
+        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1" id="filtroVendedorPV">
+        </div>
+      </div>
+    </div>
     <div class="col-6 col-lg-4">
       <input type="text" onkeyup="load()" class="form-control" id="busquedaNombre" placeholder="Nombre">
     </div>
@@ -65,6 +74,7 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
         <thead>
           <tr>
             <th>Nombre</th>
+            <th>Vendedor</th>
             <th>Editar</th>
           </tr>
         </thead>
@@ -100,6 +110,9 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
           <label for="nombre"><b>Nombre</b></label><br>
           <input class="form-control" id="nombreAdd" type="text" placeholder="Nombre" name="nombre" required>
           <br>
+          <label for="vendedor"><b>Vendedor</b></label><br>
+          <select class="form-control" name="idVendedor" id="vendedorAdd" required></select>
+          <br>
           <div id="avisoAgregar"> </div>
           <br>
           <div class="modal-footer">
@@ -107,8 +120,7 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
           <button class="btn btn-outline-success"
             style="margin:1%;" type="button" data-id=""
             id="btnNuevaZona">Agregar <i class="far fa-save"></i></button>
-            </div>
-          
+            </div> 
       </div>
     </div>
   </div>
@@ -131,6 +143,9 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
           <label for="nombre"><b>Nombre</b></label><br>
           <input class="form-control" id="nombreEdit" type="text" placeholder="Nombre" name="nombre" required>
           <br>
+          <label for="vendedor"><b>Vendedor</b></label><br>
+          <select class="form-control" name="idVendedor" id="vendedorEdit" required></select>
+          <br>
           <div id="avisoEditar"> </div>
           <br>
           <div class="modal-footer">
@@ -147,19 +162,25 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
 <?php include ('includes/footer.php')?>
 
 <script>
+getVendedorFiltro("#filtroVendedorPV");
 $(document).ready(function () {
   load('');
+  getVendedorFiltro();
+  getVendedor();
 });
 
 //función para mostrar datos en el tbody de la tabla
 //llamamos paginación y filtros
 function load(page, busquedaNombre) {
   var busquedaNombre = $("#busquedaNombre").val();
+  var idVendedorV = $("#filtroPVendedor").attr("data-vendedorV");
+  getVendedorFiltro(idVendedorV);
 
   var parametros = {
     "action": "getZona",
     "page": page,
-    "busquedaNombre": busquedaNombre
+    "busquedaNombre": busquedaNombre,
+    "idVendedorV": idVendedorV
   }
   $.ajax({
     data: parametros,
@@ -176,11 +197,13 @@ function load(page, busquedaNombre) {
 //AGREGAR
 $("#btnNuevaZona").click(function () {
   var nombreAdd = $("#nombreAdd").val();
+  var vendedorAdd = $("#vendedorAdd").val();
 
-  if (nombreAdd != "") {
+  if (nombreAdd != "" && vendedorAdd != "") {
     var parametros = {
       "action": "agregarZona",
-      "nombreAdd": nombreAdd
+      "nombreAdd": nombreAdd,
+      "vendedorAdd": vendedorAdd
     }
     $.ajax({
       url: "zonasAjax.php",
@@ -195,6 +218,7 @@ $("#btnNuevaZona").click(function () {
                 $('#avisoAgregar').html("<i class='bi bi-x-square'></i> Dato Duplicado").css("color", "red");
               } 
               $('#nombreAdd').val("");
+              $('#vendedorAdd').val("");
       }
     });
   }else{
@@ -217,21 +241,24 @@ $(document).on("click", "#btnEditModal", function () {
       data = jQuery.parseJSON(data);
       console.log(data);
       $("#nombreEdit").val(data.nombre);
+      $("#vendedorEdit").val(data.idVendedor);
       $("#btnEditarZona").attr("data-id", data.idZona);
     }
   })
 });
 
 //EDITAR función para obtener datos de campos editar y realizar validaciones
-$("#btnEditarZona").click(function btnEditarZona(idZona, nombreEdit) {
+$("#btnEditarZona").click(function btnEditarZona(idZona, nombreEdit, vendedorEdit) {
   var idZona = $("#btnEditarZona").attr('data-id');
   var nombreEdit = $("#nombreEdit").val();
+  var vendedorEdit = $("#vendedorEdit").val();
 
-  if (nombreEdit != "") {
+  if (nombreEdit != "" && vendedorEdit != "") {
     var parametros = {
       "action": "editarZona",
       "idZona": idZona,
-      "nombreEdit": nombreEdit
+      "nombreEdit": nombreEdit,
+      "vendedorEdit": vendedorEdit
     }
     $.ajax({
       url: "zonasAjax.php",
@@ -252,6 +279,48 @@ $("#btnEditarZona").click(function btnEditarZona(idZona, nombreEdit) {
   }
 });
 
+//filtros
+function getVendedorFiltro(filtro) {
+  var parametros = {
+    "action": "getVendedorFiltro"
+  }
+  $.ajax({
+    url: "zonasAjax.php",
+    data: parametros,
+    success: function (data) {
+      $(filtro).html(data);
+    }
+  });
+}
+
+$(document).on("click", ".opcFilVendedorV", function () {
+  var vendedorBusc = $(this).attr('data-id');
+  var idVendedorV = $(this).attr('data-vendedorV');
+  $("#filtroPVendedor").attr("data-vendedorV", vendedorBusc);
+  load();
+  if ($("#buscVendedor").length) {
+    $("#buscVendedor").remove();
+  }
+  if (vendedorBusc)
+    $("#filtros").append('<a class="badge badge-pill badge-secondary" href="#" id="buscVendedor">' + idVendedorV + ' <i class="far fa-times-circle"></i></a>');
+});
+
+//select automatico
+function getVendedor() {
+  var parametros = {
+    "action": "getVendedor"
+  }
+  $.ajax({
+    url: 'zonasAjax.php',
+    data: parametros,
+    success: function (data) {
+      console.log(data);
+      $("#vendedorAdd").html(data);
+      $("#vendedorEdit").html(data);
+    }
+  });
+}
+
 // limpiar avisos
 $(document).on("click", "#btnCerrarAdd", function () {
   $('#avisoAgregar').html("");
@@ -261,6 +330,11 @@ $(document).on("click", "#btnCerrarAdd", function () {
 $(document).on("click", "#btnCerrarEdit", function () {
   $('#avisoEditar').html("");
   $('#btnEditarZona').show();
+});
+$(document).on("click", "#buscVendedor", function() {
+  $("#filtroPVendedor").attr('data-vendedorV', '');
+  $("#buscVendedor").remove();
+  load();
 });
 
 </script>
