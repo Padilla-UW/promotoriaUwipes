@@ -31,6 +31,7 @@ if($_SESSION["tipoUsuario"]=="Administrador"){
           <a class="dropdown-item" href="tableroUsuarios.php">Usuarios</a>
           <a class="dropdown-item" href="tableroZonas.php">Zonas</a>
           <a class="dropdown-item" href="tableroPuntosVenta.php">Puntos de Venta</a>
+          <a class="dropdown-item" href="tableroSucursales.php">Sucursales</a>
           <a class="dropdown-item" href="productos.php">Productos</a>
         </div>
       </li>
