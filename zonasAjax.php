@@ -17,18 +17,20 @@ if($action=="getZona"){
 
     //filtrado
     $nombre=(isset($_REQUEST['busquedaNombre'])&& $_REQUEST['busquedaNombre'] !=NULL)?$_REQUEST['busquedaNombre']:'';
+    $idVendedorV=(isset($_REQUEST['idVendedorV'])&& $_REQUEST['idVendedorV'] !=NULL)?$_REQUEST['idVendedorV']:'';
 
-    if($nombre != ''){
-        $sqlTipoN = " WHERE nombre LIKE '%$nombre%'";
-        $qZonas= "Select * FROM zona";
-        $qZonasCount.=$qZonas.$sqlTipoN;
-        $qZonas.=$sqlTipoN." ORDER BY nombre ASC LIMIT $offset,$per_page";
+    if($nombre != '' || $idVendedorV != ''){
+        if($nombre != '') $sqlTipoN = " AND z.nombre LIKE '%$nombre%'";
+        if($idVendedorV != '') $sqlTipoZ = " AND z.idVendedor = '$idVendedorV'";
+        $qZonas= "Select z.idZona, z.nombre, z.idVendedor, p.idPersona, p.nombre as nombrePer FROM zona z, persona p WHERE p.idPersona=z.idVendedor";
+        $qZonasCount.=$qZonas.$sqlTipoN.$sqlTipoZ;
+        $qZonas.=$sqlTipoN.$sqlTipoZ." ORDER BY nombre ASC LIMIT $offset,$per_page";
             
             $queryZonas = mysqli_query($con,$qZonas);
             $queryZonasCount = mysqli_query($con,$qZonasCount);  
     }else{
-        $queryZonas = mysqli_query($con,"Select * FROM zona ORDER BY nombre ASC LIMIT $offset,$per_page");
-        $queryZonasCount = mysqli_query($con,"Select * FROM zona");
+        $queryZonas = mysqli_query($con,"Select z.idZona, z.nombre, z.idVendedor, p.idPersona, p.nombre as nombrePer FROM zona z, persona p Where p.idPersona=z.idVendedor ORDER BY nombre ASC LIMIT $offset,$per_page");
+        $queryZonasCount = mysqli_query($con,"Select z.idZona, z.nombre, z.idVendedor, p.idPersona, p.nombre as nombrePer FROM zona z, persona p Where p.idPersona=z.idVendedor");
     }
     $total_pages = mysqli_num_rows($queryZonasCount);
     $total_pages = ceil($total_pages/$per_page);
@@ -38,8 +40,10 @@ if($action=="getZona"){
     while($res=mysqli_fetch_array($queryZonas)){
         $idZona=$res['idZona'];
         $nombre=$res['nombre'];
+        $idVendedor=$res['nombrePer'];
         $zonas .= "<tr> 
                 <th> $nombre </th>
+                <td> $idVendedor </td>
                 <td><button type='button' data-id='$idZona' class='btn' id='btnEditModal' data-toggle='modal' data-target='#modalEditar'>Datos <i class='far fa-edit'></i>
               </svg></button>
             </td>
@@ -56,6 +60,7 @@ if($action=="getZona"){
 
 }elseif($action=="agregarZona"){
     $nombreAdd=(isset($_REQUEST['nombreAdd'])&& $_REQUEST['nombreAdd'] !=NULL)?$_REQUEST['nombreAdd']:'';
+    $vendedorAdd=(isset($_REQUEST['vendedorAdd'])&& $_REQUEST['vendedorAdd'] !=NULL)?$_REQUEST['vendedorAdd']:'';
     mysqli_query($con,'BEGIN');
 
     $duplicado=mysqli_query($con, "Select nombre From zona where nombre='$nombreAdd'");
@@ -63,7 +68,7 @@ if($action=="getZona"){
             mysqli_query($con,'ROLLBACK');
             echo 0;
         }else{      
-        $insertZona = "INSERT INTO zona (nombre) VALUES ('$nombreAdd')";
+        $insertZona = "INSERT INTO zona (idVendedor, nombre) VALUES ('$vendedorAdd', '$nombreAdd')";
             mysqli_query($con, $insertZona);
             mysqli_query($con,'COMMIT');
             echo 1;
@@ -78,19 +83,19 @@ if($action=="getZona"){
 }elseif($action=="editarZona"){
     $idZona=(isset($_REQUEST['idZona'])&& $_REQUEST['idZona'] !=NULL)?$_REQUEST['idZona']:'';
     $nombreEdit=(isset($_REQUEST['nombreEdit'])&& $_REQUEST['nombreEdit'] !=NULL)?$_REQUEST['nombreEdit']:'';
+    $vendedorEdit=(isset($_REQUEST['vendedorEdit'])&& $_REQUEST['vendedorEdit'] !=NULL)?$_REQUEST['vendedorEdit']:'';
 
     mysqli_query($con,'BEGIN');
+    $updateZ = "UPDATE zona SET idVendedor='$vendedorEdit', nombre='$nombreEdit' WHERE idZona= $idZona"; 
+    $conUpdate=mysqli_query($con, $updateZ);
 
-    $duplicado=mysqli_query($con, "Select nombre From zona where nombre='$nombreEdit'");
-        if(mysqli_num_rows($duplicado)>0){
-            mysqli_query($con,'ROLLBACK');
-            echo 0;
-        }else{      
-            $updateZona = "UPDATE zona SET nombre='$nombreEdit' WHERE idZona= $idZona"; 
-            mysqli_query($con, $updateZona);
-            mysqli_query($con,'COMMIT');
-            echo 1;
-        }
+    if($conUpdate){
+        mysqli_query($con,'COMMIT');
+        echo 1;
+    }else{
+        mysqli_query($con,'ROLLBACK');
+        echo 0; 
+    }
 }
 
 //Inicia parte de PUNTOS VENTA **********************************************************************************
