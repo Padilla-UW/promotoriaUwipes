@@ -31,11 +31,11 @@ if($_SESSION["tipoUsuario"]!="Vendedor"){
 <div style="display: flex; align-items: center; justify-content: center;">
     </div>
     <br>
-    <label for=""><b>Zona</b></label><br>
-    <select name="" id="selZona" class="form-control"></select>
-    <br>
     <label for=""><b>Punto de Venta</b></label><br>
     <select name="" id="selPuntoV" class="form-control"></select> 
+    <br>
+    <label for=""><b>Sucursal</b></label><br>
+    <select name="" id="selSucursal" class="form-control"></select>
     <br>
     <div id="mns"></div>
     <br>
@@ -48,35 +48,20 @@ if($_SESSION["tipoUsuario"]!="Vendedor"){
 
 <script>
 $(document).ready(function(){
-  getZona(); 
+  getPVenta(); 
 });
 
 //Select automáticos
 $(document).ready(function(){
-    $('#selZona').change(function(){
-      var zona = $("#selZona").val();
-      getPVenta(zona);
+    $('#selPuntoV').change(function(){
+      var pv = $("#selPuntoV").val();
+      getSucursal(pv);
     });
   })
 
-function getZona() {
+function getPVenta() {
   var parametros = {
-    "action": "getZona"
-  }
-  $.ajax({
-    url: 'visitasAjax.php',
-    data: parametros,
-    success: function (data) {
-      console.log(data);
-      $("#selZona").html(data);
-    }
-  });
-}
-
-function getPVenta(zona) {
-  var parametros = {
-    "action": "getPVenta",
-    "zona": zona
+    "action": "getPVenta"
   }
   $.ajax({
     url: 'visitasAjax.php',
@@ -88,12 +73,27 @@ function getPVenta(zona) {
   });
 }
 
+function getSucursal(pv) {
+  var parametros = {
+    "action": "getSucursal",
+    "pv": pv
+  }
+  $.ajax({
+    url: 'visitasAjax.php',
+    data: parametros,
+    success: function (data) {
+      console.log(data);
+      $("#selSucursal").html(data);
+    }
+  });
+}
+
 //Botón visita valida o redirecciona
 $("#btnVisita").click(function(){
-  var selZona = $('#selZona').val();
+  var selSucursal = $('#selSucursal').val();
   var selPuntoV = $('#selPuntoV').val();
  
-  if(selZona != "" && selPuntoV != "") {
+  if(selSucursal != "" && selPuntoV != "") {
     window.location="ficheroSeleccion.php";
     var parametros = {
         "action": "entrarVisita",
