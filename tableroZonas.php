@@ -332,6 +332,7 @@ $(document).on("click", "#btnCerrarAdd", function () {
 $(document).on("click", "#btnCerrarEdit", function () {
   $('#avisoEditar').html("");
   $('#btnEditarZona').show();
+  location.reload();
 });
 $(document).on("click", "#buscVendedor", function() {
   $("#filtroPVendedor").attr('data-vendedorV', '');
