@@ -214,11 +214,11 @@ $("#btnNuevaZona").click(function () {
         if (data == 1) {
           $('#btnNuevaZona').hide();
           $('#avisoAgregar').html("<i class='far fa-save'></i> Agregado con Éxito").css("color", "#0f5132");
+          $('#nombreAdd').val("");
+          $('#vendedorAdd').val("");
         }else if(data==0){
                 $('#avisoAgregar').html("<i class='bi bi-x-square'></i> Dato Duplicado").css("color", "red");
-              } 
-              $('#nombreAdd').val("");
-              $('#vendedorAdd').val("");
+        }         
       }
     });
   }else{
@@ -308,12 +308,12 @@ $(document).on("click", ".opcFilVendedorV", function () {
 //select automatico
 function getVendedor() {
   var parametros = {
-    "action": "getVendedor"
+    "action": "getVendedorZona"
   }
   $.ajax({
     url: 'zonasAjax.php',
     data: parametros,
-    success: function (data) {
+    success: function (data){
       console.log(data);
       $("#vendedorAdd").html(data);
       $("#vendedorEdit").html(data);
@@ -326,6 +326,8 @@ $(document).on("click", "#btnCerrarAdd", function () {
   $('#avisoAgregar').html("");
   $('#btnNuevaZona').show();
   $('#nombreAdd').val("");
+  $('#vendedorAdd').val("");
+  location.reload();
 });
 $(document).on("click", "#btnCerrarEdit", function () {
   $('#avisoEditar').html("");
