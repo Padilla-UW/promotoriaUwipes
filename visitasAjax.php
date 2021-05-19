@@ -7,27 +7,29 @@ $action=(isset($_REQUEST['action'])&& $_REQUEST['action'] !=NULL)?$_REQUEST['act
 
 //Inicia parte de VISITAS VENDEDOR ************************************************************************************
 if($action=="getPVenta"){
-    $zona=(isset($_REQUEST['zona'])&& $_REQUEST['zona'] !=NULL)?$_REQUEST['zona']:'';
-        if($zona != ''){
-            $queryPVenta=mysqli_query($con,"SELECT * From zona z, puntoventa pv WHERE z.idZona = pv.idZona AND pv.idZona = $zona");
+    $idUsuarioV=$_SESSION['idUsuario']['idUsuario'];
+    $queryRes=mysqli_query($con,"SELECT pv.idPuntoVenta, pv.idZona, pv.nombre, z.idZona, z.idVendedor From puntoventa pv, zona z
+    WHERE z.idVendedor=$idUsuarioV AND z.idZona=pv.idZona");
+    echo "<option value=''>Seleccione</option>";
+   while($res = mysqli_fetch_array($queryRes)){
+       $idPuntoVenta = $res['idPuntoVenta'];
+       $nombre = $res['nombre'];
+      echo "<option value='".$idPuntoVenta."'>$nombre</option>";
+   }
+
+}elseif($action=="getSucursal"){
+    $pv=(isset($_REQUEST['pv'])&& $_REQUEST['pv'] !=NULL)?$_REQUEST['pv']:'';
+        if($pv != ''){
+            $queryPVenta=mysqli_query($con,"SELECT s.idSucursal, s.nombre AS nombreSuc, s.idPuntoVenta, pv.idPuntoVenta From sucursal s, puntoventa pv WHERE s.idPuntoVenta = pv.idPuntoVenta AND pv.idPuntoVenta = $pv");
         }else{
-            $queryPVenta=mysqli_query($con,"SELECT * From puntoventa");
+            $queryPVenta=mysqli_query($con,"SELECT * From sucursal");
         }
         echo "<option value=''>Seleccione</option>";
         while($res = mysqli_fetch_array($queryPVenta)){
-            $idPuntoVenta = $res['idPuntoVenta'];
-            $nombre = $res['nombre'];
-           echo "<option value='".$idPuntoVenta."'>$nombre</option>";
-        }  
-
-}elseif($action=="getZona"){
-    $queryZona=mysqli_query($con,"SELECT * From zona");
-    echo "<option value=''>Seleccione</option>";
-   while($res = mysqli_fetch_array($queryZona)){
-       $idZona = $res['idZona'];
-       $nombre = $res['nombre'];
-      echo "<option value='".$idZona."'>$nombre</option>";
-   } 
+            $idSucursal = $res['idSucursal'];
+            $nombre = $res['nombreSuc'];
+           echo "<option value='".$idSucursal."'>$nombre</option>";
+        }
 
 //SESSIONES de visita
 }elseif($action=="entrarVisita"){
@@ -565,5 +567,6 @@ if($action=="getPVisitas"){
             <td><img width='250px' height='auto' src='imgEvidencias/".$imagen.".png'> </td>
         </tr>";
     }
+
 }
 ?>
