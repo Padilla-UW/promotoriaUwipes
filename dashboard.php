@@ -244,7 +244,7 @@ function getZona() {
     "action": "getZona"
   }
   $.ajax({
-    url: 'visitasAjax.php',
+    url: 'dashboardAjax.php',
     data: parametros,
     success: function (data) {
       console.log(data);
