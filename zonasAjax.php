@@ -63,7 +63,7 @@ if($action=="getZona"){
     $vendedorAdd=(isset($_REQUEST['vendedorAdd'])&& $_REQUEST['vendedorAdd'] !=NULL)?$_REQUEST['vendedorAdd']:'';
     mysqli_query($con,'BEGIN');
 
-    $duplicado=mysqli_query($con, "Select nombre From zona where nombre='$nombreAdd'");
+    $duplicado=mysqli_query($con, "Select nombre From zona where nombre='$nombreAdd'");  
         if(mysqli_num_rows($duplicado)>0){
             mysqli_query($con,'ROLLBACK');
             echo 0;
@@ -96,6 +96,14 @@ if($action=="getZona"){
         mysqli_query($con,'ROLLBACK');
         echo 0; 
     }
+}elseif($action=="getVendedorZona"){
+    $queryVendedor=mysqli_query($con, "SELECT p.idPersona, p.nombre, u.idTipoUsuario, u.idPersona FROM usuario u, persona p WHERE NOT EXISTS (SELECT idVendedor FROM zona WHERE p.idPersona=idVendedor) AND u.idTipoUsuario=2 AND p.idPersona=u.idPersona");
+    echo "<option value=''>Seleccione</option>";
+   while($res = mysqli_fetch_array($queryVendedor)){
+       $idPersona = $res['idPersona'];
+        $nombre= $res['nombre'];
+      echo "<option value='".$idPersona."'>$nombre</option>";
+   } 
 }
 
 //Inicia parte de PUNTOS VENTA **********************************************************************************
