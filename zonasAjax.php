@@ -116,31 +116,29 @@ if($action=="getPuntosV"){
     $adjacents  = 3; //brecha entre páginas después de varios adyacentes
     $offset = ($page - 1) * $per_page;
 
-    //filtrado x tipo de usuario/nombre/zona/vendedor
+    //filtrado x tipo de usuario/nombre/zona
     $tipo=(isset($_REQUEST['tipo'])&& $_REQUEST['tipo'] !=NULL)?$_REQUEST['tipo']:'';
     $nombre=(isset($_REQUEST['busquedaNombre'])&& $_REQUEST['busquedaNombre'] !=NULL)?$_REQUEST['busquedaNombre']:'';
     $idZonaV=(isset($_REQUEST['idZonaV'])&& $_REQUEST['idZonaV'] !=NULL)?$_REQUEST['idZonaV']:'';
-    $idVendedorV=(isset($_REQUEST['idVendedorV'])&& $_REQUEST['idVendedorV'] !=NULL)?$_REQUEST['idVendedorV']:'';
 
-    if($nombre != '' || $tipo != '' || $idZonaV != '' || $idVendedorV != ''){
+    if($nombre != '' || $tipo != '' || $idZonaV != ''){
         if($tipo != '') $sqlTipoP = " AND pv.tipo = '$tipo'";
         if($nombre != '') $sqlTipoN = " AND pv.nombre LIKE '%$nombre%'";
         if($idZonaV != '') $sqlTipoZ = " AND pv.idZona = '$idZonaV'";
-        if($idVendedorV != '') $sqlTipoV = " AND pv.idVendedor = '$idVendedorV'";
 
-        $qPuntosV = "Select pv.nombre AS nombrePV, pv.idPuntoVenta, pv.idVendedor, pv.idZona, pv.tipo, z.idZona, z.nombre AS nombreZ, p.idPersona, p.nombre AS nombreV FROM 
-        persona p, zona z, puntoventa pv WHERE pv.idZona = z.idZona AND pv.idVendedor = p.idPersona";
-        $qPuntosVCount.=$qPuntosV.$sqlTipoN.$sqlTipoP.$sqlTipoZ.$sqlTipoV;
-        $qPuntosV.=$sqlTipoN.$sqlTipoP.$sqlTipoZ.$sqlTipoV." ORDER BY nombrePV ASC LIMIT $offset,$per_page";
+        $qPuntosV = "Select pv.nombre AS nombrePV, pv.idPuntoVenta, pv.idZona, pv.tipo, z.idZona, z.nombre AS nombreZ FROM 
+        zona z, puntoventa pv WHERE pv.idZona = z.idZona";
+        $qPuntosVCount.=$qPuntosV.$sqlTipoN.$sqlTipoP.$sqlTipoZ;
+        $qPuntosV.=$sqlTipoN.$sqlTipoP.$sqlTipoZ." ORDER BY nombrePV ASC LIMIT $offset,$per_page";
             
             $queryPuntosV = mysqli_query($con,$qPuntosV);
             $queryPuntosVCount = mysqli_query($con,$qPuntosVCount);
         
     }else{
-        $queryPuntosV = mysqli_query($con,"Select pv.nombre AS nombrePV, pv.idPuntoVenta, pv.idVendedor, pv.idZona, pv.tipo, z.idZona, z.nombre AS nombreZ, p.idPersona, p.nombre AS nombreV FROM 
-        persona p, zona z, puntoventa pv WHERE pv.idZona = z.idZona AND pv.idVendedor = p.idPersona ORDER BY nombrePV ASC LIMIT $offset,$per_page");
-        $queryPuntosVCount = mysqli_query($con,"Select pv.nombre AS nombrePV, pv.idPuntoVenta, pv.idVendedor, pv.idZona, pv.tipo, z.idZona, z.nombre AS nombreZ, p.idPersona, p.nombre AS nombreV FROM 
-        persona p, zona z, puntoventa pv WHERE pv.idZona = z.idZona AND pv.idVendedor = p.idPersona");
+        $queryPuntosV = mysqli_query($con,"Select pv.nombre AS nombrePV, pv.idPuntoVenta, pv.idZona, pv.tipo, z.idZona, z.nombre AS nombreZ FROM 
+        zona z, puntoventa pv WHERE pv.idZona = z.idZona ORDER BY nombrePV ASC LIMIT $offset,$per_page");
+        $queryPuntosVCount = mysqli_query($con,"Select pv.nombre AS nombrePV, pv.idPuntoVenta, pv.idZona, pv.tipo, z.idZona, z.nombre AS nombreZ FROM 
+        zona z, puntoventa pv WHERE pv.idZona = z.idZona");
     }
         $total_pages = mysqli_num_rows($queryPuntosVCount);
         $total_pages = ceil($total_pages/$per_page);
@@ -151,13 +149,11 @@ if($action=="getPuntosV"){
         $idPuntoVenta=$res['idPuntoVenta'];
         $nombre=$res['nombrePV'];
         $tipo=$res['tipo'];
-        $idVendedor = $res['nombreV'];
         $idZona = $res['nombreZ'];
         $pventa .= "<tr> 
                 <th> $nombre </th>
                 <td> $tipo </td>
                 <td> $idZona </td>
-                <td> $idVendedor </td>
                 <td><button type='button' data-id='$idPuntoVenta' class='btn' id='btnEditModalP' data-toggle='modal' data-target='#modalEditar'>Datos <i class='far fa-edit'></i>
               </svg></button>
               </td>
@@ -177,7 +173,6 @@ if($action=="getPuntosV"){
     $nombreAdd=(isset($_REQUEST['nombreAdd'])&& $_REQUEST['nombreAdd'] !=NULL)?$_REQUEST['nombreAdd']:'';
     $tipoAdd=(isset($_REQUEST['tipoAdd'])&& $_REQUEST['tipoAdd'] !=NULL)?$_REQUEST['tipoAdd']:'';
     $zonaAdd=(isset($_REQUEST['zonaAdd'])&& $_REQUEST['zonaAdd'] !=NULL)?$_REQUEST['zonaAdd']:'';
-    $vendedorAdd=(isset($_REQUEST['vendedorAdd'])&& $_REQUEST['vendedorAdd'] !=NULL)?$_REQUEST['vendedorAdd']:'';
 
     mysqli_query($con,'BEGIN');
     $duplicado=mysqli_query($con, "SELECT nombre FROM puntoventa WHERE nombre='$nombreAdd' AND idZona='$zonaAdd'");
@@ -185,8 +180,8 @@ if($action=="getPuntosV"){
         mysqli_query($con,'ROLLBACK');
         echo 0;
         }else{      
-        $insertPuntoV = "INSERT INTO puntoventa (idVendedor, idZona, nombre, tipo)
-        VALUES ('$vendedorAdd', '$zonaAdd', '$nombreAdd', '$tipoAdd')";
+        $insertPuntoV = "INSERT INTO puntoventa (idZona, nombre, tipo)
+        VALUES ('$zonaAdd', '$nombreAdd', '$tipoAdd')";
         mysqli_query($con, $insertPuntoV);
         mysqli_query($con,'COMMIT');
         echo 1;
@@ -195,7 +190,7 @@ if($action=="getPuntosV"){
 //editar
 }elseif($action=="getDatosPuntoV"){
     $idPuntoVenta=(isset($_REQUEST['idPuntoVenta'])&& $_REQUEST['idPuntoVenta'] !=NULL)?$_REQUEST['idPuntoVenta']:'';
-    $query=mysqli_fetch_array(mysqli_query($con,"SELECT idPuntoVenta, idVendedor, idZona, nombre, tipo FROM puntoventa WHERE idPuntoVenta = $idPuntoVenta"));
+    $query=mysqli_fetch_array(mysqli_query($con,"SELECT idPuntoVenta, idZona, nombre, tipo FROM puntoventa WHERE idPuntoVenta = $idPuntoVenta"));
     echo json_encode($query);
 
 }elseif($action=="editarPuntoV"){
@@ -203,10 +198,9 @@ if($action=="getPuntosV"){
     $nombreEdit=(isset($_REQUEST['nombreEdit'])&& $_REQUEST['nombreEdit'] !=NULL)?$_REQUEST['nombreEdit']:'';
     $tipoEdit=(isset($_REQUEST['tipoEdit'])&& $_REQUEST['tipoEdit'] !=NULL)?$_REQUEST['tipoEdit']:'';
     $zonaEdit=(isset($_REQUEST['zonaEdit'])&& $_REQUEST['zonaEdit'] !=NULL)?$_REQUEST['zonaEdit']:'';
-    $vendedorEdit=(isset($_REQUEST['vendedorEdit'])&& $_REQUEST['vendedorEdit'] !=NULL)?$_REQUEST['vendedorEdit']:'';
 
     mysqli_query($con,'BEGIN');
-    $updatePuntoV = "UPDATE puntoventa SET idVendedor='$vendedorEdit', idZona='$zonaEdit', nombre='$nombreEdit', tipo='$tipoEdit' WHERE idPuntoVenta= $idPuntoVenta"; 
+    $updatePuntoV = "UPDATE puntoventa SET idZona='$zonaEdit', nombre='$nombreEdit', tipo='$tipoEdit' WHERE idPuntoVenta= $idPuntoVenta"; 
     $conUpdate=mysqli_query($con, $updatePuntoV);
 
     if($conUpdate){
