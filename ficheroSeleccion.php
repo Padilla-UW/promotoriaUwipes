@@ -696,6 +696,7 @@ $("#btnAgregarProd").click(function() {
                         $("#msjAgregarProd").removeClass("border-warning border-danger");
                         $("#msjAgregarProd").addClass("border border-success");
                         getFProducto(); 
+                        getNProducto();
 
                     } else if (data == 2) {
                         $("#msjAgregarProd").html("Producto repetido <i class='fas fa-exclamation' style = 'color:#ffc107;'></i>");
