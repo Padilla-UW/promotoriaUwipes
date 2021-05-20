@@ -68,14 +68,6 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
         <div class="dropdown-menu" aria-labelledby="btnGroupDrop1" id="filtroZonaPV">
         </div>
       </div>
-      <div class="btn-group" role="group">
-        <button id="filtroPVendedor" type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown"
-          aria-haspopup="true" aria-expanded="false">
-          <i class="fas fa-filter"></i> Vendedor
-        </button>
-        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1" id="filtroVendedorPV">
-        </div>
-      </div>
     </div>
     <div class="col-6 col-lg-4">
       <input type="text" onkeyup="load()" class="form-control" id="busquedaNombre" placeholder="Nombre">
@@ -95,7 +87,6 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
             <th>Nombre</th>
             <th>Tipo</th>
             <th>Zona</th>
-            <th>Vendedor</th>
             <th>Editar</th>
           </tr>
         </thead>
@@ -142,9 +133,6 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
           <label for="zona"><b>Zona</b></label><br>
           <select class="form-control" name="idZona" id="zonaAdd" required></select>
           <br>
-          <label for="vendedor"><b>Vendedor</b></label><br>
-          <select class="form-control" name="idVendedor" id="vendedorAdd" required></select>
-          <br>
           <div id="avisoAgregar"> </div>
           <br>
           <div class="modal-footer">
@@ -185,9 +173,6 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
           <label for="zona"><b>Zona</b></label><br>
           <select class="form-control" name="idZona" id="zonaEdit" required></select>
           <br>
-          <label for="vendedor"><b>Vendedor</b></label><br>
-          <select class="form-control" name="idVendedor" id="vendedorEdit" required></select>
-          <br>
           <div id="avisoEditar"> </div>
           <br>
           <div class="modal-footer">
@@ -205,22 +190,17 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
 
 <script>
 getZonaFiltro("#filtroZonaPV");
-getVendedorFiltro("#filtroVendedorPV");
 $(document).ready(function () {
   load('');
   getZonas();
-  getVendedor();
   getZonaFiltro();
-  getVendedorFiltro();
 });
 
 //función para mostrar datos en el tbody de la tabla
 //llamamos paginación y filtros
-function load(page, tipo, busquedaNombre, idZonaV, idVendedorV) {
+function load(page, tipo, busquedaNombre, idZonaV) {
   var idZonaV = $("#filtroPZona").attr("data-zonaV");
   getZonaFiltro(idZonaV);
-  var idVendedorV = $("#filtroPVendedor").attr("data-vendedorV");
-  getVendedorFiltro(idVendedorV);
   var tipo = $("#filtroTPuntoV").attr("data-puntoV");
   var busquedaNombre = $("#busquedaNombre").val();
 
@@ -229,8 +209,7 @@ function load(page, tipo, busquedaNombre, idZonaV, idVendedorV) {
     "page": page,
     "tipo": tipo,
     "busquedaNombre": busquedaNombre,
-    "idZonaV": idZonaV,
-    "idVendedorV": idVendedorV
+    "idZonaV": idZonaV
   }
   $.ajax({
     data: parametros,
@@ -249,15 +228,13 @@ $("#btnNuevoPuntoV").click(function () {
   var nombreAdd = $("#nombreAdd").val();
   var tipoAdd = $("#tipoAdd").val();
   var zonaAdd = $("#zonaAdd").val();
-  var vendedorAdd = $("#vendedorAdd").val();
 
-  if (nombreAdd != "" && tipoAdd != "" && zonaAdd != "" && vendedorAdd != "") {
+  if (nombreAdd != "" && tipoAdd != "" && zonaAdd != "") {
     var parametros = {
       "action": "agregarPuntoV",
       "nombreAdd": nombreAdd,
       "tipoAdd": tipoAdd,
-      "zonaAdd": zonaAdd,
-      "vendedorAdd": vendedorAdd
+      "zonaAdd": zonaAdd
     }
     $.ajax({
       url: "zonasAjax.php",
@@ -271,7 +248,6 @@ $("#btnNuevoPuntoV").click(function () {
           $('#nombreAdd').val("");
           $('#tipoAdd').val("0");
           $('#zonaAdd').val("");
-          $('#vendedorAdd').val("");
         }if(data == 0){
         $('#avisoAgregar').html("<i class='fas fa-exclamation-triangle'></i> Punto de venta existente en zona").css("color", "red");
         }
@@ -300,28 +276,25 @@ $(document).on("click", "#btnEditModalP", function () {
       $("#nombreEdit").val(data.nombre);
       $("#tipoEdit").val(data.tipo);
       $("#zonaEdit").val(data.idZona);
-      $("#vendedorEdit").val(data.idVendedor);
       $("#btnEditarPuntoV").attr("data-id", data.idPuntoVenta);
     }
   })
 });
 
 //EDITAR función para obtener datos de campos editar y realizar validaciones
-$("#btnEditarPuntoV").click(function btnEditarPuntoV(idPuntoVenta, nombreEdit, tipoEdit, zonaEdit, vendedorEdit) {
+$("#btnEditarPuntoV").click(function btnEditarPuntoV(idPuntoVenta, nombreEdit, tipoEdit, zonaEdit) {
   var idPuntoVenta = $("#btnEditarPuntoV").attr('data-id');
   var nombreEdit = $("#nombreEdit").val();
   var tipoEdit = $("#tipoEdit").val();
   var zonaEdit = $("#zonaEdit").val();
-  var vendedorEdit = $("#vendedorEdit").val();
  
-  if (nombreEdit != "" && tipoEdit != "" && zonaEdit != "" && vendedorEdit != "") {
+  if (nombreEdit != "" && tipoEdit != "" && zonaEdit != "") {
     var parametros = {
       "action": "editarPuntoV",
       "idPuntoVenta": idPuntoVenta,
       "nombreEdit": nombreEdit,
       "tipoEdit": tipoEdit,
-      "zonaEdit": zonaEdit,
-      "vendedorEdit": vendedorEdit
+      "zonaEdit": zonaEdit
     }
     $.ajax({
       url: "zonasAjax.php",
@@ -358,21 +331,6 @@ function getZonas() {
   });
 }
 
-function getVendedor() {
-  var parametros = {
-    "action": "getVendedor"
-  }
-  $.ajax({
-    url: 'zonasAjax.php',
-    data: parametros,
-    success: function (data) {
-      console.log(data);
-      $("#vendedorAdd").html(data);
-      $("#vendedorEdit").html(data);
-    }
-  });
-}
-
 // limpiar avisos y filtros
 $(document).on("click", "#btnCerrarAdd", function () {
   $('#avisoAgregar').html("");
@@ -380,7 +338,6 @@ $(document).on("click", "#btnCerrarAdd", function () {
   $('#nombreAdd').val("");
   $('#tipoAdd').val("0");
   $('#zonaAdd').val("");
-  $('#vendedorAdd').val("");
 });
 $(document).on("click", "#btnCerrarEdit", function () {
   $('#avisoEditar').html("");
@@ -394,11 +351,6 @@ $(document).on("click", "#buscPunto", function() {
 $(document).on("click", "#buscZona", function() {
   $("#filtroPZona").attr('data-zonaV', '');
   $("#buscZona").remove();
-  load();
-});
-$(document).on("click", "#buscVendedor", function() {
-  $("#filtroPVendedor").attr('data-vendedorV', '');
-  $("#buscVendedor").remove();
   load();
 });
 
@@ -426,35 +378,10 @@ $(".opcFilPuntoV").click(function() {
     $("#filtros").append('<a class="badge badge-pill badge-secondary" href="#" id="buscZona">' + idZonaV + ' <i class="far fa-times-circle"></i></a>');
 });
 
-$(document).on("click", ".opcFilVendedorV", function () {
-  var vendedorBusc = $(this).attr('data-id');
-  var idVendedorV = $(this).attr('data-vendedorV');
-  $("#filtroPVendedor").attr("data-vendedorV", vendedorBusc);
-  load();
-  if ($("#buscVendedor").length) {
-    $("#buscVendedor").remove();
-  }
-  if (vendedorBusc)
-    $("#filtros").append('<a class="badge badge-pill badge-secondary" href="#" id="buscVendedor">' + idVendedorV + ' <i class="far fa-times-circle"></i></a>');
-});
-
 //filtros de búsqueda funciones
 function getZonaFiltro(filtro) {
   var parametros = {
     "action": "getZonaFiltro"
-  }
-  $.ajax({
-    url: "zonasAjax.php",
-    data: parametros,
-    success: function (data) {
-      $(filtro).html(data);
-    }
-  });
-}
-
-function getVendedorFiltro(filtro) {
-  var parametros = {
-    "action": "getVendedorFiltro"
   }
   $.ajax({
     url: "zonasAjax.php",
