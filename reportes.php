@@ -29,31 +29,69 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
   <div class="row">
     <div class="col">
       <h2>Reportes</h2>
-      <p>Reporte en Excel con los siguientes datos: Fecha, Zona, Punto de Venta y Vendedor.</p>
     </div>
   </div>
 </div>
 
 <div class="container">
 <div class="row justify-content-center">
-<div class="col-12 col-lg-6">
+<div class="col-12 col-lg-8">
 <div style="display: flex; align-items: center; justify-content: center;">
     </div>
-    <label for=""><b>Vendedor</b></label><br>
-    <select name="" id="selVendedor" class="form-control"></select> 
-    <br>
+    <div class="row">
+    <div class="col">
     <label for=""><b>Zona</b></label><br>
     <select name="" id="selZona" class="form-control"></select> 
-    <br>
+    <br></div>
+    <div class="col">
     <label for=""><b>Punto de Venta</b></label><br>
-    <select name="" id="selPunVenta" class="form-control"></select> 
-    <br>
-    <label for=""><b>Fecha</b></label>
-    <br>
+    <select name="" id="selPunVenta" class="form-control"></select>
+    <br></div>
+    </div>
+    <div class="row">
+    <div class="col">
+    <label for=""><b>Vendedor</b></label><br>
+    <select name="" id="selVendedor" class="form-control"></select> 
+    <br></div>
+    <div class="col">
+    <label for=""><b>Categoría</b></label><br>
+    <select name="" id="selCategoria" class="form-control"></select>
+    <br></div>
+    </div>
+    <div class="row">
+    <div class="col">
+    <label for=""><b>Segmento</b></label><br>
+    <select name="" id="selSegmento" class="form-control">
+    <option selected="true" disabled="disabled">Seleccione</option>
+    <option value="Alto">Alto</option>
+    <option value="Medio">Medio</option>
+    <option value="Bajo">Bajo</option>
+    </select>
+    <br></div>
+    <div class="col">
+    <label for=""><b>Procedencia</b></label><br>
+    <select name="" id="selProcedencia" class="form-control">
+    <option selected="true" disabled="disabled">Seleccione</option>
+    <option value="Propio">Propio</option>
+    <option value="Competencia">Competencia</option>
+    </select>
+    <br></div>
+    </div>
+    <div class="row">
+    <div class="col">
+    <label for=""><b>Fecha</b></label><br>
+    </div>
+    </div>
+    <div class="row">
+    <div class="col">
     <p>Desde:</p><input type="date" id="selFechaIni" class="form-control"></input>
     <br>
+    <br></div>
+    <div class="col">
     <p>Hasta:</p><input type="date" id="selFechaFin" class="form-control"></input> 
     <br>
+    <br></div>
+    </div>
     <button class="btn btn-secondary" data-id="" id="btnDescarga"><i class="fas fa-download"></i> Descargar</button>
     <br>
     <!-- Descarga en pantalla -->
@@ -68,6 +106,7 @@ $(document).ready(function(){
     getVendedor();
     getZona();
     getPunVenta();
+    getCategoria();
 });
 
 //selects automáticos
@@ -113,6 +152,20 @@ function getPunVenta(){
   });
 }
 
+function getCategoria(){
+  var parametros = {
+    "action": "getCategoria"
+  }
+  $.ajax({
+    url: 'reportesAjax.php',
+    data: parametros,
+    success: function (data){
+      console.log(data);
+      $("#selCategoria").html(data);
+    }
+  });
+}
+
 //cacha datos de variables para botón descarga 
 $("#btnDescarga").click(function() {
     var selVendedor = $("#selVendedor").val();
@@ -120,13 +173,20 @@ $("#btnDescarga").click(function() {
     var selPunVenta = $("#selPunVenta").val();
     var inicio = $("#selFechaIni").val();
     var fin = $("#selFechaFin").val();
+    var selCategoria = $("#selCategoria").val();
+    var selSegmento = $('#selSegmento').val();
+    var selProcedencia = $("#selProcedencia").val();
+
   var parametros = {
             "action": "imprimirReporte",
             "idVendedor": selVendedor,
             "idZona" : selZona,
             "idPuntoVenta" : selPunVenta,
             "idInicio": inicio,
-            "idFin": fin
+            "idFin": fin,
+            "idCategoria": selCategoria,
+            "segmento": selSegmento,
+            "idProcedencia": selProcedencia
         }
         $.ajax({
             data: parametros,
@@ -137,12 +197,14 @@ $("#btnDescarga").click(function() {
                 $('#selPunVenta').val("");
                 $('#selFechaIni').val("");
                 $('#selFechaFin').val("");
+                $('#selCategoria').val("");
+                $('#selSegmento').val("Seleccione");
+                $('#selProcedencia').val("Seleccione");
                 console.log(data);
                 // Descarga en pantalla
                 $("#descargaBoton").html(data);
                 desc();
         }
-
     });
 });
 
