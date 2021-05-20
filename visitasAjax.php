@@ -391,7 +391,7 @@ if($action=="getPVisitas"){
         if($fechaInicio =='' && $fechaFin !='') $sqlFecha3 = " AND v.fecha <= '$fechaFin'";
 
         $qVisitas = "SELECT v.idVisita,  v.idVendedor, v.idPuntoVenta, v.fecha, pv.idPuntoVenta, pv.nombre AS nombrePunto,
-        pv.idVendedor, p.nombre AS nombrePersona, p.idPersona, u.idUsuario, u.idPersona, pv.idZona, z.idZona, z.nombre AS nombreZona FROM visita v, persona p, puntoventa pv, usuario u, zona z WHERE v.idPuntoVenta=pv.idPuntoVenta 
+        p.nombre AS nombrePersona, p.idPersona, u.idUsuario, u.idPersona, pv.idZona, z.idZona, z.nombre AS nombreZona FROM visita v, persona p, puntoventa pv, usuario u, zona z WHERE v.idPuntoVenta=pv.idPuntoVenta 
         AND v.idVendedor=u.idUsuario AND u.idPersona=p.idPersona AND pv.idZona=z.idZona";
         $qVisitasCount.=$qVisitas.$sqlVenta.$sqlFecha1.$sqlFecha2.$sqlFecha3.$sqlVendedor.$sqlZona;
         $qVisitas .=$sqlVenta.$sqlFecha1.$sqlFecha2.$sqlFecha3.$sqlVendedor.$sqlZona." ORDER BY idVisita DESC LIMIT $offset,$per_page";
@@ -400,10 +400,10 @@ if($action=="getPVisitas"){
 
     }else{
         $queryVisitas = mysqli_query($con,"SELECT v.idVisita, v.idVendedor, v.idPuntoVenta, v.fecha, pv.idPuntoVenta, pv.nombre AS nombrePunto,
-        pv.idVendedor, p.nombre AS nombrePersona, p.idPersona, u.idUsuario, u.idPersona, pv.idZona, z.idZona, z.nombre AS nombreZona FROM visita v, persona p, puntoventa pv, usuario u, zona z WHERE v.idPuntoVenta=pv.idPuntoVenta 
+        p.nombre AS nombrePersona, p.idPersona, u.idUsuario, u.idPersona, pv.idZona, z.idZona, z.nombre AS nombreZona FROM visita v, persona p, puntoventa pv, usuario u, zona z WHERE v.idPuntoVenta=pv.idPuntoVenta 
         AND v.idVendedor=u.idUsuario AND u.idPersona=p.idPersona AND pv.idZona=z.idZona ORDER BY idVisita DESC LIMIT $offset,$per_page");
         $queryVisitasCount = mysqli_query($con,"SELECT v.idVisita, v.idVendedor, v.idPuntoVenta, v.fecha, pv.idPuntoVenta, pv.nombre AS nombrePunto,
-        pv.idVendedor, p.nombre AS nombrePersona, p.idPersona, u.idUsuario, u.idPersona, pv.idZona, z.idZona, z.nombre AS nombreZona FROM visita v, persona p, puntoventa pv, usuario u, zona z WHERE v.idPuntoVenta=pv.idPuntoVenta 
+        p.nombre AS nombrePersona, p.idPersona, u.idUsuario, u.idPersona, pv.idZona, z.idZona, z.nombre AS nombreZona FROM visita v, persona p, puntoventa pv, usuario u, zona z WHERE v.idPuntoVenta=pv.idPuntoVenta 
         AND v.idVendedor=u.idUsuario AND u.idPersona=p.idPersona AND pv.idZona=z.idZona");
     }
         $total_pages = mysqli_num_rows($queryVisitasCount);
