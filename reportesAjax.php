@@ -63,7 +63,9 @@ if($action=="getVendedor"){
         s.idPuntoVenta, s.nombre AS nomSucursal, s.numero, d.idDetallesVisita, d.idVisita, d.idProducto, d.idTipoExibicion,
         d.existencia, d.precio, d.frentes, pro.idProducto, pro.nombre AS nomProducto, te.idTipoExibicion, te.tipoExibicion,
         c.idCategoria, c.categoria, pro.idCategoria, pro.segmento, pro.procedencia, mu.idDetallesVisita, mu.supIzq, mu.supCentro, 
-        mu.supDer, mu.centroIzq, mu.centroCentro, mu.centroDer, mu.infIzq, mu.infCentro, mu.infDer FROM visita v, puntoventa pv,
+        mu.supDer, mu.centroIzq, mu.centroCentro, mu.centroDer, mu.infIzq, mu.infCentro, mu.infDer, CASE WHEN pro.nombre = mu.supIzq THEN 'SupIzq' 
+        WHEN pro.nombre = mu.supCentro THEN 'supCentro'  WHEN pro.nombre = mu.supDer THEN 'supDer' WHEN pro.nombre = mu.centroIzq THEN 'centroIzq'  WHEN pro.nombre = mu.centroCentro THEN 'centroCentro' 
+        WHEN pro.nombre = mu.centroDer THEN 'centroDer'  WHEN pro.nombre = mu.infIzq THEN 'infIzq' WHEN pro.nombre = mu.infCentro THEN 'infCentro'  WHEN pro.nombre = mu.infDer THEN 'infDer' END 'ubicacion' FROM visita v, puntoventa pv,
         usuario u, persona p, zona z, sucursal s, detallesvisita d, producto pro, tipoexibicion te, categoria c, matrizubicacion mu
         WHERE v.idVendedor=u.idUsuario AND u.idPersona=p.idPersona AND te.idTipoExibicion=d.idTipoExibicion AND pro.idCategoria=c.idCategoria
         AND v.idPuntoVenta=pv.idPuntoVenta AND pv.idZona=z.idZona AND pv.idPuntoVenta=s.idPuntoVenta AND d.idVisita=v.idVisita AND pro.idProducto=d.idProducto
@@ -131,7 +133,7 @@ if($action=="getVendedor"){
         $hoja = $spreadsheet->getActiveSheet();
         $writer = new Xlsx($spreadsheet);
         $headerRowData = ["Producto", "Zona", "Punto de Venta", "Sucursal", "#Sucursal", "Vendedor", "Fecha", "Tipo Exhibición", "Categoría", "Segmento",
-        "Procedencia", "Existencia", "Precio", "Frentes", "SupIzq", "SupCen", "SupDer", "cenIzq", "cenCen", "cenDer", "infIzq", "infCen", "infDer"];
+        "Procedencia", "Existencia", "Precio", "Frentes", "Ubicacion", "SupIzq", "SupCen", "SupDer", "cenIzq", "cenCen", "cenDer", "infIzq", "infCen", "infDer"];
         $spreadsheet->getActiveSheet()->fromArray($headerRowData,NULL,'A3'); 
         $c = 5;
      
@@ -161,9 +163,10 @@ if($action=="getVendedor"){
             $infIzq=$res['infIzq'];
             $infCentro=$res['infCentro'];
             $infDer=$res['infDer'];
+            $ubicacion=$res['ubicacion'];
             
             $rowData=[$res['nomProducto'], $res['nomZona'],  $res['nomPVenta'], $res['nomSucursal'], $res['numero'], $res['nomPersona'], $res['fecha'],  $res['tipoExibicion'], $res['categoria'], $res['segmento'],
-            $res['procedencia'], $res['existencia'],  $res['precio'], $res['frentes'], $res['supIzq'], $res['supCentro'], $res['supDer'],  $res['centroIzq'], $res['centroCentro'], $res['centroDer'], $res['infIzq'], $res['infCentro'], $res['infDer'] ];
+            $res['procedencia'], $res['existencia'],  $res['precio'], $res['frentes'], $res['ubicacion'], $res['supIzq'], $res['supCentro'], $res['supDer'],  $res['centroIzq'], $res['centroCentro'], $res['centroDer'], $res['infIzq'], $res['infCentro'], $res['infDer'] ];
                   $spreadsheet->getActiveSheet()->fromArray($rowData,NULL,'A'.$c);
                   $c++;
           }
@@ -192,6 +195,7 @@ if($action=="getVendedor"){
         $spreadsheet->getActiveSheet()->getColumnDimension('U')->setAutoSize(true);
         $spreadsheet->getActiveSheet()->getColumnDimension('V')->setAutoSize(true);
         $spreadsheet->getActiveSheet()->getColumnDimension('W')->setAutoSize(true);
+        $spreadsheet->getActiveSheet()->getColumnDimension('X')->setAutoSize(true);
         
 
     //guardamos en excel
