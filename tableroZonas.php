@@ -327,12 +327,12 @@ $(document).on("click", "#btnCerrarAdd", function () {
   $('#btnNuevaZona').show();
   $('#nombreAdd').val("");
   $('#vendedorAdd').val("");
-  location.reload();
+  load('');
 });
 $(document).on("click", "#btnCerrarEdit", function () {
   $('#avisoEditar').html("");
   $('#btnEditarZona').show();
-  location.reload();
+  load('');
 });
 $(document).on("click", "#buscVendedor", function() {
   $("#filtroPVendedor").attr('data-vendedorV', '');
