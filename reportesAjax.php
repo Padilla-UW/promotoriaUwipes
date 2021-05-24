@@ -69,7 +69,7 @@ if($action=="getVendedor"){
         usuario u, persona p, zona z, sucursal s, detallesvisita d, producto pro, tipoexibicion te, categoria c, matrizubicacion mu
         WHERE v.idVendedor=u.idUsuario AND u.idPersona=p.idPersona AND te.idTipoExibicion=d.idTipoExibicion AND pro.idCategoria=c.idCategoria
         AND v.idPuntoVenta=pv.idPuntoVenta AND pv.idZona=z.idZona AND pv.idPuntoVenta=s.idPuntoVenta AND d.idVisita=v.idVisita AND pro.idProducto=d.idProducto
-        AND mu.idDetallesVisita=d.idDetallesVisita";
+        AND mu.idDetallesVisita=d.idDetallesVisita ORDER BY d.idDetallesVisita";
 
     //Validación con cierto vendedor
         if($idVendedor !=''){
