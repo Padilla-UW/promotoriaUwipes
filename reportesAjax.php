@@ -69,53 +69,53 @@ if($action=="getVendedor"){
         usuario u, persona p, zona z, sucursal s, detallesvisita d, producto pro, tipoexibicion te, categoria c, matrizubicacion mu
         WHERE v.idVendedor=u.idUsuario AND u.idPersona=p.idPersona AND te.idTipoExibicion=d.idTipoExibicion AND pro.idCategoria=c.idCategoria
         AND v.idPuntoVenta=pv.idPuntoVenta AND pv.idZona=z.idZona AND pv.idPuntoVenta=s.idPuntoVenta AND d.idVisita=v.idVisita AND pro.idProducto=d.idProducto
-        AND mu.idDetallesVisita=d.idDetallesVisita ORDER BY d.idDetallesVisita";
+        AND mu.idDetallesVisita=d.idDetallesVisita ";
 
     //Validación con cierto vendedor
         if($idVendedor !=''){
-            $queryVendedor = " AND u.idUsuario = $idVendedor ";
+            $queryVendedor = " AND u.idUsuario = $idVendedor ORDER BY d.idDetallesVisita";
         }
         $queryGeneral.=$queryVendedor;
         $query=mysqli_query($con,$queryGeneral);
 
     //Validación con cierta zona
         if($idZona !=''){
-            $queryZona = " AND z.idZona = $idZona ";
+            $queryZona = " AND z.idZona = $idZona ORDER BY d.idDetallesVisita";
         }
         $queryGeneral.=$queryZona;
         $query=mysqli_query($con,$queryGeneral);
 
     //Validación con cierto punto de venta
     if($idPuntoVenta !=''){
-        $queryPV = " AND pv.idPuntoVenta = $idPuntoVenta ";
+        $queryPV = " AND pv.idPuntoVenta = $idPuntoVenta ORDER BY d.idDetallesVisita";
     }
     $queryGeneral.=$queryPV;
     $query=mysqli_query($con,$queryGeneral);
 
     //Validación con cierta categoria
     if($idCategoria !=''){
-        $queryCategoria = " AND c.idCategoria = $idCategoria ";
+        $queryCategoria = " AND c.idCategoria = $idCategoria ORDER BY d.idDetallesVisita";
     }
     $queryGeneral.=$queryCategoria;
     $query=mysqli_query($con,$queryGeneral);
 
     //Validación con cierto segmento
     if($segmento !=''){
-        $querySegmento = " AND pro.segmento = '$segmento' ";
+        $querySegmento = " AND pro.segmento = '$segmento' ORDER BY d.idDetallesVisita";
     }
     $queryGeneral.=$querySegmento;
     $query=mysqli_query($con,$queryGeneral);
 
     //Validación con cierta procedencia
     if($idProcedencia !=''){
-        $queryProcedencia = " AND pro.procedencia = '$idProcedencia' ";
+        $queryProcedencia = " AND pro.procedencia = '$idProcedencia' ORDER BY d.idDetallesVisita";
     }
     $queryGeneral.=$queryProcedencia;
     $query=mysqli_query($con,$queryGeneral);
 
     //Validación con cierta fecha
     if($idInicio !='' && $idFin !=''){
-        $queryFecha = " AND v.fecha BETWEEN '$idInicio' and '$idFin'";
+        $queryFecha = " AND v.fecha BETWEEN '$idInicio' and '$idFin' ORDER BY d.idDetallesVisita";
 
     }elseif($idInicio !='' && $idFin =='') {
         $queryFecha = " AND v.fecha >= '$idInicio'";
