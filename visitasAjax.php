@@ -111,7 +111,7 @@ if($action=="getPVenta"){
     //parte session
     if(isset($_SESSION['fichero'])){
         $count = count($_SESSION['fichero']);
-        $datos=array_column($_SESSION['fichero'], 'producto', 'tipoExi', 'existencia', 'precio', 'frentes', 'rutaFinal');
+        $datos=array_column($_SESSION['fichero'], 'producto', 'tipoExi', 'existencia', 'precio', 'frentes', 'rutaFinal','extension');
    if(!in_array($producto, $datos)){
        $_SESSION['fichero'][$count] = array(
                 'producto' => $producto,
@@ -119,7 +119,8 @@ if($action=="getPVenta"){
                 'existencia'=> $existencia,
                 'precio'=> $precio,
                 'frentes'=> $frentes,
-                'rutaFinal'=> $rutaFinal
+                'rutaFinal'=> $rutaFinal,
+                'extension'=> $extension
             );
    }else{
        for($i=0; $i < count($datos); $i++){
@@ -131,6 +132,7 @@ if($action=="getPVenta"){
               $_SESSION['fichero'][$i]['precio']= $precio;
               $_SESSION['fichero'][$i]['frentes']= $frentes;
               $_SESSION['fichero'][$i]['rutaFinal']= $rutaFinal;
+              $_SESSION['fichero'][$i]['extension']= $extension;
              
               echo ($producto);
               echo ($tipoExi);
@@ -149,7 +151,8 @@ if($action=="getPVenta"){
                                            'existencia'=> $existencia,
                                            'precio'=> $precio,
                                            'frentes'=> $frentes,
-                                           'rutaFinal'=> $rutaFinal
+                                           'rutaFinal'=> $rutaFinal,
+                                           'extension'=> $extension
                                             );
     }
 
@@ -280,6 +283,7 @@ if($action=="getPVenta"){
             $precio=$_SESSION['fichero'][$i]['precio'];
             $frentes=$_SESSION['fichero'][$i]['frentes'];
             $rutaFinal=$_SESSION['fichero'][$i]['rutaFinal'];
+            $extension=$_SESSION['fichero'][$i]['extension'];
             $supIzq=$_SESSION['matrix'][$i]['supIzq'];
             $supCen=$_SESSION['matrix'][$i]['supCen'];
             $supDer=$_SESSION['matrix'][$i]['supDer'];
@@ -298,7 +302,7 @@ if($action=="getPVenta"){
             VALUES ('$idDetallesVisita', '$supIzq', '$supCen', '$supDer', '$cenIzq', '$centro', '$cenDer', '$infIzq', '$infCen', '$infDer')"; 
             mysqli_query($con, $insertMatriz);
 
-            $updateImgDetalles = "UPDATE imgdetallesvisita SET idDetallesVisita = '$idDetallesVisita', ruta = 'imgEvidencias/img$idDetallesVisita' WHERE `ruta` = '$rutaFinal'";
+            $updateImgDetalles = "UPDATE imgdetallesvisita SET idDetallesVisita = '$idDetallesVisita', ruta = 'imgEvidencias/img$idDetallesVisita.$extension' WHERE `ruta` = '$rutaFinal'";
             mysqli_query($con, $updateImgDetalles);
 
             echo $insertMatriz;
@@ -503,10 +507,8 @@ if($action=="getPVisitas"){
     AND v.idVisita = $idVisita AND d.idDetallesVisita = i.idDetallesVisita AND d.idProducto = p.idProducto");
     
     while($res=mysqli_fetch_array($query)){
-    $idDetallesVisita=$res['idDetallesVisita'];
-    $idImgDetallesVisita=$res['idImgDetallesVisita'];
+    $imagen=$res['ruta'];
     $name = 'Img';
-    $imagen= $name.$idImgDetallesVisita;
     $idProducto = $res['nombre'];
     $fecha = $res['fecha'];
     $frentes = $res['frentes'];
@@ -517,9 +519,8 @@ if($action=="getPVisitas"){
             <td>$frentes</td>
             <td>$$precio</td>
             <td>$fecha</td>
-            <td><img width='250px' height='auto' src='imgEvidencias/".$imagen.".png'> </td>
+            <td><img width='250px' height='auto' src='$imagen'> </td>
         </tr>";
     }
-
 }
 ?>
