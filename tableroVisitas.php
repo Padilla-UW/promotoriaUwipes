@@ -179,9 +179,9 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
       <table class="table">
            <thead>
                <tr>
-                   <th>Sup Izq</th>
-                   <th>Sup Centro</th>
-                   <th>Sup Der</th>
+                   <th style="width:35%; max-width:35%;">Sup Izq</th>
+                   <th style="width:35%; max-width:35%;">Sup Centro</th>
+                   <th style="width:35%; max-width:35%;">Sup Der</th>
                </tr>
            </thead>
            <tbody id="tablaMatrizSup">
@@ -190,9 +190,9 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
        <table class="table">
            <thead>
                <tr>
-                   <th>Cen Izq</th>
-                   <th>Cen Centro</th>
-                   <th>Cen Der</th>
+                   <th style="width:35%; max-width:35%;">Cen Izq</th>
+                   <th style="width:35%; max-width:35%;">Cen Centro</th>
+                   <th style="width:35%; max-width:35%;">Cen Der</th>
                </tr>
            </thead>
            <tbody id="tablaMatrizCen">
@@ -201,9 +201,9 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
        <table class="table">
            <thead>
                <tr>
-                   <th>Inf Izq</th>
-                   <th>Inf Centro</th>
-                   <th>Inf Der</th>
+                   <th style="width:35%; max-width:35%;">Inf Izq</th>
+                   <th style="width:35%; max-width:35%;">Inf Centro</th>
+                   <th style="width:35%; max-width:35%;">Inf Der</th>
                </tr>
            </thead>
            <tbody id="tablaMatrizInf">
