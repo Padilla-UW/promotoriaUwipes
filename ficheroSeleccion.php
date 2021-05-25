@@ -657,7 +657,7 @@ $("#btnAgregarProd").click(function() {
             var conteo = $("#conteoProd").val();
             var procedencia = $("#procedenciaProd").val();
             var img = $("#imgProd")[0].files[0];
-            var imagen = $('#imgEvidencia').val();
+            var imagen = $('#imgProd').val();
 
             if(nombre != "" && categoria != "" && segmento != "" && precio != "" && conteo != "" && imagen != ""){
               var extension = img.name.substring(img.name.lastIndexOf("."));
