@@ -1,7 +1,26 @@
 <?php
-    include 'includes/header.php';
+    session_start();
+
+    include('includes/header.php');
+    include('includes/menu.php');
     include 'includes/conection.php';
 ?>
+
+<style>
+.page-item.active .page-link {
+    z-index: 3;
+    color: white;
+    background-color: rgba(34,34,34,0.75);
+    border-color: black;
+}
+
+.page-item .page-link {
+    z-index: 2;
+    color: black;
+    background-color: white;
+}
+</style>
+
     <div class="container"></div>
     <div class="container">
         <div class="row">
@@ -294,29 +313,38 @@
             var conteo = $("#conteoProd").val();
             var procedencia = $("#procedenciaProd").val();
             var img = $("#imgProd")[0].files[0];
+            var imagen = $('#imgProd').val();
 
-            if (!nombre || !categoria || !segmento || !precio || !conteo || !img) {
-                console.log("LLena todos los datos");
-            } else {
-                var extension = img.name.substring(img.name.lastIndexOf("."));
-                console.log(extension);
-                if (extension != ".png" && extension != ".jpg") {
-                    $("#msjAgregarProd").removeClass("border-success border-danger");
-                    $("#msjAgregarProd").html("Formato no permitido <i class='fas fa-exclamation' style = 'color:#ffc107;'></i>");
-                    $("#msjAgregarProd").addClass("border border-warning");
-                } else {
-                    var producto = new FormData();
-                    producto.append("action", "agregarProducto");
-                    producto.append("nombre", nombre);
-                    producto.append("categoria", categoria);
-                    producto.append("segmento", segmento);
-                    producto.append("conteo", conteo);
-                    producto.append("precio", precio);
-                    producto.append("procedencia", procedencia);
-                    producto.append("img", img);
-                    agregarProducto(producto);
-                }
-            }
+if(nombre != "" && categoria != "" && segmento != "" && precio != "" && conteo != "" && imagen != ""){
+  var extension = img.name.substring(img.name.lastIndexOf("."));
+    console.log(extension);
+    if(extension != ".png" && extension != ".jpg"){
+        $("#msjAgregarProd").removeClass("border-success border-danger");
+        $("#msjAgregarProd").html("Formato no permitido <i class='fas fa-exclamation' style = 'color:#ffc107;'></i>");
+        $("#msjAgregarProd").addClass("border border-warning");
+    }else{
+        var producto = new FormData();
+        producto.append("action", "agregarProducto");
+        producto.append("nombre", nombre);
+        producto.append("categoria", categoria);
+        producto.append("segmento", segmento);
+        producto.append("conteo", conteo);
+        producto.append("precio", precio);
+        producto.append("procedencia", procedencia);
+        producto.append("img", img);
+        agregarProducto(producto);
+    }
+}else{
+        var producto = new FormData();
+        producto.append("action", "agregarProducto");
+        producto.append("nombre", nombre);
+        producto.append("categoria", categoria);
+        producto.append("segmento", segmento);
+        producto.append("conteo", conteo);
+        producto.append("precio", precio);
+        producto.append("procedencia", procedencia);
+        agregarProducto(producto);
+}
         });
 
         $(".opcFilProceProd").click(function() {
