@@ -228,12 +228,13 @@ if($_SESSION["tipoUsuario"]!="Vendedor"){
 <!-- FIN Modal Matriz-->
 
 <!-- Modal Agregar Producto-->
-<div class="modal fade" id="modalNvoProducto" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modalNvoProducto" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Agregar Producto</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"  id="btnCerrarAddPro">
             <span aria-hidden="true">&times;</span>
           </button>
                 </div>
@@ -300,7 +301,7 @@ if($_SESSION["tipoUsuario"]!="Vendedor"){
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="btnCerrarAddPro">Cerrar</button>
                     <button type="button" id="btnAgregarProd" class="btn btn-outline-success">Agregar <i class="far fa-save"></i></button>
                 </div>
             </div>
@@ -425,6 +426,25 @@ $("#btnGuardar").click(function(){
         $('#selFrentes').val("");
         $('#imgEvidencia').val("");
         $("#btnFinalizar").removeAttr('disabled');
+        $('#supIzq').val("");
+        $('#supCen').val("");
+        $('#supDer').val("");
+        $('#cenIzq').val("");
+        $('#centro').val("");
+        $('#cenDer').val("");
+        $('#infIzq').val("");
+        $('#infCen').val("");
+        $('#infDer').val("");
+        $('#txtSupIzq').val("");
+        $('#txtSupCen').val("");
+        $('#txtSupDer').val("");
+        $('#txtCenIzq').val("");
+        $('#txtCentro').val("");
+        $('#txtCenDer').val("");
+        $('#txtInfIzq').val("");
+        $('#txtInfCen').val("");
+        $('#txtInfDer').val("");
+        $('#btnNuevaMatriz').show();
         }
       });
     }else{
@@ -627,25 +647,6 @@ $(document).on("click", "#btnCerrarF", function(){
 
 $(document).on("click", "#btnCerrarMat", function () {
   $('#avisoMatriz').html("");
-  $('#btnNuevaMatriz').show();
-  $('#supIzq').val("");
-  $('#supCen').val("");
-  $('#supDer').val("");
-  $('#cenIzq').val("");
-  $('#centro').val("");
-  $('#cenDer').val("");
-  $('#infIzq').val("");
-  $('#infCen').val("");
-  $('#infDer').val("");
-  $('#txtSupIzq').val("");
-  $('#txtSupCen').val("");
-  $('#txtSupDer').val("");
-  $('#txtCenIzq').val("");
-  $('#txtCentro').val("");
-  $('#txtCenDer').val("");
-  $('#txtInfIzq').val("");
-  $('#txtInfCen').val("");
-  $('#txtInfDer').val("");
 });
 
 //Agregar producto
@@ -734,6 +735,19 @@ function getCategoria() {
     }
   });
 }
+
+//limpiar
+$(document).on("click", "#btnCerrarAddPro", function () {
+            $("#nombreProd").val("");
+            $("#categoriaProd").val("");
+            $("#segmentoProd").val("");
+            $("#precioProd").val("");
+            $("#conteoProd").val("");
+            $("#procedenciaProd").val("");
+            $('#imgProd').val("");
+            $('#msjAgregarProd').html("");
+            $("#msjAgregarProd").removeClass("border-success border-danger");
+});
 
 </script>
 
