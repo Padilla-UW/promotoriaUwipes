@@ -73,49 +73,49 @@ if($action=="getVendedor"){
 
     //Validación con cierto vendedor
         if($idVendedor !=''){
-            $queryVendedor = " AND u.idUsuario = $idVendedor ORDER BY d.idDetallesVisita";
+            $queryVendedor = " AND u.idUsuario = $idVendedor";
         }
         $queryGeneral.=$queryVendedor;
         $query=mysqli_query($con,$queryGeneral);
 
     //Validación con cierta zona
         if($idZona !=''){
-            $queryZona = " AND z.idZona = $idZona ORDER BY d.idDetallesVisita";
+            $queryZona = " AND z.idZona = $idZona";
         }
         $queryGeneral.=$queryZona;
         $query=mysqli_query($con,$queryGeneral);
 
     //Validación con cierto punto de venta
     if($idPuntoVenta !=''){
-        $queryPV = " AND pv.idPuntoVenta = $idPuntoVenta ORDER BY d.idDetallesVisita";
+        $queryPV = " AND pv.idPuntoVenta = $idPuntoVenta";
     }
     $queryGeneral.=$queryPV;
     $query=mysqli_query($con,$queryGeneral);
 
     //Validación con cierta categoria
     if($idCategoria !=''){
-        $queryCategoria = " AND c.idCategoria = $idCategoria ORDER BY d.idDetallesVisita";
+        $queryCategoria = " AND c.idCategoria = $idCategoria";
     }
     $queryGeneral.=$queryCategoria;
     $query=mysqli_query($con,$queryGeneral);
 
     //Validación con cierto segmento
     if($segmento !=''){
-        $querySegmento = " AND pro.segmento = '$segmento' ORDER BY d.idDetallesVisita";
+        $querySegmento = " AND pro.segmento = '$segmento'";
     }
     $queryGeneral.=$querySegmento;
     $query=mysqli_query($con,$queryGeneral);
 
     //Validación con cierta procedencia
     if($idProcedencia !=''){
-        $queryProcedencia = " AND pro.procedencia = '$idProcedencia' ORDER BY d.idDetallesVisita";
+        $queryProcedencia = " AND pro.procedencia = '$idProcedencia'";
     }
     $queryGeneral.=$queryProcedencia;
     $query=mysqli_query($con,$queryGeneral);
 
     //Validación con cierta fecha
     if($idInicio !='' && $idFin !=''){
-        $queryFecha = " AND v.fecha BETWEEN '$idInicio' and '$idFin' ORDER BY d.idDetallesVisita";
+        $queryFecha = " AND v.fecha BETWEEN '$idInicio' and '$idFin'";
 
     }elseif($idInicio !='' && $idFin =='') {
         $queryFecha = " AND v.fecha >= '$idInicio'";
