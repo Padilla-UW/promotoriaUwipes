@@ -75,58 +75,45 @@ if($action=="getVendedor"){
         if($idVendedor !=''){
             $queryVendedor = " AND u.idUsuario = $idVendedor";
         }
-        $queryGeneral.=$queryVendedor;
-        $query=mysqli_query($con,$queryGeneral);
-
+        
     //Validación con cierta zona
         if($idZona !=''){
             $queryZona = " AND z.idZona = $idZona";
-        }
-        $queryGeneral.=$queryZona;
-        $query=mysqli_query($con,$queryGeneral);
+        }      
 
     //Validación con cierto punto de venta
     if($idPuntoVenta !=''){
         $queryPV = " AND pv.idPuntoVenta = $idPuntoVenta";
     }
-    $queryGeneral.=$queryPV;
-    $query=mysqli_query($con,$queryGeneral);
-
+    
     //Validación con cierta categoria
     if($idCategoria !=''){
         $queryCategoria = " AND c.idCategoria = $idCategoria";
     }
-    $queryGeneral.=$queryCategoria;
-    $query=mysqli_query($con,$queryGeneral);
 
     //Validación con cierto segmento
     if($segmento !=''){
         $querySegmento = " AND pro.segmento = '$segmento'";
     }
-    $queryGeneral.=$querySegmento;
-    $query=mysqli_query($con,$queryGeneral);
-
+    
     //Validación con cierta procedencia
     if($idProcedencia !=''){
         $queryProcedencia = " AND pro.procedencia = '$idProcedencia'";
-    }
-    $queryGeneral.=$queryProcedencia;
-    $query=mysqli_query($con,$queryGeneral);
+    } 
 
     //Validación con cierta fecha
     if($idInicio !='' && $idFin !=''){
         $queryFecha = " AND v.fecha BETWEEN '$idInicio' and '$idFin'";
-
     }elseif($idInicio !='' && $idFin =='') {
         $queryFecha = " AND v.fecha >= '$idInicio'";
-
     }elseif($idInicio =='' && $idFin !='') {
         $queryFecha = " AND v.fecha <= '$idFin'";
     }
-    $queryGeneral.=$queryFecha;
-    $query=mysqli_query($con, $queryGeneral);
 
+    $queryGeneral.=$queryVendedor.$queryZona.$queryPV.$queryCategoria.$querySegmento.$queryProcedencia.$queryFecha." ORDER BY fecha";
+    $query=mysqli_query($con,$queryGeneral);
     echo ($queryGeneral);
+
     //creo hoja en excel con el header en posición
     //inicializo contador
         $spreadsheet = new Spreadsheet();
