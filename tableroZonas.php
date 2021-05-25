@@ -144,7 +144,7 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
           <input class="form-control" id="nombreEdit" type="text" placeholder="Nombre" name="nombre" required>
           <br>
           <label for="vendedor"><b>Vendedor</b></label><br>
-          <select class="form-control" name="idVendedor" id="vendedorEdit" required></select>
+          <select class="form-control" name="Vendedor" id="vendedorEdit" required></select>
           <br>
           <div id="avisoEditar"> </div>
           <br>
@@ -166,7 +166,7 @@ getVendedorFiltro("#filtroVendedorPV");
 $(document).ready(function () {
   load('');
   getVendedorFiltro();
-  getVendedor();
+  getVendedorZona();
 });
 
 //función para mostrar datos en el tbody de la tabla
@@ -268,9 +268,7 @@ $("#btnEditarZona").click(function btnEditarZona(idZona, nombreEdit, vendedorEdi
         if (data == 1) {
           $('#btnEditarZona').hide();
           $('#avisoEditar').html("<i class='far fa-save'></i> Guardado con Éxito").css("color", "#0f5132");
-        }else if(data==0){
-                $('#avisoEditar').html("<i class='bi bi-x-square'></i> Dato Duplicado").css("color", "red");
-              }
+        }
       }
     });
   } else {
@@ -306,7 +304,7 @@ $(document).on("click", ".opcFilVendedorV", function () {
 });
 
 //select automatico
-function getVendedor() {
+function getVendedorZona(){
   var parametros = {
     "action": "getVendedorZona"
   }
