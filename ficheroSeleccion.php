@@ -407,7 +407,6 @@ $("#btnGuardar").click(function(){
       }
 
   if(selProducto != "" && selTipoExi != "" && selExistencia != "" && selPrecio != "" && selFrentes >= 0){
-    $("#mns").css("color", "#0f5132").html("<i class='far fa-save'></i> Agregado con Éxito");
       $.ajax({
         data: evidencia,
         url:'visitasAjax.php',
@@ -417,6 +416,8 @@ $("#btnGuardar").click(function(){
         cache: false,
         processData: false,
         success:function(data){
+        $("#mns").css("color", "#0f5132").html("<i class='far fa-save'></i> Agregado con Éxito").delay(100).fadeIn(200);
+        $("#mns").css("color", "#0f5132").html("<i class='far fa-save'></i> Agregado con Éxito").delay(1000).fadeOut(200);
         $('#selProducto').val("");
         $('#selTipoExi').val("");
         $('#selExistencia').val("0");
@@ -656,17 +657,16 @@ $("#btnAgregarProd").click(function() {
             var conteo = $("#conteoProd").val();
             var procedencia = $("#procedenciaProd").val();
             var img = $("#imgProd")[0].files[0];
+            var imagen = $('#imgEvidencia').val();
 
-            if (!nombre || !categoria || !segmento || !precio || !conteo || !img) {
-                console.log("LLena todos los datos");
-            } else {
-                var extension = img.name.substring(img.name.lastIndexOf("."));
+            if(nombre != "" && categoria != "" && segmento != "" && precio != "" && conteo != "" && imagen != ""){
+              var extension = img.name.substring(img.name.lastIndexOf("."));
                 console.log(extension);
-                if (extension != ".png" && extension != ".jpg") {
+                if(extension != ".png" && extension != ".jpg"){
                     $("#msjAgregarProd").removeClass("border-success border-danger");
                     $("#msjAgregarProd").html("Formato no permitido <i class='fas fa-exclamation' style = 'color:#ffc107;'></i>");
                     $("#msjAgregarProd").addClass("border border-warning");
-                } else {
+                }else{
                     var producto = new FormData();
                     producto.append("action", "agregarProducto");
                     producto.append("nombre", nombre);
@@ -678,6 +678,16 @@ $("#btnAgregarProd").click(function() {
                     producto.append("img", img);
                     agregarProducto(producto);
                 }
+            }else{
+                    var producto = new FormData();
+                    producto.append("action", "agregarProducto");
+                    producto.append("nombre", nombre);
+                    producto.append("categoria", categoria);
+                    producto.append("segmento", segmento);
+                    producto.append("conteo", conteo);
+                    producto.append("precio", precio);
+                    producto.append("procedencia", procedencia);
+                    agregarProducto(producto);
             }
         });
 
@@ -709,7 +719,7 @@ $("#btnAgregarProd").click(function() {
                     }
                 }
             });
-        }
+        }                
 
 function getCategoria() {
   var parametros = {
