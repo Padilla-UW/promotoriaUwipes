@@ -101,12 +101,13 @@
     </div>
 
     <!-- Modal Agregar Producto-->
-    <div class="modal fade" id="agreProducModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="agreProducModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Agregar Producto</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="btnCerrarAddPro">
             <span aria-hidden="true">&times;</span>
           </button>
                 </div>
@@ -173,7 +174,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="btnCerrarAddPro">Cerrar</button>
                     <button type="button" id="btnAgregarProd" class="btn btn-outline-success">Agregar <i class="far fa-save"></i></button>
                 </div>
             </div>
@@ -656,4 +657,17 @@ if(nombre != "" && categoria != "" && segmento != "" && precio != "" && conteo !
             });
             return ruta;
         }
+
+        $(document).on("click", "#btnCerrarAddPro", function () {
+            $("#nombreProd").val("");
+            $("#categoriaProd").val("");
+            $("#segmentoProd").val("");
+            $("#precioProd").val("");
+            $("#conteoProd").val("");
+            $("#procedenciaProd").val("");
+            $('#imgProd').val("");
+            $('#msjAgregarProd').html("");
+            $("#msjAgregarProd").removeClass("border-success border-danger");
+});
+
     </script>
