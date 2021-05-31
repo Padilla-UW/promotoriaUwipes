@@ -109,7 +109,7 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
 <!-- Modal Detalles-->
 <div class="modal fade" id="modalDetalles" tabindex="-1" aria-labelledby="modalDetallesLabel" aria-hidden="true">
   <div class="modal-dialog">
-    <div class="modal-content" style="width:125%;">
+    <div class="modal-content" style="width:130%;">
       <div class="modal-header">
         <h5 class="modal-title" id="modalDetallesLabel" style="color:#607d8b">Detalles</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="btnCerrarDetalles">
@@ -121,10 +121,11 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
            <thead>
                <tr>
                    <th>Producto</th>
-                   <th>Tipo Exhibición</th>
+                   <th>Exhibición</th>
                    <th>Existencia</th>
                    <th>Precio</th>
                    <th>Frentes</th>
+                   <th>Nivel</th>
                    <th>Ver</th>
                </tr>
            </thead>
