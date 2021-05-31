@@ -75,6 +75,7 @@ if($action=="getPVenta"){
     $existencia=(isset($_REQUEST['selExistencia'])&& $_REQUEST['selExistencia'] !=NULL)?$_REQUEST['selExistencia']:'';
     $precio=(isset($_REQUEST['selPrecio'])&& $_REQUEST['selPrecio'] !=NULL)?$_REQUEST['selPrecio']:'';
     $frentes=(isset($_REQUEST['selFrentes'])&& $_REQUEST['selFrentes'] !=NULL)?$_REQUEST['selFrentes']:'';
+    $nivel=(isset($_REQUEST['selNivel'])&& $_REQUEST['selNivel'] !=NULL)?$_REQUEST['selNivel']:'';
     $imgFinal = "imgEvidencias/img";
     $rutaFinal = "";
     //parte imagen
@@ -111,7 +112,7 @@ if($action=="getPVenta"){
     //parte session
     if(isset($_SESSION['fichero'])){
         $count = count($_SESSION['fichero']);
-        $datos=array_column($_SESSION['fichero'], 'producto', 'tipoExi', 'existencia', 'precio', 'frentes', 'rutaFinal','extension');
+        $datos=array_column($_SESSION['fichero'], 'producto', 'tipoExi', 'existencia', 'precio', 'frentes', 'rutaFinal','extension', 'nivel');
    if(!in_array($producto, $datos)){
        $_SESSION['fichero'][$count] = array(
                 'producto' => $producto,
@@ -120,7 +121,8 @@ if($action=="getPVenta"){
                 'precio'=> $precio,
                 'frentes'=> $frentes,
                 'rutaFinal'=> $rutaFinal,
-                'extension'=> $extension
+                'extension'=> $extension,
+                'nivel'=> $nivel
             );
    }else{
        for($i=0; $i < count($datos); $i++){
@@ -133,12 +135,14 @@ if($action=="getPVenta"){
               $_SESSION['fichero'][$i]['frentes']= $frentes;
               $_SESSION['fichero'][$i]['rutaFinal']= $rutaFinal;
               $_SESSION['fichero'][$i]['extension']= $extension;
+              $_SESSION['fichero'][$i]['nivel']= $nivel;
              
               echo ($producto);
               echo ($tipoExi);
               echo ($existencia);
               echo ($precio);
               echo ($frentes);
+              echo ($nivel);
               echo ($rutaFinal);
               
            }
@@ -152,7 +156,8 @@ if($action=="getPVenta"){
                                            'precio'=> $precio,
                                            'frentes'=> $frentes,
                                            'rutaFinal'=> $rutaFinal,
-                                           'extension'=> $extension
+                                           'extension'=> $extension,
+                                           'nivel'=> $nivel
                                             );
     }
 
@@ -180,6 +185,7 @@ if($action=="getPVenta"){
             $existencia=$_SESSION['fichero'][$i]['existencia'];
             $precio=$_SESSION['fichero'][$i]['precio'];
             $frentes=$_SESSION['fichero'][$i]['frentes'];
+            $nivel=$_SESSION['fichero'][$i]['nivel'];
 
             $res=mysqli_fetch_array(mysqli_query($con,"SELECT nombre From producto WHERE idProducto = $idProducto"));
             $nombre= $res['nombre'];
@@ -192,6 +198,7 @@ if($action=="getPVenta"){
             <td> $existencia </td>
             <td> $precio </td>
             <td> $frentes </td>
+            <td> $nivel </td>
         </tr>";
         } 
  
@@ -210,7 +217,8 @@ if($action=="getPVenta"){
     if(isset($_SESSION['matrix'])){
         $count = count($_SESSION['matrix']);
         $datos=array_column($_SESSION['matrix'], 'supIzq', 'supCen', 'supDer', 'cenIzq', 'centro', 'cenDer', 'infIzq', 'infCen', 'infDer');
-   if(!in_array($supIzq, $datos)){
+        if(!in_array($supIzq, $datos)){
+            echo('kepeeeeeeeeeeeeeeee');
        $_SESSION['matrix'][$count] = array(
                 'supIzq' => $supIzq,
                 'supCen' => $supCen,
@@ -224,7 +232,6 @@ if($action=="getPVenta"){
             );
    }else{
        for($i=0; $i < count($datos); $i++){
-           
            if($datos[$i]==$supIzq){
               $_SESSION['matrix'][$i]['supIzq']= $supIzq;
               $_SESSION['matrix'][$i]['supCen']= $supCen;
@@ -235,7 +242,7 @@ if($action=="getPVenta"){
               $_SESSION['matrix'][$i]['infIzq']= $infIzq;
               $_SESSION['matrix'][$i]['infCen']= $infCen;
               $_SESSION['matrix'][$i]['infDer']= $infDer;
-
+              echo('kipiiiiiiiiiiiiiiiii');
               echo ($supIzq);
               echo ($supDer);
               echo ($supCen);
@@ -249,18 +256,68 @@ if($action=="getPVenta"){
        }
    }
       }else{
-   $_SESSION['matrix'][0] = array(
-    'supIzq' => $supIzq,
-    'supCen' => $supCen,
-    'supDer' => $supDer,
-    'cenIzq' => $cenIzq,
-    'centro' => $centro,
-    'cenDer' => $cenDer,
-    'infIzq' => $infIzq,
-    'infCen' => $infCen,
-    'infDer' => $infDer
-        );
-    }
+        echo('kopoooooooo');
+        $_SESSION['matrix'][0] = array(
+         'supIzq' => $supIzq,
+         'supCen' => $supCen,
+         'supDer' => $supDer,
+         'cenIzq' => $cenIzq,
+         'centro' => $centro,
+         'cenDer' => $cenDer,
+         'infIzq' => $infIzq,
+         'infCen' => $infCen,
+         'infDer' => $infDer
+             );
+         }
+
+//editar matriz
+}elseif($action=="editarMatriz"){
+    $supIzq=(isset($_REQUEST['supIzq'])&& $_REQUEST['supIzq'] !=NULL)?$_REQUEST['supIzq']:''; 
+    $supCen=(isset($_REQUEST['supCen'])&& $_REQUEST['supCen'] !=NULL)?$_REQUEST['supCen']:'';
+    $supDer=(isset($_REQUEST['supDer'])&& $_REQUEST['supDer'] !=NULL)?$_REQUEST['supDer']:'';
+    $cenIzq=(isset($_REQUEST['cenIzq'])&& $_REQUEST['cenIzq'] !=NULL)?$_REQUEST['cenIzq']:'';
+    $centro=(isset($_REQUEST['centro'])&& $_REQUEST['centro'] !=NULL)?$_REQUEST['centro']:'';
+    $cenDer=(isset($_REQUEST['cenDer'])&& $_REQUEST['cenDer'] !=NULL)?$_REQUEST['cenDer']:'';
+    $infIzq=(isset($_REQUEST['infIzq'])&& $_REQUEST['infIzq'] !=NULL)?$_REQUEST['infIzq']:'';
+    $infCen=(isset($_REQUEST['infCen'])&& $_REQUEST['infCen'] !=NULL)?$_REQUEST['infCen']:'';
+    $infDer=(isset($_REQUEST['infDer'])&& $_REQUEST['infDer'] !=NULL)?$_REQUEST['infDer']:'';
+
+        $count = count($_SESSION['matrix']);
+        $datos=array_column($_SESSION['matrix'], 'supIzq', 'supCen', 'supDer', 'cenIzq', 'centro', 'cenDer', 'infIzq', 'infCen', 'infDer');
+
+         $_SESSION['matrix'][$count-1] = array(
+                'supIzq' => $supIzq,
+                'supCen' => $supCen,
+                'supDer' => $supDer,
+                'cenIzq' => $cenIzq,
+                'centro' => $centro,
+                'cenDer' => $cenDer,
+                'infIzq' => $infIzq,
+                'infCen' => $infCen,
+                'infDer' => $infDer
+            );
+
+            for($i=0; $i < count($datos); $i++){
+              $_SESSION['matrix'][$i]['supIzq']= $supIzq;
+              $_SESSION['matrix'][$i]['supCen']= $supCen;
+              $_SESSION['matrix'][$i]['supDer']= $supDer;
+              $_SESSION['matrix'][$i]['cenIzq']= $cenIzq;
+              $_SESSION['matrix'][$i]['centro']= $centro;
+              $_SESSION['matrix'][$i]['cenDer']= $cenDer;
+              $_SESSION['matrix'][$i]['infIzq']= $infIzq;
+              $_SESSION['matrix'][$i]['infCen']= $infCen;
+              $_SESSION['matrix'][$i]['infDer']= $infDer;
+         
+              echo ($supIzq);
+              echo ($supDer);
+              echo ($supCen);
+              echo ($cenIzq);
+              echo ($centro);
+              echo ($cenDer);
+              echo ($infIzq);
+              echo ($infCen);
+              echo ($infDer);         
+            }
 
 //insertar confirmacion en bd
 }elseif($action=="confirmarFichero"){
@@ -282,6 +339,7 @@ if($action=="getPVenta"){
             $existencia=$_SESSION['fichero'][$i]['existencia'];
             $precio=$_SESSION['fichero'][$i]['precio'];
             $frentes=$_SESSION['fichero'][$i]['frentes'];
+            $nivel=$_SESSION['fichero'][$i]['nivel'];
             $rutaFinal=$_SESSION['fichero'][$i]['rutaFinal'];
             $extension=$_SESSION['fichero'][$i]['extension'];
             $supIzq=$_SESSION['matrix'][$i]['supIzq'];
@@ -294,8 +352,8 @@ if($action=="getPVenta"){
             $infCen=$_SESSION['matrix'][$i]['infCen'];
             $infDer=$_SESSION['matrix'][$i]['infDer'];
 
-            $queryDetalles="INSERT INTO detallesvisita(idVisita, idProducto, idTipoExibicion, existencia, precio, frentes) 
-            VALUES ($idVisita, $producto, $tipoExi, '$existencia', $precio, $frentes)";
+            $queryDetalles="INSERT INTO detallesvisita(idVisita, idProducto, idTipoExibicion, existencia, precio, frentes, nivel) 
+            VALUES ($idVisita, $producto, $tipoExi, '$existencia', $precio, $frentes, $nivel)";
             mysqli_query($con,$queryDetalles);
             $idDetallesVisita = mysqli_insert_id($con);
             $insertMatriz = "INSERT INTO matrizubicacion(idDetallesVisita, supIzq, supCentro, supDer, centroIzq, centroCentro, centroDer, infIzq, infCentro, infDer)
@@ -415,7 +473,7 @@ if($action=="getPVisitas"){
 //detalles
 }elseif($action=="getDetalles"){
         $idVisita=(isset($_REQUEST['idVisita'])&& $_REQUEST['idVisita'] !=NULL)?$_REQUEST['idVisita']:'';
-        $query= mysqli_query($con,"SELECT v.idVisita, d.idDetallesVisita, d.idVisita, d.idProducto, p.idProducto, p.nombre, d.idTipoExibicion, d.existencia, d.precio, d.frentes, t.idTipoExibicion, t.tipoExibicion
+        $query= mysqli_query($con,"SELECT v.idVisita, d.idDetallesVisita, d.idVisita, d.idProducto, p.idProducto, p.nombre, d.idTipoExibicion, d.existencia, d.precio, d.frentes, d.nivel, t.idTipoExibicion, t.tipoExibicion
         FROM detallesvisita d, visita v, producto p, tipoexibicion t WHERE v.idVisita = d.idVisita AND v.idVisita = $idVisita AND p.idProducto=d.idProducto AND d.idTipoExibicion=t.idTipoExibicion ORDER BY idDetallesVisita");
         while($res=mysqli_fetch_array($query)){
             $idDetallesVisita=$res['idDetallesVisita'];
@@ -424,6 +482,7 @@ if($action=="getPVisitas"){
             $existencia = $res['existencia'];
             $precio = $res['precio'];
             $frentes = $res['frentes'];
+            $nivel = $res['nivel'];
              
             echo "<tr> 
                     <td> $producto </td>
@@ -431,6 +490,7 @@ if($action=="getPVisitas"){
                     <td> $existencia </td>
                     <td> $precio </td>
                     <td> $frentes </td>
+                    <td> $nivel </td>
                     <td><button type='button' data-id='$idDetallesVisita' class='btn' style='padding:0%;margin:0%' id='btnMatrizModal' data-toggle='modal' data-target='#modalMatriz'><i class='fab fa-buromobelexperte'></i> Matriz</button>
               </td>
                 </tr>";
