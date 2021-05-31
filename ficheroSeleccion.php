@@ -14,7 +14,8 @@ if($_SESSION["tipoUsuario"]!="Vendedor"){
 #btnGuardar, 
 #btnFinalizar,
 #btnConfirmar,
-#btnNuevaMatriz{
+#btnNuevaMatriz,
+#btnEditarMatriz{
   padding: 14px 20px;
   margin: 8px 0;
   border: none;
@@ -26,7 +27,8 @@ if($_SESSION["tipoUsuario"]!="Vendedor"){
 #btnGuardar:hover,
 #btnFinalizar:hover:enabled,
 #btnConfirmar:hover,
-#btnNuevaMatriz:hover{
+#btnNuevaMatriz:hover,
+#btnEditarMatriz:hover{
   opacity: 0.8;
 }
 
@@ -39,41 +41,69 @@ if($_SESSION["tipoUsuario"]!="Vendedor"){
 <!-- selects principal -->
 <div class="container">
 <div class="row justify-content-center">
-<div class="col-12 col-lg-6">
+<div class="col-12 col-lg-8">
 <div style="display: flex; align-items: center; justify-content: center;">
     </div>
     <div class="row">
-    <div class="col-8">
+    <div class="col-6">
+    <br>
     <label for=""><b>Producto</b></label>
-    <select name="producto" id="selProducto" class="form-control"></select> 
+    <select name="producto" id="selProducto" class="form-control" required></select> 
     <br></div>
-    <div class="col-4">
-    <label for=""> </label><br>
-    <button type="button" class="btn btn-light" style="margin-top:7px;" id="btnAddProducto" data-toggle="modal"
+    <div class="col-6">
+    <br>
+    <label for=""><b>Nuevo Producto</b></label><br>
+    <button type="button" class="btn btn-light" style="margin-top:1px; width:100%;" id="btnAddProducto" data-toggle="modal"
         data-target="#modalNvoProducto">Agregar <i class="fas fa-plus"></i></button>
     </div>
     </div>
+    <div class="row">
+    <div class="col-6">
     <label for=""><b>Tipo de Exhibición</b></label><br>
-    <select name="" id="selTipoExi" class="form-control"></select> 
-    <br>
+    <select name="" id="selTipoExi" class="form-control" required></select> 
+    <br></div>
+    <div class="col-6">
     <label for=""><b>Existencia</b></label><br>
-    <select name="selector" id="selExistencia" class="form-control">
-    <option value="0">¿Está en existencia el producto?</option>
+    <select name="selector" id="selExistencia" class="form-control" required>
+    <option value="">¿Está en existencia el producto?</option>
     <option value="Si">Sí</option>
     <option value="No">No</option>
     </select> 
-    <br>
+    </div>
+    </div>
+
+    <div class="row">
+    <div class="col-6">
     <label for=""><b>Precio</b></label>
-    <input type="text" class="form-control" name="precio" id="selPrecio" placeholder='$100.00'>
-    <br>
+    <input type="text" class="form-control" name="precio" id="selPrecio" placeholder='100.00' required>
+    <br></div>
+    <div class="col-6">
     <label for=""><b>Frentes</b></label>
-    <input type="number" class="form-control" name="frentes" id="selFrentes" min="0">
-    <br>
+    <input type="number" class="form-control" name="frentes" id="selFrentes" min="0" required>
+    </div>
+    </div>
+
+    <div class="row">
+    <div class="col-6">
+    <label for=""><b>Nivel</b></label><br>
+    <select name="selector" id="selNivel" class="form-control" required>
+    <option value="">Seleccione el nivel de su producto</option>
+    <option value="5">5</option>
+    <option value="4">4</option>
+    <option value="3">3</option>
+    <option value="2">2</option>
+    <option value="1">1</option>
+    </select> 
+    <br></div>
+    <div class="col-6">
+    <label for=""><b>Matriz</b></label><br>
+    <button type="button" class="btn btn-light" style="margin-top:1px; width:100%;" data-toggle="modal"
+    data-target="#modalMatriz" id="btnMatriz">Agregar <i class="fab fa-buromobelexperte"></i></button>
+    </div>
+    </div>
+    <label for=""><b>Img Evidencia</b></label><br>
     <input type="file" name="imagen" id="imgEvidencia">
-    <br><br>
-    <button type="button" class="btn btn-light" style="margin-top:5px;" data-toggle="modal"
-    data-target="#modalMatriz" id="btnMatriz">Matriz <i class="fab fa-buromobelexperte"></i></button>
-    <br>   
+    <br><br>  
     <div id="mns"></div>
     <br>
     <button class="btn btn-secondary" data-id="" id="btnGuardar"><i class="far fa-save"></i> Guardar</button>
@@ -117,6 +147,7 @@ if($_SESSION["tipoUsuario"]!="Vendedor"){
                    <th>Existencia</th>
                    <th>Precio</th>
                    <th>Frentes</th>
+                   <th>Nivel</th>
                </tr>
            </thead>
            <tbody id="tablaFinal">
@@ -221,6 +252,8 @@ if($_SESSION["tipoUsuario"]!="Vendedor"){
           <br>
           <button class="btn btn-outline-success" style="margin:1%;" type="button" data-id=""
             id="btnNuevaMatriz">Agregar <i class="far fa-save"></i></button>
+            <button class="btn btn-outline-success" style="margin:1%;" type="button" data-id=""
+            id="btnEditarMatriz">Editar <i class="far fa-save"></i></button>
       </div>
     </div>
   </div>
@@ -251,8 +284,7 @@ data-backdrop="static" data-keyboard="false">
                                 <div class="form-row">
                                     <div class="form-group col-12">
                                         <label for="categoriaProd">Categoria</label>
-                                        <select id="categoriaProd" class="form-control">
-                                            
+                                        <select id="categoriaProd" class="form-control">   
                                           </select>
                                     </div>
                                 </div>
@@ -317,6 +349,7 @@ $(document).ready(function(){
     getNProducto(); 
     getFTipoExi();
     getCategoria();
+    $('#btnEditarMatriz').hide();
 });
 
 //Select automáticos
@@ -377,6 +410,7 @@ $("#btnGuardar").click(function(){
   var selExistencia = $('#selExistencia').val();
   var selPrecio = $('#selPrecio').val();
   var selFrentes = parseInt( $('#selFrentes').val());
+  var selNivel = $('#selNivel').val();
   var img = $("#imgEvidencia")[0].files[0];
   var imagen = $('#imgEvidencia').val();
 
@@ -390,6 +424,7 @@ $("#btnGuardar").click(function(){
           evidencia.append("selExistencia", selExistencia);
           evidencia.append("selPrecio", selPrecio);
           evidencia.append("selFrentes", selFrentes);
+          evidencia.append("selNivel", selNivel);
       }else{
         var extension = img.name.substring(img.name.lastIndexOf("."));
         console.log(extension);
@@ -404,10 +439,11 @@ $("#btnGuardar").click(function(){
           evidencia.append("selExistencia", selExistencia);
           evidencia.append("selPrecio", selPrecio);
           evidencia.append("selFrentes", selFrentes);
+          evidencia.append("selNivel", selNivel);
         }
       }
 
-  if(selProducto != "" && selTipoExi != "" && selExistencia != "" && selPrecio != "" && selFrentes >= 0){
+  if(selProducto != "" && selTipoExi != "" && selExistencia != "" && selPrecio != "" && selFrentes >= 0 && selNivel != ""){
       $.ajax({
         data: evidencia,
         url:'visitasAjax.php',
@@ -421,9 +457,10 @@ $("#btnGuardar").click(function(){
         $("#mns").css("color", "#0f5132").html("<i class='far fa-save'></i> Agregado con Éxito").delay(1000).fadeOut(200);
         $('#selProducto').val("");
         $('#selTipoExi').val("");
-        $('#selExistencia').val("0");
+        $('#selExistencia').val("");
         $('#selPrecio').val("");
         $('#selFrentes').val("");
+        $('#selNivel').val("");
         $('#imgEvidencia').val("");
         $("#btnFinalizar").removeAttr('disabled');
         $('#supIzq').val("");
@@ -445,6 +482,7 @@ $("#btnGuardar").click(function(){
         $('#txtInfCen').val("");
         $('#txtInfDer').val("");
         $('#btnNuevaMatriz').show();
+        $('#btnEditarMatriz').hide();
         }
       });
     }else{
@@ -485,6 +523,7 @@ $("#btnFinalizar").click(function(){
   var selExistencia = $('#selExistencia').val();
   var selPrecio = $('#selPrecio').val();
   var selFrentes = parseInt( $('#selFrentes').val());
+  var selNivel = $('#selNivel').val();
 
   var parametros = {
         "action": "finalFichero2",
@@ -492,7 +531,8 @@ $("#btnFinalizar").click(function(){
         "selTipoExi": selTipoExi,
         "selExistencia":selExistencia,  
         "selPrecio":selPrecio,
-        "selFrentes":selFrentes
+        "selFrentes":selFrentes,
+        "selNivel":selNivel
       };
       $.ajax({
         data:parametros,
@@ -517,6 +557,7 @@ $("#btnConfirmar").click(function(){
   var selExistencia = $('#selExistencia').val();
   var selPrecio = $('#selPrecio').val();
   var selFrentes = $('#selFrentes').val();
+  var selNivel = $('#selNivel').val();
   var supIzq = $('#supIzq').val();
   var supCen = $('#supCen').val();
   var supDer = $('#supDer').val();
@@ -544,6 +585,7 @@ $("#btnConfirmar").click(function(){
         "selExistencia":selExistencia,  
         "selPrecio":selPrecio,
         "selFrentes":selFrentes,
+        "selNivel":selNivel,
         "supIzq": (supIzq || txtSupIzq),
         "supCen": (supCen || txtSupCen),
         "supDer": (supDer || txtSupDer),
@@ -561,7 +603,7 @@ $("#btnConfirmar").click(function(){
           console.log(data);
         $('#mns').html("");
         $('#btnConfirmar').hide();
-        setTimeout("redireccionarPagina()", 1500);
+        // setTimeout("redireccionarPagina()", 1500);
         }
       });
     });
@@ -628,7 +670,80 @@ $("#btnNuevaMatriz").click(function(x){
         data:parametros,
         url:'visitasAjax.php',
         success:function(data){
+          $('#btnEditarMatriz').show();
           $('#btnNuevaMatriz').hide();
+          console.log(data);
+        }
+      });
+    }
+  }else{
+    $("#avisoMatriz").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> Datos Incorrectos o Vacíos");
+      }
+    }
+  });
+
+//MATRIZ editar datos
+$("#btnEditarMatriz").click(function(x){
+  var supIzq = $('#supIzq').val();
+  var supCen = $('#supCen').val();
+  var supDer = $('#supDer').val();
+  var cenIzq = $('#cenIzq').val();
+  var centro = $('#centro').val();
+  var cenDer = $('#cenDer').val();
+  var infIzq = $('#infIzq').val();
+  var infCen = $('#infCen').val();
+  var infDer = $('#infDer').val();
+  var txtSupIzq = $('#txtSupIzq').val();
+  var txtSupCen = $('#txtSupCen').val();
+  var txtSupDer = $('#txtSupDer').val();
+  var txtCenIzq = $('#txtCenIzq').val();
+  var txtCentro = $('#txtCentro').val();
+  var txtCenDer = $('#txtCenDer').val();
+  var txtInfIzq = $('#txtInfIzq').val();
+  var txtInfCen = $('#txtInfCen').val();
+  var txtInfDer = $('#txtInfDer').val();
+  var prodPrincipal = $('#selProducto').val();
+  var idSupIzq = $('#supIzq>option:selected').data("id");
+  var idSupCen = $('#supCen>option:selected').data("id");
+  var idSupDer = $('#supDer>option:selected').data("id");
+  var idCenIzq = $('#cenIzq>option:selected').data("id");
+  var idCentro = $('#centro>option:selected').data("id");
+  var idCenDer = $('#cenDer>option:selected').data("id");
+  var idInfIzq = $('#infIzq>option:selected').data("id");
+  var idInfCen = $('#infCen>option:selected').data("id");
+  var idInfDer = $('#infDer>option:selected').data("id");
+
+  if((supIzq != "" && txtSupIzq != "") || (supCen != "" && txtSupCen != "") || (supDer != "" && txtSupDer != "") || (cenIzq != "" && txtCenIzq != "") || (centro != "" && txtCentro != "") || (cenDer != "" && txtCenDer != "") ||
+     (infIzq != "" && txtInfIzq != "") || (infCen != "" && txtInfCen != "") || (infDer != "" && txtInfDer != "")){
+        $("#avisoMatriz").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> Sólo 1 producto por sección");
+      }else{
+
+  if(((supIzq == "" && txtSupIzq != "") || (supIzq != "" && txtSupIzq == "" )) && ((supCen == "" && txtSupCen != "") || (supCen != "" && txtSupCen == "" )) && ((supDer == "" && txtSupDer != "") || (supDer != "" && txtSupDer == "" )) &&
+     ((cenIzq == "" && txtCenIzq != "") || (cenIzq != "" && txtCenIzq == "" )) && ((centro == "" && txtCentro != "") || (centro != "" && txtCentro == "" )) && ((cenDer == "" && txtCenDer != "") || (cenDer != "" && txtCenDer == "" )) &&
+     ((infIzq == "" && txtInfIzq != "") || (infIzq != "" && txtInfIzq == "" )) && ((infCen == "" && txtInfCen != "") || (infCen != "" && txtInfCen == "" )) && ((infDer == "" && txtInfDer != "") || (infDer != "" && txtInfDer == "" ))){
+ 
+  if(idSupIzq != prodPrincipal && idSupCen != prodPrincipal && idSupDer != prodPrincipal && idCenIzq != prodPrincipal && idCentro != prodPrincipal && 
+     idCenDer != prodPrincipal && idInfIzq != prodPrincipal && idInfCen != prodPrincipal && idInfDer != prodPrincipal){
+        $("#avisoMatriz").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> No se hace referencia al producto seleccionado");
+    }else{
+
+    $("#avisoMatriz").css("color", "#0f5132").html("<i class='far fa-save'></i> Agregado con Éxito");
+    var parametros = {
+        "action": "editarMatriz",
+        "supIzq": (supIzq || txtSupIzq),
+        "supCen": (supCen || txtSupCen),
+        "supDer": (supDer || txtSupDer),
+        "cenIzq": (cenIzq || txtCenIzq),
+        "centro": (centro || txtCentro),
+        "cenDer": (cenDer || txtCenDer),
+        "infIzq": (infIzq || txtInfIzq),
+        "infCen": (infCen || txtInfCen),
+        "infDer": (infDer || txtInfDer)
+      }
+      $.ajax({
+        data:parametros,
+        url:'visitasAjax.php',
+        success:function(data){
           console.log(data);
         }
       });
@@ -648,6 +763,9 @@ $(document).on("click", "#btnCerrarF", function(){
 $(document).on("click", "#btnCerrarMat", function () {
   $('#avisoMatriz').html("");
 });
+
+
+
 
 //Agregar producto
 $("#btnAgregarProd").click(function() {
@@ -702,18 +820,17 @@ $("#btnAgregarProd").click(function() {
                 cache: false,
                 processData: false,
                 success: function(data) {
-                    if (data == 1) {
+                    if(data == 1){
                         $("#msjAgregarProd").html("Producto Guardado <i class='fas fa-check-double' style='color:#28a745;'></i>");
                         $("#msjAgregarProd").removeClass("border-warning border-danger");
                         $("#msjAgregarProd").addClass("border border-success");
                         getFProducto(); 
                         getNProducto();
-
-                    } else if (data == 2) {
+                    }else if(data == 2) {
                         $("#msjAgregarProd").html("Producto repetido <i class='fas fa-exclamation' style = 'color:#ffc107;'></i>");
                         $("#msjAgregarProd").removeClass("border-success border-danger");
                         $("#msjAgregarProd").addClass("border border-warning ");
-                    } else {
+                    }else{
                         $("#msjAgregarProd").html("Error <i class='fas fa-times' style='color:#dc3545;'></i>");
                         $("#msjAgregarProd").removeClass("border-success border-warning");
                         $("#msjAgregarProd").addClass("border border-danger");
@@ -748,7 +865,6 @@ $(document).on("click", "#btnCerrarAddPro", function () {
             $('#msjAgregarProd').html("");
             $("#msjAgregarProd").removeClass("border-success border-danger");
 });
-
 </script>
 
 <?php
