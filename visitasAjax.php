@@ -218,7 +218,6 @@ if($action=="getPVenta"){
         $count = count($_SESSION['matrix']);
         $datos=array_column($_SESSION['matrix'], 'supIzq', 'supCen', 'supDer', 'cenIzq', 'centro', 'cenDer', 'infIzq', 'infCen', 'infDer');
         if(!in_array($supIzq, $datos)){
-            echo('kepeeeeeeeeeeeeeeee');
        $_SESSION['matrix'][$count] = array(
                 'supIzq' => $supIzq,
                 'supCen' => $supCen,
@@ -242,21 +241,10 @@ if($action=="getPVenta"){
               $_SESSION['matrix'][$i]['infIzq']= $infIzq;
               $_SESSION['matrix'][$i]['infCen']= $infCen;
               $_SESSION['matrix'][$i]['infDer']= $infDer;
-              echo('kipiiiiiiiiiiiiiiiii');
-              echo ($supIzq);
-              echo ($supDer);
-              echo ($supCen);
-              echo ($cenIzq);
-              echo ($centro);
-              echo ($cenDer);
-              echo ($infIzq);
-              echo ($infCen);
-              echo ($infDer);
            }
        }
    }
       }else{
-        echo('kopoooooooo');
         $_SESSION['matrix'][0] = array(
          'supIzq' => $supIzq,
          'supCen' => $supCen,
@@ -269,56 +257,7 @@ if($action=="getPVenta"){
          'infDer' => $infDer
              );
          }
-
-//editar matriz
-}elseif($action=="editarMatriz"){
-    $supIzq=(isset($_REQUEST['supIzq'])&& $_REQUEST['supIzq'] !=NULL)?$_REQUEST['supIzq']:''; 
-    $supCen=(isset($_REQUEST['supCen'])&& $_REQUEST['supCen'] !=NULL)?$_REQUEST['supCen']:'';
-    $supDer=(isset($_REQUEST['supDer'])&& $_REQUEST['supDer'] !=NULL)?$_REQUEST['supDer']:'';
-    $cenIzq=(isset($_REQUEST['cenIzq'])&& $_REQUEST['cenIzq'] !=NULL)?$_REQUEST['cenIzq']:'';
-    $centro=(isset($_REQUEST['centro'])&& $_REQUEST['centro'] !=NULL)?$_REQUEST['centro']:'';
-    $cenDer=(isset($_REQUEST['cenDer'])&& $_REQUEST['cenDer'] !=NULL)?$_REQUEST['cenDer']:'';
-    $infIzq=(isset($_REQUEST['infIzq'])&& $_REQUEST['infIzq'] !=NULL)?$_REQUEST['infIzq']:'';
-    $infCen=(isset($_REQUEST['infCen'])&& $_REQUEST['infCen'] !=NULL)?$_REQUEST['infCen']:'';
-    $infDer=(isset($_REQUEST['infDer'])&& $_REQUEST['infDer'] !=NULL)?$_REQUEST['infDer']:'';
-
-        $count = count($_SESSION['matrix']);
-        $datos=array_column($_SESSION['matrix'], 'supIzq', 'supCen', 'supDer', 'cenIzq', 'centro', 'cenDer', 'infIzq', 'infCen', 'infDer');
-
-         $_SESSION['matrix'][$count-1] = array(
-                'supIzq' => $supIzq,
-                'supCen' => $supCen,
-                'supDer' => $supDer,
-                'cenIzq' => $cenIzq,
-                'centro' => $centro,
-                'cenDer' => $cenDer,
-                'infIzq' => $infIzq,
-                'infCen' => $infCen,
-                'infDer' => $infDer
-            );
-
-            for($i=0; $i < count($datos); $i++){
-              $_SESSION['matrix'][$i]['supIzq']= $supIzq;
-              $_SESSION['matrix'][$i]['supCen']= $supCen;
-              $_SESSION['matrix'][$i]['supDer']= $supDer;
-              $_SESSION['matrix'][$i]['cenIzq']= $cenIzq;
-              $_SESSION['matrix'][$i]['centro']= $centro;
-              $_SESSION['matrix'][$i]['cenDer']= $cenDer;
-              $_SESSION['matrix'][$i]['infIzq']= $infIzq;
-              $_SESSION['matrix'][$i]['infCen']= $infCen;
-              $_SESSION['matrix'][$i]['infDer']= $infDer;
-         
-              echo ($supIzq);
-              echo ($supDer);
-              echo ($supCen);
-              echo ($cenIzq);
-              echo ($centro);
-              echo ($cenDer);
-              echo ($infIzq);
-              echo ($infCen);
-              echo ($infDer);         
-            }
-
+  
 //insertar confirmacion en bd
 }elseif($action=="confirmarFichero"){
     //parte funcional de visita
