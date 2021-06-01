@@ -13,9 +13,7 @@ if($_SESSION["tipoUsuario"]!="Vendedor"){
 <style>
 #btnGuardar, 
 #btnFinalizar,
-#btnConfirmar,
-#btnNuevaMatriz,
-#btnEditarMatriz{
+#btnConfirmar{
   padding: 14px 20px;
   margin: 8px 0;
   border: none;
@@ -26,9 +24,7 @@ if($_SESSION["tipoUsuario"]!="Vendedor"){
 
 #btnGuardar:hover,
 #btnFinalizar:hover:enabled,
-#btnConfirmar:hover,
-#btnNuevaMatriz:hover,
-#btnEditarMatriz:hover{
+#btnConfirmar:hover{
   opacity: 0.8;
 }
 
@@ -248,12 +244,6 @@ if($_SESSION["tipoUsuario"]!="Vendedor"){
               <br>
             </div>
           </div>
-          <div id="avisoMatriz"> </div>
-          <br>
-          <button class="btn btn-outline-success" style="margin:1%;" type="button" data-id=""
-            id="btnNuevaMatriz">Agregar <i class="far fa-save"></i></button>
-            <button class="btn btn-outline-success" style="margin:1%;" type="button" data-id=""
-            id="btnEditarMatriz">Editar <i class="far fa-save"></i></button>
       </div>
     </div>
   </div>
@@ -349,7 +339,6 @@ $(document).ready(function(){
     getNProducto(); 
     getFTipoExi();
     getCategoria();
-    $('#btnEditarMatriz').hide();
 });
 
 //Select automáticos
@@ -403,92 +392,175 @@ function getFTipoExi() {
   });
 }
 
+function getGuardarMatriz(){
+  var supIzq = $('#supIzq').val();
+  var supCen = $('#supCen').val();
+  var supDer = $('#supDer').val();
+  var cenIzq = $('#cenIzq').val();
+  var centro = $('#centro').val();
+  var cenDer = $('#cenDer').val();
+  var infIzq = $('#infIzq').val();
+  var infCen = $('#infCen').val();
+  var infDer = $('#infDer').val();
+  var txtSupIzq = $('#txtSupIzq').val();
+  var txtSupCen = $('#txtSupCen').val();
+  var txtSupDer = $('#txtSupDer').val();
+  var txtCenIzq = $('#txtCenIzq').val();
+  var txtCentro = $('#txtCentro').val();
+  var txtCenDer = $('#txtCenDer').val();
+  var txtInfIzq = $('#txtInfIzq').val();
+  var txtInfCen = $('#txtInfCen').val();
+  var txtInfDer = $('#txtInfDer').val();
+    var parametros = {
+        "action": "guardarMatriz",
+        "supIzq": (supIzq || txtSupIzq),
+        "supCen": (supCen || txtSupCen),
+        "supDer": (supDer || txtSupDer),
+        "cenIzq": (cenIzq || txtCenIzq),
+        "centro": (centro || txtCentro),
+        "cenDer": (cenDer || txtCenDer),
+        "infIzq": (infIzq || txtInfIzq),
+        "infCen": (infCen || txtInfCen),
+        "infDer": (infDer || txtInfDer)
+      }
+      $.ajax({
+        data:parametros,
+        url:'visitasAjax.php',
+        success:function(data){
+          console.log(data);
+        }
+      });
+}
+
 //GUARDAR datos para sesiones
-$("#btnGuardar").click(function(){
+$("#btnGuardar").click(function () {
   var selProducto = $('#selProducto').val();
   var selTipoExi = $('#selTipoExi').val();
   var selExistencia = $('#selExistencia').val();
   var selPrecio = $('#selPrecio').val();
-  var selFrentes = parseInt( $('#selFrentes').val());
+  var selFrentes = parseInt($('#selFrentes').val());
   var selNivel = $('#selNivel').val();
   var img = $("#imgEvidencia")[0].files[0];
   var imagen = $('#imgEvidencia').val();
+  var supIzq = $('#supIzq').val();
+  var supCen = $('#supCen').val();
+  var supDer = $('#supDer').val();
+  var cenIzq = $('#cenIzq').val();
+  var centro = $('#centro').val();
+  var cenDer = $('#cenDer').val();
+  var infIzq = $('#infIzq').val();
+  var infCen = $('#infCen').val();
+  var infDer = $('#infDer').val();
+  var txtSupIzq = $('#txtSupIzq').val();
+  var txtSupCen = $('#txtSupCen').val();
+  var txtSupDer = $('#txtSupDer').val();
+  var txtCenIzq = $('#txtCenIzq').val();
+  var txtCentro = $('#txtCentro').val();
+  var txtCenDer = $('#txtCenDer').val();
+  var txtInfIzq = $('#txtInfIzq').val();
+  var txtInfCen = $('#txtInfCen').val();
+  var txtInfDer = $('#txtInfDer').val();
+  var prodPrincipal = $('#selProducto').val();
+  var idSupIzq = $('#supIzq>option:selected').data("id");
+  var idSupCen = $('#supCen>option:selected').data("id");
+  var idSupDer = $('#supDer>option:selected').data("id");
+  var idCenIzq = $('#cenIzq>option:selected').data("id");
+  var idCentro = $('#centro>option:selected').data("id");
+  var idCenDer = $('#cenDer>option:selected').data("id");
+  var idInfIzq = $('#infIzq>option:selected').data("id");
+  var idInfCen = $('#infCen>option:selected').data("id");
+  var idInfDer = $('#infDer>option:selected').data("id");
 
   //parte imagen
-  if(imagen == ""){
-        console.log("Imagen no seleccionada");
-          var evidencia = new FormData();
-          evidencia.append("action", "guardarFichero");
-          evidencia.append("selProducto", selProducto);
-          evidencia.append("selTipoExi", selTipoExi);
-          evidencia.append("selExistencia", selExistencia);
-          evidencia.append("selPrecio", selPrecio);
-          evidencia.append("selFrentes", selFrentes);
-          evidencia.append("selNivel", selNivel);
+  if (imagen == "") {
+    console.log("Imagen no seleccionada");
+    var evidencia = new FormData();
+    evidencia.append("action", "guardarFichero");
+    evidencia.append("selProducto", selProducto);
+    evidencia.append("selTipoExi", selTipoExi);
+    evidencia.append("selExistencia", selExistencia);
+    evidencia.append("selPrecio", selPrecio);
+    evidencia.append("selFrentes", selFrentes);
+    evidencia.append("selNivel", selNivel);
+  } else {
+    var extension = img.name.substring(img.name.lastIndexOf("."));
+    console.log(extension);
+    if (extension != ".png" && extension != ".jpg") {
+      console.log("Error de formato");
+    } else {
+      var evidencia = new FormData();
+      evidencia.append("action", "guardarFichero");
+      evidencia.append("img", img);
+      evidencia.append("selProducto", selProducto);
+      evidencia.append("selTipoExi", selTipoExi);
+      evidencia.append("selExistencia", selExistencia);
+      evidencia.append("selPrecio", selPrecio);
+      evidencia.append("selFrentes", selFrentes);
+      evidencia.append("selNivel", selNivel);
+    }
+  }
+
+  if ((supIzq != "" && txtSupIzq != "") || (supCen != "" && txtSupCen != "") || (supDer != "" && txtSupDer != "") || (cenIzq != "" && txtCenIzq != "") || (centro != "" && txtCentro != "") || (cenDer != "" && txtCenDer != "") ||
+      (infIzq != "" && txtInfIzq != "") || (infCen != "" && txtInfCen != "") || (infDer != "" && txtInfDer != "")) {
+        $("#mns").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> Sólo 1 producto por sección en Matriz");
+  }else{
+   if(((supIzq == "" && txtSupIzq != "") || (supIzq != "" && txtSupIzq == "")) && ((supCen == "" && txtSupCen != "") || (supCen != "" && txtSupCen == "")) && ((supDer == "" && txtSupDer != "") || (supDer != "" && txtSupDer == "")) &&
+      ((cenIzq == "" && txtCenIzq != "") || (cenIzq != "" && txtCenIzq == "")) && ((centro == "" && txtCentro != "") || (centro != "" && txtCentro == "")) && ((cenDer == "" && txtCenDer != "") || (cenDer != "" && txtCenDer == "")) &&
+      ((infIzq == "" && txtInfIzq != "") || (infIzq != "" && txtInfIzq == "")) && ((infCen == "" && txtInfCen != "") || (infCen != "" && txtInfCen == "")) && ((infDer == "" && txtInfDer != "") || (infDer != "" && txtInfDer == ""))) {
+      if (idSupIzq != prodPrincipal && idSupCen != prodPrincipal && idSupDer != prodPrincipal && idCenIzq != prodPrincipal && idCentro != prodPrincipal &&
+          idCenDer != prodPrincipal && idInfIzq != prodPrincipal && idInfCen != prodPrincipal && idInfDer != prodPrincipal){
+             $("#mns").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> No se hace referencia al producto seleccionado en Matriz");
       }else{
-        var extension = img.name.substring(img.name.lastIndexOf("."));
-        console.log(extension);
-        if(extension != ".png" && extension != ".jpg"){
-          console.log("Error de formato");
+        if(selProducto != "" && selTipoExi != "" && selExistencia != "" && selPrecio != "" && selFrentes >= 0 && selNivel != "") {
+          getGuardarMatriz();
+          $.ajax({
+            data: evidencia,
+            url: 'visitasAjax.php',
+            type: 'POST',
+            contentType: false,
+            enctype: 'multipart/form-data',
+            cache: false,
+            processData: false,
+            success: function (data) {
+              $("#mns").css("color", "#0f5132").html("<i class='far fa-save'></i> Agregado con Éxito").delay(100).fadeIn(200);
+              $("#mns").css("color", "#0f5132").html("<i class='far fa-save'></i> Agregado con Éxito").delay(1000).fadeOut(200);
+              $('#selProducto').val("");
+              $('#selTipoExi').val("");
+              $('#selExistencia').val("");
+              $('#selPrecio').val("");
+              $('#selFrentes').val("");
+              $('#selNivel').val("");
+              $('#imgEvidencia').val("");
+              $("#btnFinalizar").removeAttr('disabled');
+              $('#supIzq').val("");
+              $('#supCen').val("");
+              $('#supDer').val("");
+              $('#cenIzq').val("");
+              $('#centro').val("");
+              $('#cenDer').val("");
+              $('#infIzq').val("");
+              $('#infCen').val("");
+              $('#infDer').val("");
+              $('#txtSupIzq').val("");
+              $('#txtSupCen').val("");
+              $('#txtSupDer').val("");
+              $('#txtCenIzq').val("");
+              $('#txtCentro').val("");
+              $('#txtCenDer').val("");
+              $('#txtInfIzq').val("");
+              $('#txtInfCen').val("");
+              $('#txtInfDer').val("");
+            }
+          });
         }else{
-          var evidencia = new FormData();
-          evidencia.append("action", "guardarFichero");
-          evidencia.append("img", img);
-          evidencia.append("selProducto", selProducto);
-          evidencia.append("selTipoExi", selTipoExi);
-          evidencia.append("selExistencia", selExistencia);
-          evidencia.append("selPrecio", selPrecio);
-          evidencia.append("selFrentes", selFrentes);
-          evidencia.append("selNivel", selNivel);
+          $("#mns").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> Datos Incorrectos o Vacíos");
         }
       }
-
-  if(selProducto != "" && selTipoExi != "" && selExistencia != "" && selPrecio != "" && selFrentes >= 0 && selNivel != ""){
-      $.ajax({
-        data: evidencia,
-        url:'visitasAjax.php',
-        type: 'POST',
-        contentType: false,
-        enctype: 'multipart/form-data',
-        cache: false,
-        processData: false,
-        success:function(data){
-        $("#mns").css("color", "#0f5132").html("<i class='far fa-save'></i> Agregado con Éxito").delay(100).fadeIn(200);
-        $("#mns").css("color", "#0f5132").html("<i class='far fa-save'></i> Agregado con Éxito").delay(1000).fadeOut(200);
-        $('#selProducto').val("");
-        $('#selTipoExi').val("");
-        $('#selExistencia').val("");
-        $('#selPrecio').val("");
-        $('#selFrentes').val("");
-        $('#selNivel').val("");
-        $('#imgEvidencia').val("");
-        $("#btnFinalizar").removeAttr('disabled');
-        $('#supIzq').val("");
-        $('#supCen').val("");
-        $('#supDer').val("");
-        $('#cenIzq').val("");
-        $('#centro').val("");
-        $('#cenDer').val("");
-        $('#infIzq').val("");
-        $('#infCen').val("");
-        $('#infDer').val("");
-        $('#txtSupIzq').val("");
-        $('#txtSupCen').val("");
-        $('#txtSupDer').val("");
-        $('#txtCenIzq').val("");
-        $('#txtCentro').val("");
-        $('#txtCenDer').val("");
-        $('#txtInfIzq').val("");
-        $('#txtInfCen').val("");
-        $('#txtInfDer').val("");
-        $('#btnNuevaMatriz').show();
-        $('#btnEditarMatriz').hide();
-        }
-      });
     }else{
-    $("#mns").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> Datos Incorrectos o Vacíos");
+      $("#mns").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> Datos Incorrectos o Vacíos en Matriz");
+    }
   }
-  });
+});
 
 //función para mostrar datos en el tbody de la tabla
 function finalFichero1(){
@@ -603,169 +675,16 @@ $("#btnConfirmar").click(function(){
           console.log(data);
         $('#mns').html("");
         $('#btnConfirmar').hide();
-        // setTimeout("redireccionarPagina()", 1500);
+        setTimeout("redireccionarPagina()", 1500);
         }
       });
     });
-
-//MATRIZ guardar datos
-$("#btnNuevaMatriz").click(function(x){
-  var supIzq = $('#supIzq').val();
-  var supCen = $('#supCen').val();
-  var supDer = $('#supDer').val();
-  var cenIzq = $('#cenIzq').val();
-  var centro = $('#centro').val();
-  var cenDer = $('#cenDer').val();
-  var infIzq = $('#infIzq').val();
-  var infCen = $('#infCen').val();
-  var infDer = $('#infDer').val();
-  var txtSupIzq = $('#txtSupIzq').val();
-  var txtSupCen = $('#txtSupCen').val();
-  var txtSupDer = $('#txtSupDer').val();
-  var txtCenIzq = $('#txtCenIzq').val();
-  var txtCentro = $('#txtCentro').val();
-  var txtCenDer = $('#txtCenDer').val();
-  var txtInfIzq = $('#txtInfIzq').val();
-  var txtInfCen = $('#txtInfCen').val();
-  var txtInfDer = $('#txtInfDer').val();
-  var prodPrincipal = $('#selProducto').val();
-  var idSupIzq = $('#supIzq>option:selected').data("id");
-  var idSupCen = $('#supCen>option:selected').data("id");
-  var idSupDer = $('#supDer>option:selected').data("id");
-  var idCenIzq = $('#cenIzq>option:selected').data("id");
-  var idCentro = $('#centro>option:selected').data("id");
-  var idCenDer = $('#cenDer>option:selected').data("id");
-  var idInfIzq = $('#infIzq>option:selected').data("id");
-  var idInfCen = $('#infCen>option:selected').data("id");
-  var idInfDer = $('#infDer>option:selected').data("id");
-
-  if((supIzq != "" && txtSupIzq != "") || (supCen != "" && txtSupCen != "") || (supDer != "" && txtSupDer != "") || (cenIzq != "" && txtCenIzq != "") || (centro != "" && txtCentro != "") || (cenDer != "" && txtCenDer != "") ||
-     (infIzq != "" && txtInfIzq != "") || (infCen != "" && txtInfCen != "") || (infDer != "" && txtInfDer != "")){
-        $("#avisoMatriz").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> Sólo 1 producto por sección");
-      }else{
-
-  if(((supIzq == "" && txtSupIzq != "") || (supIzq != "" && txtSupIzq == "" )) && ((supCen == "" && txtSupCen != "") || (supCen != "" && txtSupCen == "" )) && ((supDer == "" && txtSupDer != "") || (supDer != "" && txtSupDer == "" )) &&
-     ((cenIzq == "" && txtCenIzq != "") || (cenIzq != "" && txtCenIzq == "" )) && ((centro == "" && txtCentro != "") || (centro != "" && txtCentro == "" )) && ((cenDer == "" && txtCenDer != "") || (cenDer != "" && txtCenDer == "" )) &&
-     ((infIzq == "" && txtInfIzq != "") || (infIzq != "" && txtInfIzq == "" )) && ((infCen == "" && txtInfCen != "") || (infCen != "" && txtInfCen == "" )) && ((infDer == "" && txtInfDer != "") || (infDer != "" && txtInfDer == "" ))){
- 
-  if(idSupIzq != prodPrincipal && idSupCen != prodPrincipal && idSupDer != prodPrincipal && idCenIzq != prodPrincipal && idCentro != prodPrincipal && 
-     idCenDer != prodPrincipal && idInfIzq != prodPrincipal && idInfCen != prodPrincipal && idInfDer != prodPrincipal){
-        $("#avisoMatriz").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> No se hace referencia al producto seleccionado");
-    }else{
-
-    $("#avisoMatriz").css("color", "#0f5132").html("<i class='far fa-save'></i> Agregado con Éxito");
-    var parametros = {
-        "action": "guardarMatriz",
-        "supIzq": (supIzq || txtSupIzq),
-        "supCen": (supCen || txtSupCen),
-        "supDer": (supDer || txtSupDer),
-        "cenIzq": (cenIzq || txtCenIzq),
-        "centro": (centro || txtCentro),
-        "cenDer": (cenDer || txtCenDer),
-        "infIzq": (infIzq || txtInfIzq),
-        "infCen": (infCen || txtInfCen),
-        "infDer": (infDer || txtInfDer)
-      }
-      $.ajax({
-        data:parametros,
-        url:'visitasAjax.php',
-        success:function(data){
-          $('#btnEditarMatriz').show();
-          $('#btnNuevaMatriz').hide();
-          console.log(data);
-        }
-      });
-    }
-  }else{
-    $("#avisoMatriz").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> Datos Incorrectos o Vacíos");
-      }
-    }
-  });
-
-//MATRIZ editar datos
-$("#btnEditarMatriz").click(function(x){
-  var supIzq = $('#supIzq').val();
-  var supCen = $('#supCen').val();
-  var supDer = $('#supDer').val();
-  var cenIzq = $('#cenIzq').val();
-  var centro = $('#centro').val();
-  var cenDer = $('#cenDer').val();
-  var infIzq = $('#infIzq').val();
-  var infCen = $('#infCen').val();
-  var infDer = $('#infDer').val();
-  var txtSupIzq = $('#txtSupIzq').val();
-  var txtSupCen = $('#txtSupCen').val();
-  var txtSupDer = $('#txtSupDer').val();
-  var txtCenIzq = $('#txtCenIzq').val();
-  var txtCentro = $('#txtCentro').val();
-  var txtCenDer = $('#txtCenDer').val();
-  var txtInfIzq = $('#txtInfIzq').val();
-  var txtInfCen = $('#txtInfCen').val();
-  var txtInfDer = $('#txtInfDer').val();
-  var prodPrincipal = $('#selProducto').val();
-  var idSupIzq = $('#supIzq>option:selected').data("id");
-  var idSupCen = $('#supCen>option:selected').data("id");
-  var idSupDer = $('#supDer>option:selected').data("id");
-  var idCenIzq = $('#cenIzq>option:selected').data("id");
-  var idCentro = $('#centro>option:selected').data("id");
-  var idCenDer = $('#cenDer>option:selected').data("id");
-  var idInfIzq = $('#infIzq>option:selected').data("id");
-  var idInfCen = $('#infCen>option:selected').data("id");
-  var idInfDer = $('#infDer>option:selected').data("id");
-
-  if((supIzq != "" && txtSupIzq != "") || (supCen != "" && txtSupCen != "") || (supDer != "" && txtSupDer != "") || (cenIzq != "" && txtCenIzq != "") || (centro != "" && txtCentro != "") || (cenDer != "" && txtCenDer != "") ||
-     (infIzq != "" && txtInfIzq != "") || (infCen != "" && txtInfCen != "") || (infDer != "" && txtInfDer != "")){
-        $("#avisoMatriz").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> Sólo 1 producto por sección");
-      }else{
-
-  if(((supIzq == "" && txtSupIzq != "") || (supIzq != "" && txtSupIzq == "" )) && ((supCen == "" && txtSupCen != "") || (supCen != "" && txtSupCen == "" )) && ((supDer == "" && txtSupDer != "") || (supDer != "" && txtSupDer == "" )) &&
-     ((cenIzq == "" && txtCenIzq != "") || (cenIzq != "" && txtCenIzq == "" )) && ((centro == "" && txtCentro != "") || (centro != "" && txtCentro == "" )) && ((cenDer == "" && txtCenDer != "") || (cenDer != "" && txtCenDer == "" )) &&
-     ((infIzq == "" && txtInfIzq != "") || (infIzq != "" && txtInfIzq == "" )) && ((infCen == "" && txtInfCen != "") || (infCen != "" && txtInfCen == "" )) && ((infDer == "" && txtInfDer != "") || (infDer != "" && txtInfDer == "" ))){
- 
-  if(idSupIzq != prodPrincipal && idSupCen != prodPrincipal && idSupDer != prodPrincipal && idCenIzq != prodPrincipal && idCentro != prodPrincipal && 
-     idCenDer != prodPrincipal && idInfIzq != prodPrincipal && idInfCen != prodPrincipal && idInfDer != prodPrincipal){
-        $("#avisoMatriz").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> No se hace referencia al producto seleccionado");
-    }else{
-
-    $("#avisoMatriz").css("color", "#0f5132").html("<i class='far fa-save'></i> Agregado con Éxito");
-    var parametros = {
-        "action": "editarMatriz",
-        "supIzq": (supIzq || txtSupIzq),
-        "supCen": (supCen || txtSupCen),
-        "supDer": (supDer || txtSupDer),
-        "cenIzq": (cenIzq || txtCenIzq),
-        "centro": (centro || txtCentro),
-        "cenDer": (cenDer || txtCenDer),
-        "infIzq": (infIzq || txtInfIzq),
-        "infCen": (infCen || txtInfCen),
-        "infDer": (infDer || txtInfDer)
-      }
-      $.ajax({
-        data:parametros,
-        url:'visitasAjax.php',
-        success:function(data){
-          console.log(data);
-        }
-      });
-    }
-  }else{
-    $("#avisoMatriz").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> Datos Incorrectos o Vacíos");
-      }
-    }
-  });
 
 //limpiar avisos
 $(document).on("click", "#btnCerrarF", function(){
   $('#mns2').html("");
   $('#btnConfirmar').show();
 });
-
-$(document).on("click", "#btnCerrarMat", function () {
-  $('#avisoMatriz').html("");
-});
-
-
-
 
 //Agregar producto
 $("#btnAgregarProd").click(function() {
