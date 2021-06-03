@@ -61,7 +61,7 @@ if($action=="getVendedor"){
         $queryGeneral="SELECT v.idVisita, v.idVendedor, v.idPuntoVenta, v.fecha, pv.idPuntoVenta, pv.nombre AS nomPVenta,
         u.idUsuario, u.idPersona, p.idPersona, p.nombre AS nomPersona, pv.idZona, z.idZona, z.nombre AS nomZona, s.idSucursal,
         s.idPuntoVenta, s.nombre AS nomSucursal, s.numero, d.idDetallesVisita, d.idVisita, d.idProducto, d.idTipoExibicion,
-        d.existencia, d.precio, d.frentes, pro.idProducto, pro.nombre AS nomProducto, te.idTipoExibicion, te.tipoExibicion,
+        d.existencia, d.precio, d.frentes, d.nivel, pro.idProducto, pro.nombre AS nomProducto, te.idTipoExibicion, te.tipoExibicion,
         c.idCategoria, c.categoria, pro.idCategoria, pro.segmento, pro.procedencia, mu.idDetallesVisita, mu.supIzq, mu.supCentro, 
         mu.supDer, mu.centroIzq, mu.centroCentro, mu.centroDer, mu.infIzq, mu.infCentro, mu.infDer, CASE WHEN pro.nombre = mu.supIzq THEN 'SupIzq' 
         WHEN pro.nombre = mu.supCentro THEN 'supCentro'  WHEN pro.nombre = mu.supDer THEN 'supDer' WHEN pro.nombre = mu.centroIzq THEN 'centroIzq'  WHEN pro.nombre = mu.centroCentro THEN 'centroCentro' 
@@ -120,7 +120,7 @@ if($action=="getVendedor"){
         $hoja = $spreadsheet->getActiveSheet();
         $writer = new Xlsx($spreadsheet);
         $headerRowData = ["Producto", "Zona", "Punto de Venta", "Sucursal", "#Sucursal", "Vendedor", "Fecha", "Tipo Exhibición", "Categoría", "Segmento",
-        "Procedencia", "Existencia", "Precio", "Frentes", "Ubicacion", "SupIzq", "SupCen", "SupDer", "cenIzq", "cenCen", "cenDer", "infIzq", "infCen", "infDer"];
+        "Procedencia", "Existencia", "Precio", "Frentes", "Nivel", "Ubicacion", "SupIzq", "SupCen", "SupDer", "cenIzq", "cenCen", "cenDer", "infIzq", "infCen", "infDer"];
         $spreadsheet->getActiveSheet()->fromArray($headerRowData,NULL,'A3'); 
         $c = 5;
      
@@ -151,9 +151,10 @@ if($action=="getVendedor"){
             $infCentro=$res['infCentro'];
             $infDer=$res['infDer'];
             $ubicacion=$res['ubicacion'];
+            $nivel=$res['nivel'];
             
             $rowData=[$res['nomProducto'], $res['nomZona'],  $res['nomPVenta'], $res['nomSucursal'], $res['numero'], $res['nomPersona'], $res['fecha'],  $res['tipoExibicion'], $res['categoria'], $res['segmento'],
-            $res['procedencia'], $res['existencia'],  $res['precio'], $res['frentes'], $res['ubicacion'], $res['supIzq'], $res['supCentro'], $res['supDer'],  $res['centroIzq'], $res['centroCentro'], $res['centroDer'], $res['infIzq'], $res['infCentro'], $res['infDer'] ];
+            $res['procedencia'], $res['existencia'],  $res['precio'], $res['frentes'], $res['nivel'], $res['ubicacion'], $res['supIzq'], $res['supCentro'], $res['supDer'],  $res['centroIzq'], $res['centroCentro'], $res['centroDer'], $res['infIzq'], $res['infCentro'], $res['infDer'] ];
                   $spreadsheet->getActiveSheet()->fromArray($rowData,NULL,'A'.$c);
                   $c++;
           }
@@ -183,6 +184,7 @@ if($action=="getVendedor"){
         $spreadsheet->getActiveSheet()->getColumnDimension('V')->setAutoSize(true);
         $spreadsheet->getActiveSheet()->getColumnDimension('W')->setAutoSize(true);
         $spreadsheet->getActiveSheet()->getColumnDimension('X')->setAutoSize(true);
+        $spreadsheet->getActiveSheet()->getColumnDimension('Y')->setAutoSize(true);
         
 
     //guardamos en excel
