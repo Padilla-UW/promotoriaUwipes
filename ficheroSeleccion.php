@@ -785,7 +785,7 @@ $(document).on("click", "#btnCerrarAddPro", function () {
             $("#msjAgregarProd").removeClass("border-success border-danger");
 });
 </script>
-
+<!-- fin de script -->
 <?php
 } //cierre llave else SESSION
 ?>
