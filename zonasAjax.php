@@ -20,17 +20,17 @@ if($action=="getZona"){
     $idVendedorV=(isset($_REQUEST['idVendedorV'])&& $_REQUEST['idVendedorV'] !=NULL)?$_REQUEST['idVendedorV']:'';
 
     if($nombre != '' || $idVendedorV != ''){
-        if($nombre != '') $sqlTipoN = " AND z.nombre LIKE '%$nombre%'";
-        if($idVendedorV != '') $sqlTipoZ = " AND z.idVendedor = '$idVendedorV'";
-        $qZonas= "Select z.idZona, z.nombre, z.idVendedor, p.idPersona, p.nombre as nombrePer FROM zona z, persona p WHERE p.idPersona=z.idVendedor";
+        if($nombre != '') $sqlTipoN = " WHERE z.nombre LIKE '%$nombre%'";
+        if($idVendedorV != '') $sqlTipoZ = " WHERE z.idVendedor = '$idVendedorV'";
+        $qZonas= "Select z.idZona, z.nombre, z.idVendedor, p.idPersona, p.nombre as nombrePer FROM zona z LEFT JOIN persona p ON z.idVendedor = p.idPersona";
         $qZonasCount.=$qZonas.$sqlTipoN.$sqlTipoZ;
         $qZonas.=$sqlTipoN.$sqlTipoZ." ORDER BY nombre ASC LIMIT $offset,$per_page";
             
             $queryZonas = mysqli_query($con,$qZonas);
             $queryZonasCount = mysqli_query($con,$qZonasCount);  
     }else{
-        $queryZonas = mysqli_query($con,"Select z.idZona, z.nombre, z.idVendedor, p.idPersona, p.nombre as nombrePer FROM zona z, persona p Where p.idPersona=z.idVendedor ORDER BY nombre ASC LIMIT $offset,$per_page");
-        $queryZonasCount = mysqli_query($con,"Select z.idZona, z.nombre, z.idVendedor, p.idPersona, p.nombre as nombrePer FROM zona z, persona p Where p.idPersona=z.idVendedor");
+        $queryZonas = mysqli_query($con,"Select z.idZona, z.nombre, z.idVendedor, p.idPersona, p.nombre as nombrePer FROM zona z LEFT JOIN persona p ON z.idVendedor = p.idPersona GROUP by z.nombre ORDER BY nombre ASC LIMIT $offset,$per_page");
+        $queryZonasCount = mysqli_query($con,"Select z.idZona, z.nombre, z.idVendedor, p.idPersona, p.nombre as nombrePer FROM zona z LEFT JOIN persona p ON z.idVendedor = p.idPersona GROUP by z.nombre");
     }
     $total_pages = mysqli_num_rows($queryZonasCount);
     $total_pages = ceil($total_pages/$per_page);
@@ -68,10 +68,17 @@ if($action=="getZona"){
             mysqli_query($con,'ROLLBACK');
             echo 0;
         }else{      
-        $insertZona = "INSERT INTO zona (idVendedor, nombre) VALUES ('$vendedorAdd', '$nombreAdd')";
+            if($vendedorAdd != ''){
+            $insertZona = "INSERT INTO zona (idVendedor, nombre) VALUES ('$vendedorAdd', '$nombreAdd')";
             mysqli_query($con, $insertZona);
             mysqli_query($con,'COMMIT');
             echo 1;
+            }else{
+            $insertZona = "INSERT INTO zona (idVendedor, nombre) VALUES (NULL, '$nombreAdd')";
+            mysqli_query($con, $insertZona);
+            mysqli_query($con,'COMMIT');
+            echo 1;
+            }
         }
 
 //editar zona
