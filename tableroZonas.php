@@ -111,7 +111,7 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
           <input class="form-control" id="nombreAdd" type="text" placeholder="Nombre" name="nombre" required>
           <br>
           <label for="vendedor"><b>Vendedor</b></label><br>
-          <select class="form-control" name="idVendedor" id="vendedorAdd" required></select>
+          <select class="form-control" name="idVendedor" id="vendedorAdd"></select>
           <br>
           <div id="avisoAgregar"> </div>
           <br>
@@ -144,7 +144,7 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
           <input class="form-control" id="nombreEdit" type="text" placeholder="Nombre" name="nombre" required>
           <br>
           <label for="vendedor"><b>Vendedor</b></label><br>
-          <select class="form-control" name="Vendedor" id="vendedorEdit" required></select>
+          <select class="form-control" name="selected" id="vendedorEdit" required></select>
           <br>
           <div id="avisoEditar"> </div>
           <br>
@@ -199,7 +199,7 @@ $("#btnNuevaZona").click(function () {
   var nombreAdd = $("#nombreAdd").val();
   var vendedorAdd = $("#vendedorAdd").val();
 
-  if (nombreAdd != "" && vendedorAdd != "") {
+  if (nombreAdd != "") {
     var parametros = {
       "action": "agregarZona",
       "nombreAdd": nombreAdd,
@@ -265,6 +265,7 @@ $("#btnEditarZona").click(function btnEditarZona(idZona, nombreEdit, vendedorEdi
       data: parametros,
       success: function (data) {
         load();
+        getVendedorZona();
         if (data == 1) {
           $('#btnEditarZona').hide();
           $('#avisoEditar').html("<i class='far fa-save'></i> Guardado con Éxito").css("color", "#0f5132");
