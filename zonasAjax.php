@@ -93,16 +93,19 @@ if($action=="getZona"){
     $vendedorEdit=(isset($_REQUEST['vendedorEdit'])&& $_REQUEST['vendedorEdit'] !=NULL)?$_REQUEST['vendedorEdit']:'';
 
     mysqli_query($con,'BEGIN');
-    $updateZ = "UPDATE zona SET idVendedor='$vendedorEdit', nombre='$nombreEdit' WHERE idZona= $idZona"; 
-    $conUpdate=mysqli_query($con, $updateZ);
-
-    if($conUpdate){
+   
+    if($vendedorEdit != ''){
+        $updateZona = "UPDATE zona SET idVendedor='$vendedorEdit', nombre='$nombreEdit' WHERE idZona= $idZona"; 
+        mysqli_query($con, $updateZona);
         mysqli_query($con,'COMMIT');
         echo 1;
-    }else{
-        mysqli_query($con,'ROLLBACK');
-        echo 0; 
-    }
+        }else{
+        $updateZona = "UPDATE zona SET nombre='$nombreEdit' WHERE idZona= $idZona";
+        mysqli_query($con, $updateZona);
+        mysqli_query($con,'COMMIT');
+        echo 1;
+        }
+
 }elseif($action=="getVendedorZona"){
     $queryVendedor=mysqli_query($con, "SELECT p.idPersona, p.nombre, u.idTipoUsuario, u.idPersona FROM usuario u, persona p WHERE NOT EXISTS (SELECT idVendedor FROM zona WHERE p.idPersona=idVendedor) AND u.idTipoUsuario=2 AND p.idPersona=u.idPersona");
     echo "<option value=''>Seleccione</option>";
