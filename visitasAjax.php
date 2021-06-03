@@ -517,7 +517,7 @@ if($action=="getPVisitas"){
             <td>$frentes</td>
             <td>$$precio</td>
             <td>$fecha</td>
-            <td><img width='250px' height='auto' src='$imagen'> </td>
+            <td><img width='130px' height='auto' src='$imagen'> </td>
         </tr>";
     }
 }
