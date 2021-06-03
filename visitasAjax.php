@@ -298,8 +298,7 @@ if($action=="getPVenta"){
             $insertMatriz = "INSERT INTO matrizubicacion(idDetallesVisita, supIzq, supCentro, supDer, centroIzq, centroCentro, centroDer, infIzq, infCentro, infDer)
             VALUES ('$idDetallesVisita', '$supIzq', '$supCen', '$supDer', '$cenIzq', '$centro', '$cenDer', '$infIzq', '$infCen', '$infDer')"; 
             mysqli_query($con, $insertMatriz);
-
-            $updateImgDetalles = "UPDATE imgdetallesvisita SET idDetallesVisita = '$idDetallesVisita', ruta = 'imgEvidencias/img$idDetallesVisita.$extension' WHERE `ruta` = '$rutaFinal'";
+            $updateImgDetalles = "UPDATE imgdetallesvisita SET idDetallesVisita = '$idDetallesVisita', ruta = '$rutaFinal.$extension' WHERE `ruta` = '$rutaFinal'";
             mysqli_query($con, $updateImgDetalles);
 
             echo $insertMatriz;
