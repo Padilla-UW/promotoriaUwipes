@@ -230,7 +230,6 @@ if($action=="getPVenta"){
                 'infDer' => $infDer
             );
    }else{
-           if($datos[$i]==$supIzq){
               $_SESSION['matrix'][$i]['supIzq']= $supIzq;
               $_SESSION['matrix'][$i]['supCen']= $supCen;
               $_SESSION['matrix'][$i]['supDer']= $supDer;
@@ -240,7 +239,6 @@ if($action=="getPVenta"){
               $_SESSION['matrix'][$i]['infIzq']= $infIzq;
               $_SESSION['matrix'][$i]['infCen']= $infCen;
               $_SESSION['matrix'][$i]['infDer']= $infDer;
-           }
    }
       }else{
         $_SESSION['matrix'][0] = array(
