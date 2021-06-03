@@ -253,7 +253,7 @@ $("#btnEditarZona").click(function btnEditarZona(idZona, nombreEdit, vendedorEdi
   var nombreEdit = $("#nombreEdit").val();
   var vendedorEdit = $("#vendedorEdit").val();
 
-  if (nombreEdit != "" && vendedorEdit != "") {
+  if (nombreEdit != "") {
     var parametros = {
       "action": "editarZona",
       "idZona": idZona,
