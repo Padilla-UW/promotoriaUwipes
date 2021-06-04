@@ -215,9 +215,7 @@ if($action=="getPVenta"){
     $infDer=(isset($_REQUEST['infDer'])&& $_REQUEST['infDer'] !=NULL)?$_REQUEST['infDer']:'';
 
     if(isset($_SESSION['matrix'])){
-        $count = count($_SESSION['matrix']);
-        $datos=array_column($_SESSION['matrix'], 'supIzq', 'supCen', 'supDer', 'cenIzq', 'centro', 'cenDer', 'infIzq', 'infCen', 'infDer');
-        if(!in_array($supIzq, $datos)){
+       $count = count($_SESSION['matrix']);
        $_SESSION['matrix'][$count] = array(
                 'supIzq' => $supIzq,
                 'supCen' => $supCen,
@@ -229,18 +227,6 @@ if($action=="getPVenta"){
                 'infCen' => $infCen,
                 'infDer' => $infDer
             );
-   }else{
-              $_SESSION['matrix'][$i]['supIzq']= $supIzq;
-              $_SESSION['matrix'][$i]['supCen']= $supCen;
-              $_SESSION['matrix'][$i]['supDer']= $supDer;
-              $_SESSION['matrix'][$i]['cenIzq']= $cenIzq;
-              $_SESSION['matrix'][$i]['centro']= $centro;
-              $_SESSION['matrix'][$i]['cenDer']= $cenDer;
-              $_SESSION['matrix'][$i]['infIzq']= $infIzq;
-              $_SESSION['matrix'][$i]['infCen']= $infCen;
-              $_SESSION['matrix'][$i]['infDer']= $infDer;
-           
-   }
       }else{
         $_SESSION['matrix'][0] = array(
          'supIzq' => $supIzq,
