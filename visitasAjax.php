@@ -239,6 +239,7 @@ if($action=="getPVenta"){
               $_SESSION['matrix'][$i]['infIzq']= $infIzq;
               $_SESSION['matrix'][$i]['infCen']= $infCen;
               $_SESSION['matrix'][$i]['infDer']= $infDer;
+           
    }
       }else{
         $_SESSION['matrix'][0] = array(
