@@ -69,7 +69,7 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
 <!-- Tabla usuario con campos principales-->
 <div class="container">
   <div class="row">
-    <div class="col">
+    <div class="col" >
       <table id="myTable" class="table" style="margin-top:10px;">
         <thead>
           <tr>
