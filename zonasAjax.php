@@ -41,10 +41,11 @@ if($action=="getZona"){
         $idZona=$res['idZona'];
         $nombre=$res['nombre'];
         $idVendedor=$res['nombrePer'];
+        $vendedor=$res['idVendedor'];
         $zonas .= "<tr> 
                 <th> $nombre </th>
                 <td> $idVendedor </td>
-                <td><button type='button' data-id='$idZona' class='btn' id='btnEditModal' data-toggle='modal' data-target='#modalEditar'>Datos <i class='far fa-edit'></i>
+                <td><button type='button' data-ven='$vendedor' data-id='$idZona' class='btn' id='btnEditModal' data-toggle='modal' data-target='#modalEditar'>Datos <i class='far fa-edit'></i>
               </svg></button>
             </td>
             </tr>";
@@ -84,6 +85,8 @@ if($action=="getZona"){
 //editar zona
 }elseif($action=="getDatosZona"){
     $idZona=(isset($_REQUEST['idZona'])&& $_REQUEST['idZona'] !=NULL)?$_REQUEST['idZona']:'';
+    $idVendedor=(isset($_REQUEST['idVendedor'])&& $_REQUEST['idVendedor'] !=NULL)?$_REQUEST['idVendedor']:'';
+
     $query=mysqli_fetch_array(mysqli_query($con,"SELECT * FROM zona WHERE idZona= $idZona"));
     echo json_encode($query);
 
@@ -114,6 +117,26 @@ if($action=="getZona"){
         $nombre= $res['nombre'];
       echo "<option value='".$idPersona."'>$nombre</option>";
    } 
+
+}elseif($action=="getVendedorZonaEdit"){
+    $idVendedor=(isset($_REQUEST['idVendedor'])&& $_REQUEST['idVendedor'] !=NULL)?$_REQUEST['idVendedor']:'';
+
+    if($idVendedor == 0 || $idVendedor == "" || $idVendedor == NULL){
+        $queryVendedor=mysqli_query($con, "SELECT p.idPersona, p.nombre, u.idTipoUsuario, u.idPersona FROM usuario u, persona p WHERE NOT EXISTS (SELECT idVendedor FROM zona WHERE p.idPersona=idVendedor) AND u.idTipoUsuario=2 AND p.idPersona=u.idPersona");
+    echo "<option value=''>Seleccione</option>";
+   while($res = mysqli_fetch_array($queryVendedor)){
+       $idPersona = $res['idPersona'];
+        $nombre= $res['nombre'];
+      echo "<option value='".$idPersona."'>$nombre</option>";
+   }
+    }else{
+        $queryVendedor=mysqli_query($con, "SELECT p.idPersona, p.nombre, u.idTipoUsuario, u.idPersona FROM usuario u, persona p WHERE (NOT EXISTS (SELECT idVendedor FROM zona WHERE p.idPersona=idVendedor) AND u.idTipoUsuario=2 AND p.idPersona=u.idPersona) or (p.idPersona = $idVendedor AND u.idTipoUsuario=2 AND p.idPersona = u.idPersona)");
+        while($res = mysqli_fetch_array($queryVendedor)){
+            $idPersona = $res['idPersona'];
+             $nombre= $res['nombre'];
+           echo "<option value='".$idPersona."'>$nombre</option>";
+        }
+    }  
 }
 
 //Inicia parte de PUNTOS VENTA **********************************************************************************
