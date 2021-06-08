@@ -230,9 +230,11 @@ $("#btnNuevaZona").click(function () {
 //EDITAR función para obtener datos
 $(document).on("click", "#btnEditModal", function () {
   var idZona = $(this).attr('data-id');
+  var idVendedor = $(this).attr('data-ven');
   var parametros = {
     "action": "getDatosZona",
-    "idZona": idZona
+    "idZona": idZona,
+    "idVendedor": idVendedor
   };
   $.ajax({
     data: parametros,
@@ -243,9 +245,26 @@ $(document).on("click", "#btnEditModal", function () {
       $("#nombreEdit").val(data.nombre);
       $("#vendedorEdit").val(data.idVendedor);
       $("#btnEditarZona").attr("data-id", data.idZona);
+      load();
     }
-  })
+  });
+
+  var parametross = {
+    "action": "getVendedorZonaEdit",
+    "idVendedor": idVendedor
+  }
+  console.log(parametross);
+  $.ajax({
+    url: 'zonasAjax.php',
+    data: parametross,
+    success: function (data){
+      console.log(data);
+      $("#vendedorEdit").html(data);
+      load();
+    }
+  });
 });
+
 
 //EDITAR función para obtener datos de campos editar y realizar validaciones
 $("#btnEditarZona").click(function btnEditarZona(idZona, nombreEdit, vendedorEdit) {
@@ -315,7 +334,6 @@ function getVendedorZona(){
     success: function (data){
       console.log(data);
       $("#vendedorAdd").html(data);
-      $("#vendedorEdit").html(data);
     }
   });
 }
