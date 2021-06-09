@@ -34,9 +34,11 @@ if($action=="getPVenta"){
 //SESSIONES de visita
 }elseif($action=="entrarVisita"){
     $punVenta=(isset($_REQUEST['selPuntoV'])&& $_REQUEST['selPuntoV'] !=NULL)?$_REQUEST['selPuntoV']:'';
+    $punSucursal=(isset($_REQUEST['selSucursal'])&& $_REQUEST['selSucursal'] !=NULL)?$_REQUEST['selSucursal']:'';
 
     $_SESSION['checkVisita']=array(
-        'punVenta' => $punVenta
+        'punVenta' => $punVenta,
+        'punSucursal' => $punSucursal
     );   
 
 //Selects automáticos
@@ -240,16 +242,17 @@ if($action=="getPVenta"){
          'infDer' => $infDer
              );
          }
-  
+    
 //insertar confirmacion en bd
 }elseif($action=="confirmarFichero"){
     //parte funcional de visita
     $fecha = date('Y-m-d');
     $idPuntoVenta=$_SESSION['checkVisita']['punVenta'];
+    $idSucursal=$_SESSION['checkVisita']['punSucursal'];
     $idVendedor= $_SESSION["idUsuario"];
     
-        $queryVisita="INSERT INTO visita(idVendedor, idPuntoVenta, fecha) 
-                VALUES ($idVendedor, $idPuntoVenta, '$fecha')";
+        $queryVisita="INSERT INTO visita(idVendedor, idPuntoVenta, idSucursal, fecha) 
+                VALUES ($idVendedor, $idPuntoVenta, $idSucursal, '$fecha')";
                 mysqli_query($con,$queryVisita);
                 $idVisita = mysqli_insert_id($con);
     
@@ -319,7 +322,7 @@ if($action=="getPVisitas"){
     $fechaFin=(isset($_REQUEST['fechaFin'])&& $_REQUEST['fechaFin'] !=NULL)?$_REQUEST['fechaFin']:'';
 
     if($idPuntoVenta != '' || $fecha != '' || $idVendedor != '' || $fechaInicio != '' || $fechaFin != '' || $idZona != ''){
-        if($idPuntoVenta != '') $sqlVenta = " AND v.idPuntoVenta = '$idPuntoVenta'";
+        if($idPuntoVenta != '') $sqlVenta = " AND pv.idPuntoVenta = '$idPuntoVenta'";
         if($idVendedor != '') $sqlVendedor = " AND v.idVendedor = '$idVendedor'";
         if($idZona != '') $sqlZona = " AND pv.idZona = '$idZona'";
         if($fechaInicio !='' && $fechaFin !='') $sqlFecha1 = " AND v.fecha BETWEEN '$fechaInicio' AND '$fechaFin'";
