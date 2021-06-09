@@ -97,7 +97,8 @@ $("#btnVisita").click(function(){
     window.location="ficheroSeleccion.php";
     var parametros = {
         "action": "entrarVisita",
-        "selPuntoV": selPuntoV
+        "selPuntoV": selPuntoV,
+        "selSucursal": selSucursal
       };
 }else{
   $("#mns").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> Completar Campos Vacíos");
