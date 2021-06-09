@@ -58,18 +58,17 @@ if($action=="getVendedor"){
     $idProcedencia=(isset($_REQUEST['idProcedencia'])&& $_REQUEST['idProcedencia'] !=NULL)?$_REQUEST['idProcedencia']:'';
 
     //consulta general y conexión
-        $queryGeneral="SELECT v.idVisita, v.idVendedor, v.idPuntoVenta, v.fecha, pv.idPuntoVenta, pv.nombre AS nomPVenta,
-        u.idUsuario, u.idPersona, p.idPersona, p.nombre AS nomPersona, pv.idZona, z.idZona, z.nombre AS nomZona, s.idSucursal,
-        s.idPuntoVenta, s.nombre AS nomSucursal, s.numero, d.idDetallesVisita, d.idVisita, d.idProducto, d.idTipoExibicion,
-        d.existencia, d.precio, d.frentes, d.nivel, pro.idProducto, pro.nombre AS nomProducto, te.idTipoExibicion, te.tipoExibicion,
-        c.idCategoria, c.categoria, pro.idCategoria, pro.segmento, pro.procedencia, mu.idDetallesVisita, mu.supIzq, mu.supCentro, 
+        $queryGeneral="SELECT v.idVendedor, v.fecha, pv.idPuntoVenta, pv.nombre AS nomPVenta,
+        p.nombre AS nomPersona, z.nombre AS nomZona, s.nombre AS nomSucursal, s.numero,
+        d.existencia, d.precio, d.frentes, d.nivel, pro.nombre AS nomProducto, te.tipoExibicion,
+        c.categoria, pro.segmento, pro.procedencia, mu.supIzq, mu.supCentro, 
         mu.supDer, mu.centroIzq, mu.centroCentro, mu.centroDer, mu.infIzq, mu.infCentro, mu.infDer, CASE WHEN pro.nombre = mu.supIzq THEN 'SupIzq' 
-        WHEN pro.nombre = mu.supCentro THEN 'supCentro'  WHEN pro.nombre = mu.supDer THEN 'supDer' WHEN pro.nombre = mu.centroIzq THEN 'centroIzq'  WHEN pro.nombre = mu.centroCentro THEN 'centroCentro' 
-        WHEN pro.nombre = mu.centroDer THEN 'centroDer'  WHEN pro.nombre = mu.infIzq THEN 'infIzq' WHEN pro.nombre = mu.infCentro THEN 'infCentro'  WHEN pro.nombre = mu.infDer THEN 'infDer' END 'ubicacion' FROM visita v, puntoventa pv,
+        WHEN pro.nombre = mu.supCentro THEN 'supCentro' WHEN pro.nombre = mu.supDer THEN 'supDer' WHEN pro.nombre = mu.centroIzq THEN 'centroIzq' WHEN pro.nombre = mu.centroCentro THEN 'centroCentro' 
+        WHEN pro.nombre = mu.centroDer THEN 'centroDer' WHEN pro.nombre = mu.infIzq THEN 'infIzq' WHEN pro.nombre = mu.infCentro THEN 'infCentro' WHEN pro.nombre = mu.infDer THEN 'infDer' END 'ubicacion' FROM visita v, puntoventa pv,
         usuario u, persona p, zona z, sucursal s, detallesvisita d, producto pro, tipoexibicion te, categoria c, matrizubicacion mu
         WHERE v.idVendedor=u.idUsuario AND u.idPersona=p.idPersona AND te.idTipoExibicion=d.idTipoExibicion AND pro.idCategoria=c.idCategoria
         AND v.idPuntoVenta=pv.idPuntoVenta AND pv.idZona=z.idZona AND pv.idPuntoVenta=s.idPuntoVenta AND d.idVisita=v.idVisita AND pro.idProducto=d.idProducto
-        AND mu.idDetallesVisita=d.idDetallesVisita ";
+        AND mu.idDetallesVisita=d.idDetallesVisita AND v.idSucursal = s.idSucursal ";
 
     //Validación con cierto vendedor
         if($idVendedor !=''){
