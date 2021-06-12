@@ -502,14 +502,17 @@ $("#btnGuardar").click(function () {
 
   if ((supIzq != "" && txtSupIzq != "") || (supCen != "" && txtSupCen != "") || (supDer != "" && txtSupDer != "") || (cenIzq != "" && txtCenIzq != "") || (centro != "" && txtCentro != "") || (cenDer != "" && txtCenDer != "") ||
       (infIzq != "" && txtInfIzq != "") || (infCen != "" && txtInfCen != "") || (infDer != "" && txtInfDer != "")) {
-        $("#mns").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> Sólo 1 producto por sección en Matriz");
+        $("#mns").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> Sólo 1 producto por sección en Matriz").delay(100).fadeIn(300);
+        $("#mns").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> Sólo 1 producto por sección en Matriz").delay(1000).fadeOut(300);
+
   }else{
    if(((supIzq == "" && txtSupIzq != "") || (supIzq != "" && txtSupIzq == "")) && ((supCen == "" && txtSupCen != "") || (supCen != "" && txtSupCen == "")) && ((supDer == "" && txtSupDer != "") || (supDer != "" && txtSupDer == "")) &&
       ((cenIzq == "" && txtCenIzq != "") || (cenIzq != "" && txtCenIzq == "")) && ((centro == "" && txtCentro != "") || (centro != "" && txtCentro == "")) && ((cenDer == "" && txtCenDer != "") || (cenDer != "" && txtCenDer == "")) &&
       ((infIzq == "" && txtInfIzq != "") || (infIzq != "" && txtInfIzq == "")) && ((infCen == "" && txtInfCen != "") || (infCen != "" && txtInfCen == "")) && ((infDer == "" && txtInfDer != "") || (infDer != "" && txtInfDer == ""))) {
       if (idSupIzq != prodPrincipal && idSupCen != prodPrincipal && idSupDer != prodPrincipal && idCenIzq != prodPrincipal && idCentro != prodPrincipal &&
           idCenDer != prodPrincipal && idInfIzq != prodPrincipal && idInfCen != prodPrincipal && idInfDer != prodPrincipal){
-             $("#mns").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> No se hace referencia al producto seleccionado en Matriz");
+             $("#mns").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> No se hace referencia al producto seleccionado en Matriz").delay(100).fadeIn(300);
+             $("#mns").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> No se hace referencia al producto seleccionado en Matriz").delay(1000).fadeOut(300);
       }else{
         if(selProducto != "" && selTipoExi != "" && selExistencia != "" && selPrecio != "" && selFrentes >= 0 && selNivel != "") {
           getGuardarMatriz();
@@ -522,18 +525,18 @@ $("#btnGuardar").click(function () {
             cache: false,
             processData: false,
             success: function (data) {
-              $("#mns").css("color", "#0f5132").html("<i class='far fa-save'></i> Agregado con Éxito").delay(100).fadeIn(200);
-              $("#mns").css("color", "#0f5132").html("<i class='far fa-save'></i> Agregado con Éxito").delay(1000).fadeOut(200);
-              $('#selProducto').val("");
+              $("#mns").css("color", "#0f5132").html("<i class='far fa-save'></i> Agregado con Éxito").delay(100).fadeIn(300);
+              $("#mns").css("color", "#0f5132").html("<i class='far fa-save'></i> Agregado con Éxito").delay(1000).fadeOut(300);
+              $('#selProducto').val(""); 
               $('#selTipoExi').val("");
               $('#selExistencia').val("");
               $('#selPrecio').val("");
               $('#selFrentes').val("");
               $('#selNivel').val("");
-              $('#imgEvidencia').val("");
+              $('#imgEvidencia').val(""); 
               $("#btnFinalizar").removeAttr('disabled');
               $('#supIzq').val("");
-              $('#supCen').val("");
+              $('#supCen').val(""); 
               $('#supDer').val("");
               $('#cenIzq').val("");
               $('#centro').val("");
@@ -545,19 +548,21 @@ $("#btnGuardar").click(function () {
               $('#txtSupCen').val("");
               $('#txtSupDer').val("");
               $('#txtCenIzq').val("");
-              $('#txtCentro').val("");
+              $('#txtCentro').val(""); 
               $('#txtCenDer').val("");
-              $('#txtInfIzq').val("");
-              $('#txtInfCen').val("");
+              $('#txtInfIzq').val(""); 
+              $('#txtInfCen').val(""); 
               $('#txtInfDer').val("");
             }
           });
         }else{
-          $("#mns").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> Datos Incorrectos o Vacíos");
+          $("#mns").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> Datos Incorrectos o Vacíos").delay(100).fadeIn(300);
+          $("#mns").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> Datos Incorrectos o Vacíos").delay(1000).fadeOut(300);
         }
       }
     }else{
-      $("#mns").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> Datos Incorrectos o Vacíos en Matriz");
+      $("#mns").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> Datos Incorrectos o Vacíos en Matriz").delay(100).fadeIn(300);
+      $("#mns").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> Datos Incorrectos o Vacíos en Matriz").delay(1000).fadeOut(300);
     }
   }
 });
