@@ -500,11 +500,11 @@ $("#btnGuardar").click(function () {
     }
   }
 
+  if(selProducto != "" && selTipoExi != "" && selExistencia != "" && selPrecio != "" && selFrentes >= 0 && selNivel != "") {
   if ((supIzq != "" && txtSupIzq != "") || (supCen != "" && txtSupCen != "") || (supDer != "" && txtSupDer != "") || (cenIzq != "" && txtCenIzq != "") || (centro != "" && txtCentro != "") || (cenDer != "" && txtCenDer != "") ||
       (infIzq != "" && txtInfIzq != "") || (infCen != "" && txtInfCen != "") || (infDer != "" && txtInfDer != "")) {
         $("#mns").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> Sólo 1 producto por sección en Matriz").delay(100).fadeIn(300);
         $("#mns").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> Sólo 1 producto por sección en Matriz").delay(1000).fadeOut(300);
-
   }else{
    if(((supIzq == "" && txtSupIzq != "") || (supIzq != "" && txtSupIzq == "")) && ((supCen == "" && txtSupCen != "") || (supCen != "" && txtSupCen == "")) && ((supDer == "" && txtSupDer != "") || (supDer != "" && txtSupDer == "")) &&
       ((cenIzq == "" && txtCenIzq != "") || (cenIzq != "" && txtCenIzq == "")) && ((centro == "" && txtCentro != "") || (centro != "" && txtCentro == "")) && ((cenDer == "" && txtCenDer != "") || (cenDer != "" && txtCenDer == "")) &&
@@ -514,7 +514,6 @@ $("#btnGuardar").click(function () {
              $("#mns").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> No se hace referencia al producto seleccionado en Matriz").delay(100).fadeIn(300);
              $("#mns").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> No se hace referencia al producto seleccionado en Matriz").delay(1000).fadeOut(300);
       }else{
-        if(selProducto != "" && selTipoExi != "" && selExistencia != "" && selPrecio != "" && selFrentes >= 0 && selNivel != "") {
           getGuardarMatriz();
           $.ajax({
             data: evidencia,
@@ -554,17 +553,17 @@ $("#btnGuardar").click(function () {
               $('#txtInfCen').val(""); 
               $('#txtInfDer').val("");
             }
-          });
-        }else{
-          $("#mns").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> Datos Incorrectos o Vacíos").delay(100).fadeIn(300);
-          $("#mns").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> Datos Incorrectos o Vacíos").delay(1000).fadeOut(300);
-        }
+          });    
       }
     }else{
       $("#mns").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> Datos Incorrectos o Vacíos en Matriz").delay(100).fadeIn(300);
       $("#mns").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> Datos Incorrectos o Vacíos en Matriz").delay(1000).fadeOut(300);
     }
   }
+  }else{
+      $("#mns").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> Datos Incorrectos o Vacíos").delay(100).fadeIn(300);
+      $("#mns").css("color", "red").html("<i class='fas fa-exclamation-triangle'></i> Datos Incorrectos o Vacíos").delay(1000).fadeOut(300);
+        }
 });
 
 //función para mostrar datos en el tbody de la tabla
