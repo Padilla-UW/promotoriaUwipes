@@ -329,21 +329,21 @@ if($action=="getPVisitas"){
         if($fechaInicio !='' && $fechaFin =='') $sqlFecha2 = " AND v.fecha >= '$fechaInicio'";
         if($fechaInicio =='' && $fechaFin !='') $sqlFecha3 = " AND v.fecha <= '$fechaFin'";
 
-        $qVisitas = "SELECT v.idVisita,  v.idVendedor, v.idPuntoVenta, v.fecha, pv.idPuntoVenta, pv.nombre AS nombrePunto,
-        p.nombre AS nombrePersona, p.idPersona, u.idUsuario, u.idPersona, pv.idZona, z.idZona, z.nombre AS nombreZona FROM visita v, persona p, puntoventa pv, usuario u, zona z WHERE v.idPuntoVenta=pv.idPuntoVenta 
-        AND v.idVendedor=u.idUsuario AND u.idPersona=p.idPersona AND pv.idZona=z.idZona";
+        $qVisitas = "SELECT v.idVisita,  v.idVendedor, v.idPuntoVenta, v.fecha, pv.idPuntoVenta, pv.nombre AS nombrePunto, s.nombre AS nombreSucu,
+        p.nombre AS nombrePersona, p.idPersona, u.idUsuario, u.idPersona, pv.idZona, z.idZona, z.nombre AS nombreZona FROM visita v, sucursal s, persona p, puntoventa pv, usuario u, zona z WHERE v.idPuntoVenta=pv.idPuntoVenta 
+        AND v.idVendedor=u.idUsuario AND u.idPersona=p.idPersona AND pv.idZona=z.idZona AND s.idSucursal=v.idSucursal AND s.idPuntoVenta=pv.idPuntoVenta";
         $qVisitasCount.=$qVisitas.$sqlVenta.$sqlFecha1.$sqlFecha2.$sqlFecha3.$sqlVendedor.$sqlZona;
         $qVisitas .=$sqlVenta.$sqlFecha1.$sqlFecha2.$sqlFecha3.$sqlVendedor.$sqlZona." ORDER BY idVisita DESC LIMIT $offset,$per_page";
             $queryVisitas = mysqli_query($con,$qVisitas);
             $queryVisitasCount = mysqli_query($con,$qVisitasCount);
 
     }else{
-        $queryVisitas = mysqli_query($con,"SELECT v.idVisita, v.idVendedor, v.idPuntoVenta, v.fecha, pv.idPuntoVenta, pv.nombre AS nombrePunto,
-        p.nombre AS nombrePersona, p.idPersona, u.idUsuario, u.idPersona, pv.idZona, z.idZona, z.nombre AS nombreZona FROM visita v, persona p, puntoventa pv, usuario u, zona z WHERE v.idPuntoVenta=pv.idPuntoVenta 
-        AND v.idVendedor=u.idUsuario AND u.idPersona=p.idPersona AND pv.idZona=z.idZona ORDER BY idVisita DESC LIMIT $offset,$per_page");
-        $queryVisitasCount = mysqli_query($con,"SELECT v.idVisita, v.idVendedor, v.idPuntoVenta, v.fecha, pv.idPuntoVenta, pv.nombre AS nombrePunto,
-        p.nombre AS nombrePersona, p.idPersona, u.idUsuario, u.idPersona, pv.idZona, z.idZona, z.nombre AS nombreZona FROM visita v, persona p, puntoventa pv, usuario u, zona z WHERE v.idPuntoVenta=pv.idPuntoVenta 
-        AND v.idVendedor=u.idUsuario AND u.idPersona=p.idPersona AND pv.idZona=z.idZona");
+        $queryVisitas = mysqli_query($con,"SELECT v.idVisita, v.idVendedor, v.idPuntoVenta, v.fecha, pv.idPuntoVenta, pv.nombre AS nombrePunto, s.nombre AS nombreSucu,
+        p.nombre AS nombrePersona, p.idPersona, u.idUsuario, u.idPersona, pv.idZona, z.idZona, z.nombre AS nombreZona FROM visita v, persona p, puntoventa pv, usuario u, zona z, sucursal s WHERE v.idPuntoVenta=pv.idPuntoVenta 
+        AND v.idVendedor=u.idUsuario AND u.idPersona=p.idPersona AND pv.idZona=z.idZona AND s.idSucursal=v.idSucursal AND s.idPuntoVenta=pv.idPuntoVenta ORDER BY idVisita DESC LIMIT $offset,$per_page");
+        $queryVisitasCount = mysqli_query($con,"SELECT v.idVisita, v.idVendedor, v.idPuntoVenta, v.fecha, pv.idPuntoVenta, pv.nombre AS nombrePunto, s.nombre AS nombreSucu,
+        p.nombre AS nombrePersona, p.idPersona, u.idUsuario, u.idPersona, pv.idZona, z.idZona, z.nombre AS nombreZona FROM visita v, persona p, puntoventa pv, usuario u, zona z, sucursal s WHERE v.idPuntoVenta=pv.idPuntoVenta 
+        AND v.idVendedor=u.idUsuario AND u.idPersona=p.idPersona AND pv.idZona=z.idZona AND s.idSucursal=v.idSucursal AND s.idPuntoVenta=pv.idPuntoVenta");
     }
         $total_pages = mysqli_num_rows($queryVisitasCount);
         $total_pages = ceil($total_pages/$per_page);
@@ -355,11 +355,13 @@ if($action=="getPVisitas"){
         $vendedor=$res['nombrePersona'];
         $idZona=$res['nombreZona'];
         $idPuntoVenta=$res['nombrePunto'];
+        $idSucursal=$res['nombreSucu'];
         $fecha = $res['fecha'];
         $visitas .= "<tr> 
                 <th> $vendedor </th>
                 <td> $idZona </td>
                 <td> $idPuntoVenta </td>
+                <td> $idSucursal </td>
                 <td> $fecha </td>
                 <td><button type='button' data-id='$idVisita' class='btn' id='btnDetalleModal' data-toggle='modal' data-target='#modalDetalles'>Detalles <i class='far fa-eye'></i>
               </button><button type='button' data-id='$idVisita' class='btn' style='padding:0%;margin:0%' id='btnEvidenciaModal' data-toggle='modal' data-target='#modalEvidencia'> Evidencia <i class='far fa-image'></i></button></td>
