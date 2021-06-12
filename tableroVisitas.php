@@ -87,6 +87,7 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
       <th>Vendedor</th>
       <th>Zona</th>
       <th>Punto Venta</th>
+      <th>Sucursal</th>
       <th>Fecha</th>
       <th>Ver</th>
     </tr>
