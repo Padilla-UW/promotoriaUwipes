@@ -149,44 +149,73 @@
         $imgAnt = mysqli_fetch_array(mysqli_query($con,"Select * FROM imgproducto WHERE idProducto = '$idProducto'"));
         $idImgAnt = $imgAnt['idImgProducto'];
         $rutaAnt = $imgAnt['ruta'];
-
-        if(isset($_FILES['img']) || $_FILES['img']['size']!=0){
-            mysqli_query($con,'BEGIN'); 
-            $queryInsertImg = mysqli_query($con,"INSERT INTO imgproducto(idProducto) VALUES ($idProducto)");
-            $ultimoId=mysqli_insert_id($con);
-            $nombre = $_FILES['img']['name'];
-            $nombre_tmp = $_FILES['img']['tmp_name'];
-            $partes_nombre = explode('.', $nombre);
-            $extension = end($partes_nombre);
-            $ruta ="imgProductos/";
-            if(move_uploaded_file($nombre_tmp, $ruta.$ultimoId.".".$extension)){
-                $nombrenuevo = $ultimoId.".".$extension;
-                $rutabd = "imgProductos/".$nombrenuevo;
-                $insertRuta = "UPDATE imgproducto SET ruta='$rutabd' WHERE idImgProducto='$ultimoId'";
-                $queryUpdateImg = mysqli_query($con, $insertRuta);
-                if($queryInsertImg && $queryUpdateImg ){
-                    if(unlink(realpath($rutaAnt))){
-                        $queryDelImg=mysqli_query($con,"DELETE from imgproducto WHERE idImgProducto ='$idImgAnt'");
-                        if($queryDelImg){
-                            mysqli_query($con,'COMMIT');
-                            echo 1;
+        if($imgAnt != ""){
+            if(isset($_FILES['img']) || $_FILES['img']['size']!=0){
+                mysqli_query($con,'BEGIN'); 
+                $queryInsertImg = mysqli_query($con,"INSERT INTO imgproducto(idProducto) VALUES ($idProducto)");
+                $ultimoId=mysqli_insert_id($con);
+                $nombre = $_FILES['img']['name'];
+                $nombre_tmp = $_FILES['img']['tmp_name'];
+                $partes_nombre = explode('.', $nombre);
+                $extension = end($partes_nombre);
+                $ruta ="imgProductos/";
+                if(move_uploaded_file($nombre_tmp, $ruta.$ultimoId.".".$extension)){
+                    $nombrenuevo = $ultimoId.".".$extension;
+                    $rutabd = "imgProductos/".$nombrenuevo;
+                    $insertRuta = "UPDATE imgproducto SET ruta='$rutabd' WHERE idImgProducto='$ultimoId'";
+                    $queryUpdateImg = mysqli_query($con, $insertRuta);
+                    if($queryInsertImg && $queryUpdateImg ){
+                        if(unlink(realpath($rutaAnt))){
+                            $queryDelImg=mysqli_query($con,"DELETE from imgproducto WHERE idImgProducto ='$idImgAnt'");
+                            if($queryDelImg){
+                                mysqli_query($con,'COMMIT');
+                                echo 1;
+                            }else{
+                                mysqli_query($con,'ROLLBACK');
+                                echo 0;
+                            }
                         }else{
                             mysqli_query($con,'ROLLBACK');
                             echo 0;
                         }
                     }else{
                         mysqli_query($con,'ROLLBACK');
-                        echo 0;
+                        echo 0;  
                     }
-                }else{
+                  }else{
                     mysqli_query($con,'ROLLBACK');
-                    echo 0;  
-                }
-              }else{
+                    echo 0;
+                  }
+            }
+        }else{
+            if(isset($_FILES['img']) || $_FILES['img']['size']!=0){
+                mysqli_query($con,'BEGIN');
+                $queryInsertImg = mysqli_query($con,"INSERT INTO imgproducto(idProducto) VALUES ($idProducto)");
+                $ultimoId=mysqli_insert_id($con);
+                $nombre = $_FILES['img']['name'];
+                $nombre_tmp = $_FILES['img']['tmp_name'];
+                $partes_nombre = explode('.', $nombre);
+                $extension = end($partes_nombre);
+                $ruta ="imgProductos/";
+                if(move_uploaded_file($nombre_tmp, $ruta.$ultimoId.".".$extension)){
+                    $nombrenuevo = $ultimoId.".".$extension;
+                    $rutabd = "imgProductos/".$nombrenuevo;
+                    $insertRuta = "UPDATE imgproducto SET ruta='$rutabd' WHERE idImgProducto='$ultimoId'";
+                    $queryUpdateImg = mysqli_query($con, $insertRuta);
+                  }else{
+                    mysqli_query($con,'ROLLBACK');
+                    echo 0;
+                  }
+              }       
+              if($queryInsertImg){
+                mysqli_query($con,'COMMIT');
+                echo 1;
+            }else{
                 mysqli_query($con,'ROLLBACK');
-                echo 0;
-              }
+                echo 0;  
+            }
         }
+        
     }elseif($action == "getImgProd"){
         $idProducto=(isset($_REQUEST['idProducto'])&& $_REQUEST['idProducto'] !=NULL)?$_REQUEST['idProducto']:'';
         $img = mysqli_fetch_array(mysqli_query($con,"SELECT * From imgProducto i WHERE idProducto = $idProducto"));
