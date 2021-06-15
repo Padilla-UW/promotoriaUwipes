@@ -12,7 +12,7 @@ $action=(isset($_REQUEST['action'])&& $_REQUEST['action'] !=NULL)?$_REQUEST['act
 //selects automáticos
 if($action=="getVendedor"){
     $querySelect=mysqli_query($con,"SELECT p.idPersona, p.nombre, u.idPersona, u.idTipoUsuario, u.idUsuario From 
-    persona p, usuario u WHERE p.idPersona=u.idPersona AND u.idTipoUsuario=2");
+    persona p, usuario u WHERE p.idPersona=u.idPersona AND u.idTipoUsuario=2 ORDER BY nombre");
         echo "<option value=''>Seleccione</option>";
        while($res = mysqli_fetch_array($querySelect)){
            $idUsuario = $res['idUsuario'];
@@ -21,7 +21,7 @@ if($action=="getVendedor"){
        } 
 
 }elseif($action=="getZona"){
-    $querySelect=mysqli_query($con,"SELECT * From zona");
+    $querySelect=mysqli_query($con,"SELECT * From zona ORDER BY nombre");
         echo "<option value=''>Seleccione</option>";
        while($res = mysqli_fetch_array($querySelect)){
            $idZona = $res['idZona'];
@@ -30,7 +30,7 @@ if($action=="getVendedor"){
        } 
 
 }elseif($action=="getPunVenta"){
-    $querySelect=mysqli_query($con,"SELECT * FROM puntoventa");
+    $querySelect=mysqli_query($con,"SELECT * FROM puntoventa ORDER BY nombre");
         echo "<option value=''>Seleccione</option>";
        while($res = mysqli_fetch_array($querySelect)){
            $idPuntoVenta = $res['idPuntoVenta'];
@@ -185,7 +185,6 @@ if($action=="getVendedor"){
         $spreadsheet->getActiveSheet()->getColumnDimension('X')->setAutoSize(true);
         $spreadsheet->getActiveSheet()->getColumnDimension('Y')->setAutoSize(true);
         
-
     //guardamos en excel
         $writer->save('reporte.xlsx');
         echo '<a href="reporte.xlsx" download="REPORTES-'.date('Y-m-d').'.xlsx"><button id="buttonDescargar"><i class="fas fa-download"></i></button></a>';
