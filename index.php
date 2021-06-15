@@ -10,11 +10,10 @@ button:hover {
 
 .container {
   width: 100%;
-  background-color:#f4f4f4;
+  background-color:white;
   padding-top:10px;
   margin-top:70px;
   border-radius: 6px;
-  border: 3px solid #dedede;
 }
 
 input[type=text], input[type=password] {
@@ -22,14 +21,14 @@ input[type=text], input[type=password] {
   padding: 12px 20px;
   margin: 8px 0;
   display: block;
-  border: 1px solid #dedede;
+  border: 1px solid #004c98;
   box-sizing: border-box;
   border-radius: 6px;
 }
 
 button {
-  background-color: #dedede;
-  color: black;
+  background-color: #004c98e6;
+  color: white;
   padding: 14px 20px;
   margin: 8px 0;
   border: none;
@@ -38,22 +37,20 @@ button {
   border-radius: 6px;
 }
 
-.fa-user-circle{
-    color:#d4d4d4;
-}
 </style> 
 
-<body style="background-color:#eeeeee;">
+<body style="background-color:white;">
 <div class="container">
 <div class="row justify-content-center">
 <div class="col-12 col-lg-6">
 <div style="display: flex; align-items: center; justify-content: center;">
-<i class="far fa-user-circle fa-5x"></i>
+<img src="logo/logoUwipes.png" alt="">
     </div>
+    <br>
     <input id="correoLogin" type="text" placeholder="CORREO" name="correoUsuario" required>
     <input id="passwordLogin" type="password" placeholder="CONTRASEÑA" name="password" required>
     <p style="color:red;"> </p>
-    <button data-id="" id="btnLogin">Iniciar Sesión</button>
+    <button data-id="" id="btnLogin">ENTRAR</button>
    </div>
 </div>
 </div>
