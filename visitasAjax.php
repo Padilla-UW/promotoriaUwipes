@@ -378,20 +378,20 @@ if($action=="getPVisitas"){
 
 //FILTRADO BÚSQUEDA
 }elseif($action == "getPVentaFiltro"){
-    $visitas = mysqli_query($con,"SELECT * FROM puntoventa"); 
+    $visitas = mysqli_query($con,"SELECT * FROM puntoventa ORDER BY nombre"); 
     while($res = mysqli_fetch_array($visitas)){
         echo "<a class='dropdown-item opcFilPunVenta' href='#' data-id='".$res['idPuntoVenta']."' data-tipVisita='".$res['nombre']."'>".$res['nombre']."</a>";         
     } 
 
 }elseif($action == "getVendedorFiltro"){
     $vende = mysqli_query($con,"SELECT p.idPersona, p.nombre, u.idPersona, u.idTipoUsuario, u.idUsuario From 
-    persona p, usuario u WHERE p.idPersona=u.idPersona AND u.idTipoUsuario=2"); 
+    persona p, usuario u WHERE p.idPersona=u.idPersona AND u.idTipoUsuario=2 ORDER BY nombre"); 
     while($res = mysqli_fetch_array($vende)){
         echo "<a class='dropdown-item opcFilVendedor' href='#' data-id='".$res['idUsuario']."' data-tipVende='".$res['nombre']."'>".$res['nombre']."</a>";         
     }
 
 }elseif($action == "getZonaFiltro"){
-    $zona = mysqli_query($con,"SELECT * from zona"); 
+    $zona = mysqli_query($con,"SELECT * from zona ORDER BY nombre"); 
     while($res = mysqli_fetch_array($zona)){
         echo "<a class='dropdown-item opcFilZona' href='#' data-id='".$res['idZona']."' data-tipZona='".$res['nombre']."'>".$res['nombre']."</a>";         
     } 
