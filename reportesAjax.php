@@ -48,13 +48,18 @@ if($action=="getVendedor"){
        } 
 
 }elseif($action=="getSucursal"){
-    $querySelect=mysqli_query($con,"SELECT * FROM sucursal ORDER BY nombre");
+    $pv=(isset($_REQUEST['pv'])&& $_REQUEST['pv'] !=NULL)?$_REQUEST['pv']:'';
+        if($pv != ''){
+            $querySelect=mysqli_query($con,"SELECT s.idSucursal, s.nombre AS nombreSuc, s.idPuntoVenta, pv.idPuntoVenta From sucursal s, puntoventa pv WHERE pv.idPuntoVenta = s.idPuntoVenta AND pv.idPuntoVenta = $pv ORDER BY pv.nombre");
+        }else{
+            $querySelect=mysqli_query($con,"SELECT * FROM sucursal ORDER BY nombre");
+        }
         echo "<option value=''>Seleccione</option>";
-       while($res = mysqli_fetch_array($querySelect)){
-           $idSucursal = $res['idSucursal'];
-           $nombre= $res['nombre'];
-          echo "<option value='".$idSucursal."'>$nombre</option>";
-       } 
+        while($res = mysqli_fetch_array($querySelect)){
+            $idSucursal = $res['idSucursal'];
+            $nombre= $res['nombreSuc'];
+           echo "<option value='".$idSucursal."'>$nombre</option>";
+        }
 
 }elseif($action == "imprimirReporte"){
     $idVendedor=(isset($_REQUEST['idVendedor'])&& $_REQUEST['idVendedor'] !=NULL)?$_REQUEST['idVendedor']:'';
