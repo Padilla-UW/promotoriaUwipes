@@ -54,8 +54,8 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
     <select name="" id="selVendedor" class="form-control"></select> 
     <br></div>
     <div class="col">
-    <label for=""><b>Categoría</b></label><br>
-    <select name="" id="selCategoria" class="form-control"></select>
+    <label for=""><b>Sucursal</b></label><br>
+    <select name="" id="selSucursal" class="form-control"></select>
     <br></div>
     </div>
     <div class="row">
@@ -75,6 +75,10 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
     <option value="Propio">Propio</option>
     <option value="Competencia">Competencia</option>
     </select>
+    </div>
+    <div class="col">
+    <label for=""><b>Categoría</b></label><br>
+    <select name="" id="selCategoria" class="form-control"></select>
     <br></div>
     </div>
     <div class="row">
@@ -85,11 +89,9 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
     <div class="row">
     <div class="col">
     <p>Desde:</p><input type="date" id="selFechaIni" class="form-control"></input>
-    <br>
     <br></div>
     <div class="col">
     <p>Hasta:</p><input type="date" id="selFechaFin" class="form-control"></input> 
-    <br>
     <br></div>
     </div>
     <button class="btn btn-secondary" data-id="" id="btnDescarga"><i class="fas fa-download"></i> Descargar</button>
@@ -102,12 +104,11 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
 <?php include ('includes/footer.php')?>
 
 <script>
-$(document).ready(function(){
     getVendedor();
     getZona();
     getPunVenta();
     getCategoria();
-});
+    getSucursal();
 
 //selects automáticos
 function getVendedor(){
@@ -166,6 +167,20 @@ function getCategoria(){
   });
 }
 
+function getSucursal(){
+  var parametros = {
+    "action": "getSucursal"
+  }
+  $.ajax({
+    url: 'reportesAjax.php',
+    data: parametros,
+    success: function (data){
+      console.log(data);
+      $("#selSucursal").html(data);
+    }
+  });
+}
+
 //cacha datos de variables para botón descarga 
 $("#btnDescarga").click(function() {
     var selVendedor = $("#selVendedor").val();
@@ -176,6 +191,7 @@ $("#btnDescarga").click(function() {
     var selCategoria = $("#selCategoria").val();
     var selSegmento = $('#selSegmento').val();
     var selProcedencia = $("#selProcedencia").val();
+    var selSucursal = $("#selSucursal").val();
 
   var parametros = {
             "action": "imprimirReporte",
@@ -186,7 +202,8 @@ $("#btnDescarga").click(function() {
             "idFin": fin,
             "idCategoria": selCategoria,
             "segmento": selSegmento,
-            "idProcedencia": selProcedencia
+            "idProcedencia": selProcedencia,
+            "idSucursal": selSucursal
         }
         $.ajax({
             data: parametros,
@@ -195,6 +212,7 @@ $("#btnDescarga").click(function() {
                 $('#selVendedor').val("");
                 $('#selZona').val("");
                 $('#selPunVenta').val("");
+                $('#selSucursal').val("");
                 $('#selFechaIni').val("");
                 $('#selFechaFin').val("");
                 $('#selCategoria').val("");
