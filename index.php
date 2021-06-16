@@ -24,6 +24,7 @@ input[type=text], input[type=password]{
   border: 1px solid #004c98;
   box-sizing: border-box;
   border-radius: 6px;
+  color:#004c98;
 }
 
 button {
