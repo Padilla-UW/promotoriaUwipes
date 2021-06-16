@@ -108,7 +108,6 @@ if($_SESSION["tipoUsuario"]!="Administrador"){
     getZona();
     getPunVenta();
     getCategoria();
-    getSucursal();
 
 //selects automáticos
 function getVendedor(){
@@ -139,20 +138,6 @@ function getZona(){
   });
 }
 
-function getPunVenta(){
-  var parametros = {
-    "action": "getPunVenta"
-  }
-  $.ajax({
-    url: 'reportesAjax.php',
-    data: parametros,
-    success: function (data){
-      console.log(data);
-      $("#selPunVenta").html(data);
-    }
-  });
-}
-
 function getCategoria(){
   var parametros = {
     "action": "getCategoria"
@@ -167,9 +152,31 @@ function getCategoria(){
   });
 }
 
-function getSucursal(){
+$(document).ready(function(){
+    $('#selPunVenta').change(function(){
+      var pv = $("#selPunVenta").val();
+      getSucursal(pv);
+    });
+})
+
+function getPunVenta(){
   var parametros = {
-    "action": "getSucursal"
+    "action": "getPunVenta"
+  }
+  $.ajax({
+    url: 'reportesAjax.php',
+    data: parametros,
+    success: function (data){
+      console.log(data);
+      $("#selPunVenta").html(data);
+    }
+  });
+}
+
+function getSucursal(pv){
+  var parametros = {
+    "action": "getSucursal",
+    "pv":pv
   }
   $.ajax({
     url: 'reportesAjax.php',
