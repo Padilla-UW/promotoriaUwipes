@@ -47,10 +47,20 @@ if($action=="getVendedor"){
           echo "<option value='".$idCategoria."'>$categoria</option>";
        } 
 
+}elseif($action=="getSucursal"){
+    $querySelect=mysqli_query($con,"SELECT * FROM sucursal ORDER BY nombre");
+        echo "<option value=''>Seleccione</option>";
+       while($res = mysqli_fetch_array($querySelect)){
+           $idSucursal = $res['idSucursal'];
+           $nombre= $res['nombre'];
+          echo "<option value='".$idSucursal."'>$nombre</option>";
+       } 
+
 }elseif($action == "imprimirReporte"){
     $idVendedor=(isset($_REQUEST['idVendedor'])&& $_REQUEST['idVendedor'] !=NULL)?$_REQUEST['idVendedor']:'';
     $idZona=(isset($_REQUEST['idZona'])&& $_REQUEST['idZona'] !=NULL)?$_REQUEST['idZona']:'';
     $idPuntoVenta=(isset($_REQUEST['idPuntoVenta'])&& $_REQUEST['idPuntoVenta'] !=NULL)?$_REQUEST['idPuntoVenta']:'';
+    $idSucursal=(isset($_REQUEST['idSucursal'])&& $_REQUEST['idSucursal'] !=NULL)?$_REQUEST['idSucursal']:'';
     $idInicio=(isset($_REQUEST['idInicio'])&& $_REQUEST['idInicio'] !=NULL)?$_REQUEST['idInicio']:'';
     $idFin=(isset($_REQUEST['idFin'])&& $_REQUEST['idFin'] !=NULL)?$_REQUEST['idFin']:'';
     $idCategoria=(isset($_REQUEST['idCategoria'])&& $_REQUEST['idCategoria'] !=NULL)?$_REQUEST['idCategoria']:'';
@@ -84,6 +94,11 @@ if($action=="getVendedor"){
     if($idPuntoVenta !=''){
         $queryPV = " AND pv.idPuntoVenta = $idPuntoVenta";
     }
+
+    //Validación con cierta sucursal
+    if($idSucursal !=''){
+        $querySuc = " AND s.idSucursal = $idSucursal";
+    }
     
     //Validación con cierta categoria
     if($idCategoria !=''){
@@ -109,7 +124,7 @@ if($action=="getVendedor"){
         $queryFecha = " AND v.fecha <= '$idFin'";
     }
 
-    $queryGeneral.=$queryVendedor.$queryZona.$queryPV.$queryCategoria.$querySegmento.$queryProcedencia.$queryFecha." ORDER BY fecha";
+    $queryGeneral.=$queryVendedor.$queryZona.$queryPV.$querySuc.$queryCategoria.$querySegmento.$queryProcedencia.$queryFecha." ORDER BY fecha";
     $query=mysqli_query($con,$queryGeneral);
     echo ($queryGeneral);
 
