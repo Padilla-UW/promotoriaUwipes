@@ -16,7 +16,7 @@ button:hover {
   border-radius: 6px;
 }
 
-input[type=text], input[type=password] {
+input[type=text], input[type=password]{
   width: 100%;
   padding: 12px 20px;
   margin: 8px 0;
@@ -35,6 +35,13 @@ button {
   cursor: pointer;
   width: 100%;
   border-radius: 6px;
+}
+
+#correoLogin:focus, #passwordLogin:focus{
+  border-color: #66afe9;
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
 }
 
 </style> 
